@@ -3,6 +3,7 @@
         "Dtos",
         "Hmac",
         "Newtonsoft",
+        "Npgsql",
         "Tuser"
     ]
 }

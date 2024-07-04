@@ -36,7 +36,7 @@ namespace Services.GenericService
             return _repository.Save();
         }
 
-        public async Task<int> SaveAsync()
+        public async Task<bool> SaveAsync()
         {
             return await _repository.SaveAsync();
         }

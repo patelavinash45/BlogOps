@@ -1,10 +1,11 @@
 using DbContexts.DataModels;
 using Dtos.RequestDtos;
+using Dtos.Response;
 using Services.GenericService;
 
-namespace Services.User
+namespace Services.UserService
 {
-    public interface IUserService : IGenericService<Tuser>
+    public interface IUserService : IGenericService<User>
     {
         LogInResponseDto ValidateUser(LogInRequestDto logInRequestDto);
     }

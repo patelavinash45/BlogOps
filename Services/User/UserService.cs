@@ -1,26 +1,26 @@
 using System.Security.Authentication;
-using System.Text;
 using DbContexts.DataModels;
 using Dtos.RequestDtos;
+using Dtos.Response;
+using Microsoft.Extensions.ObjectPool;
 using Repositories.GenericRepository;
 using Services.GenericService;
 using Services.JwtToken;
 
-namespace Services.User
+namespace Services.UserService
 {
-    public class UserService : GenericService<Tuser>, IUserService
+    public class UserService : GenericService<User>, IUserService
     {
         private readonly IJwtService _jwtService;
-        public UserService(IGenericRepository<Tuser> genericRepository, IJwtService jwtService) : base(genericRepository)
+        public UserService(IGenericRepository<User> genericRepository, IJwtService jwtService) : base(genericRepository)
         {
             _jwtService = jwtService;
         }
 
         public LogInResponseDto ValidateUser(LogInRequestDto logInRequestDto)
         {
-            string hashPassword = HashPassword(logInRequestDto);
-            Func<Tuser, bool> func = a => a.Email == logInRequestDto.Email && a.Password == hashPassword;
-            IEnumerable<Tuser> response = GetByFunction(func);
+            Func<User, bool> func = a => a.Email == logInRequestDto.Email && VerifyPassword(a.Password,logInRequestDto.Password);
+            IEnumerable<User> response = GetByFunction(func);
             if (!response.Any())
             {
                 throw new AuthenticationException("Invalid email or password");
@@ -32,10 +32,14 @@ namespace Services.User
             };
         }
 
-        private static string HashPassword(LogInRequestDto logInRequestDto)
+        private static string HashPassword(string password)
         {
-            var bytes = Encoding.UTF8.GetBytes(logInRequestDto.Password + logInRequestDto.Email);
-            return Convert.ToBase64String(bytes);
+            string salt = BCrypt.Net.BCrypt.GenerateSalt();
+            return BCrypt.Net.BCrypt.HashPassword(password, salt);
+        }
+
+        private static bool VerifyPassword(string hashPassword, string enteredPassword){
+            return BCrypt.Net.BCrypt.Verify(enteredPassword, hashPassword);
         }
     }
 }

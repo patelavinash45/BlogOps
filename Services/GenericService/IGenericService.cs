@@ -14,7 +14,7 @@ namespace Services.GenericService
 
         int Save();
 
-        Task<int> SaveAsync();
+        Task<bool> SaveAsync();
 
         IEnumerable<T> GetByFunction(Func<T, bool> func);
     }

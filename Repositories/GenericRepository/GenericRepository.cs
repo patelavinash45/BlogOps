@@ -45,9 +45,9 @@ namespace Repositories.GenericRepository
             return _dbContext.SaveChanges();
         }
 
-        public async Task<int> SaveAsync()
+        public async Task<bool> SaveAsync()
         {
-            return await _dbContext.SaveChangesAsync();
+            return await _dbContext.SaveChangesAsync() > 0;
         }
 
         public void Update(T objModel)

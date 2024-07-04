@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace Dtos.RequestDtos
+namespace Dtos.Response
 {
     public class LogInResponseDto
     {

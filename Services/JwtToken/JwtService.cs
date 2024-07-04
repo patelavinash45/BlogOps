@@ -16,13 +16,13 @@ namespace Services.JwtToken
             _configuration = configuration;
         }
 
-        public string CreateJwtToken(Tuser tuser)
+        public string CreateJwtToken(User user)
         {
             List<Claim> claims = [
-                new("userId", tuser.Userid.ToString()),
-                new("firstName", tuser.Firstname),
-                new("lastName", tuser.Lastname),
-                new("email", tuser.Email),
+                new("userId", user.Id.ToString()),
+                new("firstName", user.FirstName),
+                new("lastName", user.LastName),
+                new("email", user.Email),
             ];
             SymmetricSecurityKey Key = new(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]!));
             SigningCredentials creds = new(Key, SecurityAlgorithms.HmacSha256);

@@ -30,7 +30,8 @@ public class RequestHandler
         {
             BadHttpRequestException => new { error = "Bed Request." },
             ArgumentException => new { error = ex.Message },
-            _ => new { error = "Internal Server Error." },
+            //_ => new { error = "Internal Server Error." },
+            _ => new { error = ex },
         };
         return httpContext.Response.WriteAsync(JsonConvert.SerializeObject(errorMessage));
     }

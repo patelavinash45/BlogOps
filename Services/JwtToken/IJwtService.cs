@@ -7,6 +7,6 @@ namespace Services.JwtToken
     {
         bool ValidateJwtToken(string token, out JwtSecurityToken? jwtSecurityToken);
 
-        string CreateJwtToken(Tuser tuser);
+        string CreateJwtToken(User user);
     }
 }
