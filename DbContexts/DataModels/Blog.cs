@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DbContexts.Enums;
 using Microsoft.EntityFrameworkCore;
-using NpgsqlTypes;
 
 namespace DbContexts.DataModels;
 
@@ -12,7 +12,7 @@ public partial class Blog
 {
     [Key]
     [Column("id")]
-    public long Id { get; set; }
+    public int Id { get; set; }
 
     [Column("title")]
     [StringLength(128)]
@@ -35,13 +35,13 @@ public partial class Blog
     public DateTime UpdatedDate { get; set; }
 
     [Column("updated_by")]
-    public long UpdatedBy { get; set; }
+    public int UpdatedBy { get; set; }
 
     [Column("publish_date", TypeName = "timestamp without time zone")]
     public DateTime? PublishDate { get; set; }
 
     [Column("created_by")]
-    public long CreatedBy { get; set; }
+    public int CreatedBy { get; set; }
 
     [InverseProperty("Blog")]
     public virtual ICollection<BlogsCategory> BlogsCategories { get; set; } = new List<BlogsCategory>();
@@ -53,21 +53,4 @@ public partial class Blog
     [ForeignKey("UpdatedBy")]
     [InverseProperty("BlogUpdatedByNavigations")]
     public virtual User UpdatedByNavigation { get; set; } = null!;
-}
-
-public enum BlogStatus
-{
-    [PgName("Pending")]
-    Pending,
-    [PgName("Approved")]
-    Approved,
-    [PgName("Rejected")]
-
-    Rejected,
-    [PgName("Deleted")]
-
-    Deleted,
-    [PgName("Draft")]
-
-    Draft
 }

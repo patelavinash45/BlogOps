@@ -19,13 +19,13 @@ public partial class Category
     public string Name { get; set; } = null!;
 
     [Column("created_by")]
-    public long CreatedBy { get; set; }
+    public int CreatedBy { get; set; }
 
     [Column("created_date")]
     public DateTime CreatedDate { get; set; }
 
     [Column("updated_by")]
-    public long UpdatedBy { get; set; }
+    public int UpdatedBy { get; set; }
 
     [Column("updated_date")]
     public DateTime UpdatedDate { get; set; }

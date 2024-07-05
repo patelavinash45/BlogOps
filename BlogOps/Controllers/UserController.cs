@@ -15,17 +15,7 @@ namespace BlogOps.Controllers
             _userService = userService;
         }
 
-        [Authentication]
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [Route("signup")]
-        public IActionResult SignUp()
-        {
-            return Ok();
-        }
-
-        [HttpPost]
-        [Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult LogIn([FromBody] LogInRequestDto model)

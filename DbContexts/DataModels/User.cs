@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using DbContexts.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace DbContexts.DataModels;
@@ -12,7 +13,7 @@ public partial class User
 {
     [Key]
     [Column("id")]
-    public long Id { get; set; }
+    public int Id { get; set; }
 
     [Column("role_id")]
     public int RoleId { get; set; }
@@ -37,17 +38,20 @@ public partial class User
     [StringLength(256)]
     public string Password { get; set; } = null!;
 
+    [Column("status")]
+    public UserStatus Status { get; set; }
+
     [Column("updated_date")]
     public DateTime UpdatedDate { get; set; }
 
     [Column("updated_by")]
-    public long UpdatedBy { get; set; }
+    public int UpdatedBy { get; set; }
 
     [Column("created_date")]
     public DateTime CreatedDate { get; set; }
 
     [Column("created_by")]
-    public long CreatedBy { get; set; }
+    public int CreatedBy { get; set; }
 
     [InverseProperty("CreatedByNavigation")]
     public virtual ICollection<Blog> BlogCreatedByNavigations { get; set; } = new List<Blog>();
@@ -84,10 +88,4 @@ public partial class User
     [ForeignKey("UpdatedBy")]
     [InverseProperty("InverseUpdatedByNavigation")]
     public virtual User UpdatedByNavigation { get; set; } = null!;
-}
-
-public enum UserStatus{
-    Active,
-    DeActive,
-    Deleted
 }

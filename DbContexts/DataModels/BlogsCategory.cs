@@ -11,10 +11,10 @@ public partial class BlogsCategory
 {
     [Key]
     [Column("id")]
-    public long Id { get; set; }
+    public int Id { get; set; }
 
     [Column("blog_id")]
-    public long BlogId { get; set; }
+    public int BlogId { get; set; }
 
     [Column("category_id")]
     public int CategoryId { get; set; }
@@ -26,10 +26,10 @@ public partial class BlogsCategory
     public DateTime UpdatedDate { get; set; }
 
     [Column("created_by")]
-    public long CreatedBy { get; set; }
+    public int CreatedBy { get; set; }
 
     [Column("updated_by")]
-    public long UpdatedBy { get; set; }
+    public int UpdatedBy { get; set; }
 
     [Column("is_deleted")]
     public bool IsDeleted { get; set; }

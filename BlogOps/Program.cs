@@ -1,8 +1,9 @@
 using BlogOpsDbContext;
-using DbContexts.DataModels;
+using DbContexts.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Npgsql;
+using Repositories.BlogRepository;
 using Repositories.GenericRepository;
 using Services.BlogService;
 using Services.GenericService;
@@ -55,11 +56,12 @@ builder.Services.AddSwaggerGen(
 );
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<GetUser>();
-builder.Services.AddControllers().AddNewtonsoftJson(); 
+builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddDbContext<BlogOpsContext>(options =>
 {
     NpgsqlDataSourceBuilder builder = new("User ID = postgres;Password=aVI@12345;Server=localhost;Port=5432;Database=blogops;Pooling=true;");
     builder.MapEnum<BlogStatus>();
+    builder.MapEnum<UserStatus>();
     builder.EnableUnmappedTypes();
     options.UseNpgsql(builder.Build());
 });
@@ -68,6 +70,8 @@ builder.Services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IBlogService, BlogService>();
+builder.Services.AddScoped<IBlogCategoryService, BlogCategoryService>();
+builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 
 
 var app = builder.Build();
