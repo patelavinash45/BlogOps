@@ -1,8 +1,8 @@
+using System.Linq.Expressions;
 using System.Security.Authentication;
 using DbContexts.DataModels;
 using Dtos.RequestDtos;
 using Dtos.Response;
-using Microsoft.Extensions.ObjectPool;
 using Repositories.GenericRepository;
 using Services.GenericService;
 using Services.JwtToken;
@@ -19,17 +19,18 @@ namespace Services.UserService
 
         public LogInResponseDto ValidateUser(LogInRequestDto logInRequestDto)
         {
-            Func<User, bool> func = a => a.Email == logInRequestDto.Email && VerifyPassword(a.Password,logInRequestDto.Password);
-            IEnumerable<User> response = GetByFunction(func);
-            if (!response.Any())
+            Expression<Func<User, bool>>? func = a => a.Email == logInRequestDto.Email;
+            Expression<Func<User, object>> include = a => a.Role;
+            IEnumerable<User> response = GetByCriteria([include], func);
+            if (response.Any() && VerifyPassword(response.First().Password, logInRequestDto.Password))
             {
-                throw new AuthenticationException("Invalid email or password");
+                return new LogInResponseDto
+                {
+                    Email = logInRequestDto.Email,
+                    JwtToken = _jwtService.CreateJwtToken(response.First()),
+                };
             }
-            return new LogInResponseDto
-            {
-                Email = logInRequestDto.Email,
-                JwtToken = _jwtService.CreateJwtToken(response.First()),
-            };
+            throw new AuthenticationException("Invalid email or password");
         }
 
         private static string HashPassword(string password)
@@ -38,7 +39,8 @@ namespace Services.UserService
             return BCrypt.Net.BCrypt.HashPassword(password, salt);
         }
 
-        private static bool VerifyPassword(string hashPassword, string enteredPassword){
+        private static bool VerifyPassword(string hashPassword, string enteredPassword)
+        {
             return BCrypt.Net.BCrypt.Verify(enteredPassword, hashPassword);
         }
     }

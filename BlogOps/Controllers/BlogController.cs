@@ -10,9 +10,11 @@ namespace BlogOps.Controllers
     public class BlogController : ControllerBase
     {
         private readonly IBlogService _blogService;
+        private readonly GetUser _getUser;
 
-        public BlogController(IBlogService blogService)
+        public BlogController(IBlogService blogService, GetUser getUser)
         {
+            _getUser = getUser;
             _blogService = blogService;
         }
 
@@ -28,8 +30,7 @@ namespace BlogOps.Controllers
         [Route("/Blogs/{pageNo:int}")]
         public IActionResult GetBlogs(int pageNo)
         {
-            int userId = (int)HttpContext.Session.GetInt32("userId");
-            var response = _blogService.GetAllBlogs(userId, pageNo);
+            var response = _blogService.GetAllBlogs(_getUser.UserId, pageNo);
             return Ok(response);
         }
 
@@ -37,10 +38,9 @@ namespace BlogOps.Controllers
         public async Task<IActionResult> CreateBlog(CreateBlogRequestDto createBlogRequestDto)
         {
             if (string.IsNullOrEmpty(createBlogRequestDto.Title) && string.IsNullOrEmpty(createBlogRequestDto.Content))
-                throw new ArgumentException("Model is invalid", nameof(CreateBlogRequestDto));
+                throw new ArgumentException(nameof(CreateBlogRequestDto));
 
-            int userId = (int)HttpContext.Session.GetInt32("userId");
-            await _blogService.CreateBlog(createBlogRequestDto, userId);
+            await _blogService.CreateBlog(createBlogRequestDto, _getUser.UserId);
             return Ok();
         }
 
@@ -49,10 +49,9 @@ namespace BlogOps.Controllers
         public async Task<IActionResult> UpdateBlog(int id, [FromBody] UpdateBlogRequestDto updateBlogRequestDto)
         {
             if (id <= 0 || !ModelState.IsValid)
-                throw new ArgumentException("Model is invalid", nameof(LogInRequestDto));
+                throw new ArgumentException(nameof(LogInRequestDto));
 
-            int userId = (int)HttpContext.Session.GetInt32("userId");
-            await _blogService.UpdateBlog(updateBlogRequestDto, userId);
+            await _blogService.UpdateBlog(updateBlogRequestDto, _getUser.UserId);
             return Ok();
         }
 
@@ -60,7 +59,7 @@ namespace BlogOps.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> DeleteBlog(int id)
         {
-            await _blogService.DeleteBlog(id);
+            await _blogService.DeleteBlog(id, _getUser.UserId);
             return Ok();
         }
     }

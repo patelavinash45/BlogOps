@@ -1,5 +1,6 @@
 using DbContexts.DataModels;
 using DbContexts.Enums;
+using Dtos.Mapper;
 using Dtos.RequestDtos;
 using Dtos.Response;
 using Microsoft.IdentityModel.Tokens;
@@ -22,15 +23,7 @@ namespace Services.BlogService
         public BlogResponseDto GetBlog(int id)
         {
             Blog? blog = GetById(id) ?? throw new Exception("Blog Not Found");
-            return new BlogResponseDto()
-            {
-                Id = blog.Id,
-                Title = blog.Title,
-                Content = blog.Content,
-                AdminComment = blog.AdminComment,
-                Status = blog.Status,
-                CreatedDate = blog.CreatedDate,
-            };
+            return blog.ToResponseDto();
         }
 
         public List<BlogResponseDto> GetAllBlogs(int userId, int pageNo)
@@ -38,15 +31,7 @@ namespace Services.BlogService
             int skip = (pageNo - 1) * 9;
             Func<Blog, bool> func = a => a.CreatedBy == userId;
             List<BlogResponseDto> blogResponseDtos =
-                       _blogRepository.GetBlogs(skip, func).Select(blog => new BlogResponseDto()
-                       {
-                           Id = blog.Id,
-                           Title = blog.Title,
-                           Content = blog.Content,
-                           AdminComment = blog.AdminComment,
-                           Status = blog.Status,
-                           CreatedDate = blog.CreatedDate,
-                       }).ToList();
+                       _blogRepository.GetBlogs(skip, func).Select(blog => blog.ToResponseDto()).ToList();
             return blogResponseDtos;
         }
 
@@ -55,26 +40,10 @@ namespace Services.BlogService
             List<BlogsCategory>? blogsCategories = new();
             foreach (var categoryId in createBlogRequestDto.BlogsCategoryIds ?? [])
             {
-                blogsCategories.Add(new BlogsCategory()
-                {
-                    CategoryId = categoryId,
-                    CreatedDate = DateTime.UtcNow,
-                    UpdatedDate = DateTime.UtcNow,
-                    CreatedBy = userId,
-                    UpdatedBy = userId,
-                });
+                blogsCategories.Add(categoryId.ToBlogCategory(userId));
             };
-            Blog blog = new()
-            {
-                Title = createBlogRequestDto.Title,
-                Content = createBlogRequestDto.Content,
-                Status = createBlogRequestDto.IsDraft ? BlogStatus.Draft : BlogStatus.Pending,
-                CreatedDate = DateTime.UtcNow,
-                UpdatedDate = DateTime.UtcNow,
-                CreatedBy = userId,
-                UpdatedBy = userId,
-                BlogsCategories = blogsCategories
-            };
+            Blog blog = createBlogRequestDto.ToBlog(userId);
+            blog.BlogsCategories = blogsCategories;
             Add(blog);
             if (await SaveAsync())
             {
@@ -138,6 +107,8 @@ namespace Services.BlogService
             blog.Content = updateBlogRequestDto.Content;
             blog.AdminComment = updateBlogRequestDto.AdminComment;
             blog.Status = updateBlogRequestDto.Status;
+            blog.UpdatedBy = userId;
+            blog.UpdatedDate = DateTime.UtcNow;
             Update(blog);
             if (await SaveAsync())
             {
@@ -146,10 +117,12 @@ namespace Services.BlogService
             throw new Exception();
         }
 
-        public async Task<bool> DeleteBlog(int id)
+        public async Task<bool> DeleteBlog(int id, int userId)
         {
             Blog? blog = GetById(id) ?? throw new Exception("Blog Not Found");
             blog.Status = BlogStatus.Deleted;
+            blog.UpdatedBy = userId;
+            blog.UpdatedDate = DateTime.UtcNow;
             Update(blog);
             if (await SaveAsync())
             {

@@ -11,6 +11,6 @@ namespace Services.BlogService
         List<BlogResponseDto> GetAllBlogs(int userId,int pageNo);
         Task<bool> CreateBlog(CreateBlogRequestDto createBlogRequestDto, int userId);
         Task<bool> UpdateBlog(UpdateBlogRequestDto updateBlogRequestDto, int userId);
-        Task<bool> DeleteBlog(int id);
+        Task<bool> DeleteBlog(int id, int userId);
     }
 }

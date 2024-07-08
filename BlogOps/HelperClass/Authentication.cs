@@ -26,6 +26,14 @@ public class Authentication : Attribute, IAuthorizationFilter
                     userId = int.Parse(jwtSecurityToken!.Claims.First(a => a.Type == "userId").Value);
                     context.HttpContext.Session.SetInt32("userId", (int)userId);
                 }
+                if (_role != null)
+                {
+                    string jwtRole = jwtSecurityToken!.Claims.First(a => a.Type == "role").Value;
+                    if (_role != jwtRole)
+                    {
+                        throw new UnauthorizedAccessException("Unauthorized Access.");
+                    }
+                }
                 return;
             }
         }

@@ -23,6 +23,7 @@ namespace Services.JwtToken
                 new("firstName", user.FirstName),
                 new("lastName", user.LastName),
                 new("email", user.Email),
+                new("role",user.Role.Name),
             ];
             SymmetricSecurityKey Key = new(Encoding.UTF8.GetBytes(_configuration["Jwt:key"]!));
             SigningCredentials creds = new(Key, SecurityAlgorithms.HmacSha256);

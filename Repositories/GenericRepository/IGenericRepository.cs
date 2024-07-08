@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 namespace Repositories.GenericRepository
 {
     public interface IGenericRepository<T> where T : class
@@ -16,6 +18,6 @@ namespace Repositories.GenericRepository
 
         Task<bool> SaveAsync();
 
-        IEnumerable<T> GetByFunction(Func<T, bool> func);
+        IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? func = null, Expression<Func<T, Object>>? orderBy = null);
     }
 }

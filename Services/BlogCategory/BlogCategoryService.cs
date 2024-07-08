@@ -1,4 +1,6 @@
+using System.Linq.Expressions;
 using DbContexts.DataModels;
+using Dtos.Mapper;
 using Repositories.GenericRepository;
 using Services.GenericService;
 
@@ -11,22 +13,14 @@ namespace Services.BlogService
 
         public void CreateBlogCategories(int categoryId, int blogId, int userId)
         {
-            BlogsCategory blogsCategory = new()
-            {
-                BlogId = blogId,
-                CategoryId = categoryId,
-                CreatedDate = DateTime.UtcNow,
-                UpdatedDate = DateTime.UtcNow,
-                CreatedBy = userId,
-                UpdatedBy = userId,
-            };
+            BlogsCategory blogsCategory = categoryId.ToBlogCategory(userId);
             Add(blogsCategory);
         }
 
         public IEnumerable<BlogsCategory>? GetBlogsCategoriesBlogWise(int blogId)
         {
-            Func<BlogsCategory, bool> func = a => a.BlogId == blogId;
-            return GetByFunction(func);
+            Expression<Func<BlogsCategory, bool>>? func = a => a.BlogId == blogId;
+            return GetByCriteria(func: func);
         }
     }
 }

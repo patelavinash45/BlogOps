@@ -7,8 +7,12 @@ public class GetUser
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public int? UserId
+    public int UserId
     {
-        get { return _httpContextAccessor.HttpContext!.Session.GetInt32("userId"); }
+        get
+        {
+            return _httpContextAccessor.HttpContext!.Session.GetInt32("userId")
+                         ?? throw new UnauthorizedAccessException("Unauthorized Access.");
+        }
     }
 }

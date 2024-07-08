@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Repositories.GenericRepository;
 
 namespace Services.GenericService
@@ -46,9 +47,9 @@ namespace Services.GenericService
             _repository.Update(objModel);
         }
 
-        public IEnumerable<T> GetByFunction(Func<T, bool> func)
+        public IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? func = null, Expression<Func<T, Object>>? orderBy = null)
         {
-            return _repository.GetByFunction(func);
+            return _repository.GetByCriteria(includes,func,orderBy);
         }
     }
 }
