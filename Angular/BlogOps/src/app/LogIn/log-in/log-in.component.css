@@ -1,0 +1,14 @@
+.background{
+    background-color: #a6b9bf;
+    height: 100vh;
+}
+
+.logInCard{
+    width: 576px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.custom-form-group .form-control:focus ~ label {
+    color: inherit; 
+}

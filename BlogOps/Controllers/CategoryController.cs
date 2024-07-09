@@ -1,3 +1,4 @@
+using Dtos.Enums;
 using Dtos.RequestDtos;
 using Microsoft.AspNetCore.Mvc;
 using Services.BlogService;
@@ -5,64 +6,64 @@ using Services.BlogService;
 namespace BlogOps.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("categories")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        private readonly GetUser _getUser;
-        public CategoryController(ICategoryService categoryService, GetUser getUser)
+        private readonly UserInfo _userInfo;
+        public CategoryController(ICategoryService categoryService, UserInfo userInfo)
         {
-            _getUser = getUser;
+            _userInfo = userInfo;
             _categoryService = categoryService;
         }
 
-        [Authentication("Admin")]
+        [Authentication(RoleEnum.Admin)]
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("category/{id:int}")]
         public IActionResult GetCategory(int id)
         {
             var response = _categoryService.GetCategory(id);
             return Ok(response);
         }
 
-        [Authentication]
+        [Authentication(RoleEnum.All)]
         [HttpGet]
-        [Route("/Categories")]
         public IActionResult GetAllCategories()
         {
             var response = _categoryService.GetAllCategories();
             return Ok(response);
         }
 
-        [Authentication("Admin")]
+        [Authentication(RoleEnum.Admin)]
         [HttpPost]
+        [Route("category")]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequestDto createCategoryRequestDto)
         {
             if (!ModelState.IsValid)
-                throw new ArgumentException(nameof(CreateCategoryRequestDto));
+                throw new BadHttpRequestException(nameof(CreateCategoryRequestDto));
 
-            await _categoryService.CreateCategory(createCategoryRequestDto, _getUser.UserId);
+            await _categoryService.CreateCategory(createCategoryRequestDto, _userInfo.UserId);
             return Ok();
         }
 
-        [Authentication("Admin")]
+        [Authentication(RoleEnum.Admin)]
         [HttpPut]
-        [Route("{id:int}")]
+        [Route("category/{id:int}")]
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] UpdateCategoryRequestDto updateCategoryRequestDto)
         {
             if (id <= 0 || !ModelState.IsValid)
-                throw new ArgumentException(nameof(UpdateCategoryRequestDto));
+                throw new BadHttpRequestException(nameof(UpdateCategoryRequestDto));
 
-            await _categoryService.UpdateCategory(updateCategoryRequestDto, _getUser.UserId);
+            await _categoryService.UpdateCategory(updateCategoryRequestDto, _userInfo.UserId);
             return Ok();
         }
 
-        [Authentication("Admin")]
+        [Authentication(RoleEnum.Admin)]
         [HttpDelete]
-        [Route("{id:int}")]
+        [Route("category/{id:int}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            await _categoryService.DeleteCategory(id, _getUser.UserId);
+            await _categoryService.DeleteCategory(id, _userInfo.UserId);
             return Ok();
         }
     }

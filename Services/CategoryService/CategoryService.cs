@@ -10,8 +10,7 @@ namespace Services.BlogService
     public class CategoryService : GenericService<Category>, ICategoryService
     {
         public CategoryService(IGenericRepository<Category> genericRepository) : base(genericRepository)
-        {
-        }
+        { }
 
         public CategoryResponseDto GetCategory(int id)
         {
@@ -29,11 +28,7 @@ namespace Services.BlogService
             List<CategoryResponseDto> categoryResponseDtos = [];
             foreach (Category category in categories ?? [])
             {
-                categoryResponseDtos.Add(new CategoryResponseDto()
-                {
-                    Id = category.Id,
-                    Name = category.Name,
-                });
+                categoryResponseDtos.Add(category.ToCategoryResponseDto());
             };
             return categoryResponseDtos;
         }
@@ -42,7 +37,7 @@ namespace Services.BlogService
         {
             Category category = createCategoryRequestDto.ToCategory(userId);
             Add(category);
-            return await SaveAsync();
+            return await SaveAsync() ? true : throw new Exception("");
         }
 
         public async Task<bool> UpdateCategory(UpdateCategoryRequestDto updateCategoryRequestDto, int userId)
@@ -54,7 +49,7 @@ namespace Services.BlogService
             category.UpdatedBy = userId;
             category.UpdatedDate = DateTime.UtcNow;
             Update(category);
-            return await SaveAsync();
+            return await SaveAsync() ? true : throw new Exception("");
         }
 
         public async Task<bool> DeleteCategory(int id, int userId)
@@ -65,7 +60,7 @@ namespace Services.BlogService
             category.UpdatedBy = userId;
             category.UpdatedDate = DateTime.UtcNow;
             Update(category);
-            return await SaveAsync();
+            return await SaveAsync() ? true : throw new Exception("");
         }
     }
 }

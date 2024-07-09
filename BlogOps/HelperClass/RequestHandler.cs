@@ -28,7 +28,7 @@ public class RequestHandler
         httpContext.Response.ContentType = "application/json";
         object errorMessage = ex switch
         {
-            BadHttpRequestException => new { error = "Bed Request." },
+            BadHttpRequestException => new { error = Constants.BadRequestString },
             ArgumentException => new { error = ex.Message },
             //_ => new { error = "Internal Server Error." },
             _ => new { error = ex },

@@ -33,5 +33,16 @@ namespace Dtos.Mapper
                 UpdatedBy = userId,
             };
         }
+
+        public static Blog ToUpdateBlog(this UpdateBlogRequestDto updateBlogRequestDto, int userId, Blog blog)
+        {
+            blog.Title = updateBlogRequestDto.Title;
+            blog.Content = updateBlogRequestDto.Content;
+            blog.AdminComment = updateBlogRequestDto.AdminComment;
+            blog.Status = updateBlogRequestDto.Status;
+            blog.UpdatedBy = userId;
+            blog.UpdatedDate = DateTime.UtcNow;
+            return blog;
+        }
     }
 }

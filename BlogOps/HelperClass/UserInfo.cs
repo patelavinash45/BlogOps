@@ -1,8 +1,8 @@
-public class GetUser
+public class UserInfo
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public GetUser(IHttpContextAccessor httpContextAccessor)
+    public UserInfo(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
     }

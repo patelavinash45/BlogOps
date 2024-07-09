@@ -1,1 +1,54 @@
-
+<div class="background">
+  <div class="container d-flex justify-content-center align-items-center h-100">
+    <div class="card logInCard p-3">
+      <div class="text-center card-title fs-3 fw-bold">BlogOps</div>
+      <form>
+        <div class="input-group mb-3">
+          <div class="form-floating">
+            <input
+              type="email"
+              class="form-control"
+              id="floatingInput"
+              placeholder="name@example.com"
+            />
+            <label for="floatingInput">Email address</label>
+          </div>
+          <span class="input-group-text" id="basic-addon1">
+            <i class="bi bi-envelope btn"></i>
+          </span>
+        </div>
+        <div class="form-floating input-group">
+          <div class="form-floating">
+            <input
+              [type]="isShowPassword ? 'text' : 'password'"
+              class="form-control"
+              id="floatingPassword"
+              placeholder="Password"
+            />
+            <label for="floatingPassword">Password</label>
+          </div>
+          <span class="input-group-text" id="basic-addon2">
+            <button class="btn" type="button" (click)="onPasswordButtonClick()">
+              <i
+                class="bi"
+                [ngClass]="{
+                  'bi-eye': !isShowPassword,
+                  'bi-eye-slash': isShowPassword
+                }"
+              ></i>
+            </button>
+          </span>
+        </div>
+        <div class="d-flex justify-content-start align-items-center mt-2 mx-2">
+            <input type="checkbox" class="me-2"/>
+            <span>
+                Keep me signed in
+            </span>
+        </div>
+        <button class="btn btn-primary w-100 mt-3">
+            Log In
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

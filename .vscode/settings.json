@@ -1,9 +1,11 @@
 {
     "cSpell.words": [
+        "blogops",
         "Dtos",
         "Hmac",
+        "Navigations",
         "Newtonsoft",
         "Npgsql",
         "Tuser"
-    ]
+    ],
 }

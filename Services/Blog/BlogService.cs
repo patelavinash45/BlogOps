@@ -1,6 +1,7 @@
 using DbContexts.DataModels;
 using DbContexts.Enums;
 using Dtos.Mapper;
+using Dtos.PaginationDto;
 using Dtos.RequestDtos;
 using Dtos.Response;
 using Microsoft.IdentityModel.Tokens;
@@ -26,18 +27,28 @@ namespace Services.BlogService
             return blog.ToResponseDto();
         }
 
-        public List<BlogResponseDto> GetAllBlogs(int userId, int pageNo)
+        public PaginationDto<BlogResponseDto> GetAllBlogs(BlogFilterDto blogFilterDto, int userId, int pageNo)
         {
             int skip = (pageNo - 1) * 9;
-            Func<Blog, bool> func = a => a.CreatedBy == userId;
+            Func<Blog, bool> func = a => a.CreatedBy == userId
+                            && (blogFilterDto.Status == null || a.Status == blogFilterDto.Status)
+                            && (blogFilterDto.SearchContent == null || a.Title == null || a.Title.Contains(blogFilterDto.SearchContent, StringComparison.CurrentCultureIgnoreCase));
+
             List<BlogResponseDto> blogResponseDtos =
                        _blogRepository.GetBlogs(skip, func).Select(blog => blog.ToResponseDto()).ToList();
-            return blogResponseDtos;
+
+            int totalBlogs = _blogRepository.CountBlogs(func);
+            return new PaginationDto<BlogResponseDto>
+            {
+                DtoList = blogResponseDtos,
+                TotalBlogs = totalBlogs,
+                PageNo = pageNo,
+            };
         }
 
         public async Task<bool> CreateBlog(CreateBlogRequestDto createBlogRequestDto, int userId)
         {
-            List<BlogsCategory>? blogsCategories = new();
+            List<BlogsCategory>? blogsCategories = [];
             foreach (var categoryId in createBlogRequestDto.BlogsCategoryIds ?? [])
             {
                 blogsCategories.Add(categoryId.ToBlogCategory(userId));
@@ -45,11 +56,7 @@ namespace Services.BlogService
             Blog blog = createBlogRequestDto.ToBlog(userId);
             blog.BlogsCategories = blogsCategories;
             Add(blog);
-            if (await SaveAsync())
-            {
-                return true;
-            }
-            throw new Exception();
+            return await SaveAsync() ? true : throw new Exception();
         }
 
         public async Task<bool> UpdateBlog(UpdateBlogRequestDto updateBlogRequestDto, int userId)
@@ -103,18 +110,9 @@ namespace Services.BlogService
                 }
             }
 
-            blog.Title = updateBlogRequestDto.Title;
-            blog.Content = updateBlogRequestDto.Content;
-            blog.AdminComment = updateBlogRequestDto.AdminComment;
-            blog.Status = updateBlogRequestDto.Status;
-            blog.UpdatedBy = userId;
-            blog.UpdatedDate = DateTime.UtcNow;
+            blog = updateBlogRequestDto.ToUpdateBlog(userId, blog);
             Update(blog);
-            if (await SaveAsync())
-            {
-                return true;
-            }
-            throw new Exception();
+            return await SaveAsync() ? true : throw new Exception("");
         }
 
         public async Task<bool> DeleteBlog(int id, int userId)
@@ -124,11 +122,7 @@ namespace Services.BlogService
             blog.UpdatedBy = userId;
             blog.UpdatedDate = DateTime.UtcNow;
             Update(blog);
-            if (await SaveAsync())
-            {
-                return true;
-            }
-            throw new Exception();
+            return await SaveAsync() ? true : throw new Exception("");
         }
     }
 }

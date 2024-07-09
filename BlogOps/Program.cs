@@ -55,11 +55,12 @@ builder.Services.AddSwaggerGen(
     }
 );
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<GetUser>();
+builder.Services.AddScoped<UserInfo>();
 builder.Services.AddControllers().AddNewtonsoftJson();
+var connectionString = builder.Configuration.GetConnectionString("BaseConnectionString");
 builder.Services.AddDbContext<BlogOpsContext>(options =>
 {
-    NpgsqlDataSourceBuilder builder = new("User ID = postgres;Password=aVI@12345;Server=localhost;Port=5432;Database=blogops;Pooling=true;");
+    NpgsqlDataSourceBuilder builder = new(connectionString);
     builder.MapEnum<BlogStatus>();
     builder.MapEnum<UserStatus>();
     builder.EnableUnmappedTypes();

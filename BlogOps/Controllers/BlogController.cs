@@ -1,65 +1,67 @@
+using Dtos.Enums;
 using Dtos.RequestDtos;
 using Microsoft.AspNetCore.Mvc;
 using Services.BlogService;
 
 namespace BlogOps.Controllers
 {
-    [Authentication]
+    [Authentication(RoleEnum.All)]
     [ApiController]
-    [Route("[controller]")]
+    [Route("blogs")]
     public class BlogController : ControllerBase
     {
         private readonly IBlogService _blogService;
-        private readonly GetUser _getUser;
+        private readonly UserInfo _userInfo;
 
-        public BlogController(IBlogService blogService, GetUser getUser)
+        public BlogController(IBlogService blogService, UserInfo userInfo)
         {
-            _getUser = getUser;
+            _userInfo = userInfo;
             _blogService = blogService;
         }
 
         [HttpGet]
-        [Route("{id:int}")]
+        [Route("blog/{id:int}")]
         public IActionResult GetBlog(int id)
         {
             var response = _blogService.GetBlog(id);
             return Ok(response);
         }
 
-        [HttpGet]
-        [Route("/Blogs/{pageNo:int}")]
-        public IActionResult GetBlogs(int pageNo)
+        [HttpPost]
+        [Route("{pageNo:int}")]
+        public IActionResult GetBlogs(int pageNo,[FromBody] BlogFilterDto blogFilterDto)
         {
-            var response = _blogService.GetAllBlogs(_getUser.UserId, pageNo);
+            var response = _blogService.GetAllBlogs(blogFilterDto, _userInfo.UserId, pageNo);
             return Ok(response);
         }
 
         [HttpPost]
+        [Route("blog")]
         public async Task<IActionResult> CreateBlog(CreateBlogRequestDto createBlogRequestDto)
         {
             if (string.IsNullOrEmpty(createBlogRequestDto.Title) && string.IsNullOrEmpty(createBlogRequestDto.Content))
-                throw new ArgumentException(nameof(CreateBlogRequestDto));
+                throw new BadHttpRequestException(nameof(CreateBlogRequestDto));
 
-            await _blogService.CreateBlog(createBlogRequestDto, _getUser.UserId);
+            await _blogService.CreateBlog(createBlogRequestDto, _userInfo.UserId);
             return Ok();
         }
 
         [HttpPut]
-        [Route("{id:int}")]
+        [Route("blog/{id:int}")]
         public async Task<IActionResult> UpdateBlog(int id, [FromBody] UpdateBlogRequestDto updateBlogRequestDto)
         {
             if (id <= 0 || !ModelState.IsValid)
-                throw new ArgumentException(nameof(LogInRequestDto));
+                throw new BadHttpRequestException(nameof(LogInRequestDto));
 
-            await _blogService.UpdateBlog(updateBlogRequestDto, _getUser.UserId);
+            await _blogService.UpdateBlog(updateBlogRequestDto, _userInfo.UserId);
             return Ok();
         }
 
         [HttpDelete]
-        [Route("{id:int}")]
+        [Route("blog/{id:int}")]
         public async Task<IActionResult> DeleteBlog(int id)
         {
-            await _blogService.DeleteBlog(id, _getUser.UserId);
+            await _blogService.DeleteBlog(id, _userInfo.UserId);
             return Ok();
         }
     }

@@ -1,6 +1,9 @@
 using System.Linq.Expressions;
 using System.Security.Authentication;
 using DbContexts.DataModels;
+using DbContexts.Enums;
+using Dtos.CommonDtos;
+using Dtos.Mapper;
 using Dtos.RequestDtos;
 using Dtos.Response;
 using Repositories.GenericRepository;
@@ -33,10 +36,33 @@ namespace Services.UserService
             throw new AuthenticationException("Invalid email or password");
         }
 
-        private static string HashPassword(string password)
+        public List<UserDto> GetUsers()
         {
-            string salt = BCrypt.Net.BCrypt.GenerateSalt();
-            return BCrypt.Net.BCrypt.HashPassword(password, salt);
+            IEnumerable<User>? users = GetByCriteria();
+            List<UserDto> userDtos = [];
+            foreach (User user in users ?? [])
+            {
+                userDtos.Add(user.ToUserDto());
+            }
+            return userDtos;
+        }
+
+        public async Task<bool> UpdateUser(UserDto userDto, int currentUserId)
+        {
+            User? user = GetById(userDto.Id) ?? throw new Exception("User Not Found");
+            user = userDto.ToUpdateUser(currentUserId, user);
+            Update(user);
+            return await SaveAsync() ? true : throw new Exception("");
+        }
+
+        public async Task<bool> DeleteUser(int id, int currentUserId)
+        {
+            User? user = GetById(id) ?? throw new Exception("User Not Found");
+            user.Status = UserStatus.Deleted;
+            user.UpdatedBy = currentUserId;
+            user.UpdatedDate = DateTime.UtcNow;
+            Update(user);
+            return await SaveAsync() ? true : throw new Exception("");
         }
 
         private static bool VerifyPassword(string hashPassword, string enteredPassword)

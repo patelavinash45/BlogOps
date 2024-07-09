@@ -1,5 +1,6 @@
 using DbContexts.DataModels;
 using Dtos.RequestDtos;
+using Dtos.Response;
 
 namespace Dtos.Mapper
 {
@@ -14,6 +15,15 @@ namespace Dtos.Mapper
                 CreatedDate = DateTime.UtcNow,
                 UpdatedBy = userId,
                 UpdatedDate = DateTime.UtcNow,
+            };
+        }
+
+        public static CategoryResponseDto ToCategoryResponseDto(this Category category)
+        {
+            return new CategoryResponseDto
+            {
+                Id = category.Id,
+                Name = category.Name,
             };
         }
     }
