@@ -1,0 +1,23 @@
+<header class="p-3 bg-main">
+    <div
+        class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <div class="fs-4 fw-bold text me-2">BlogOps</div>
+        <ul
+            class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            <li><a href="#" class="nav-link px-2 text-black">Home</a></li>
+            <li><a href="#" class="nav-link px-2">Categories</a></li>
+        </ul>
+        <div class="dropdown">
+            <button
+                class="btn dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown">
+                {{firstName}} {{lastName}}
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#" class="dropdown-item">Profile</a></li>
+                <li><button type="button" class="dropdown-item" (click)="onLogOutButtonClick()">Log Out</button></li>
+            </ul>
+        </div>
+    </div>
+</header>

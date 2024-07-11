@@ -16,7 +16,7 @@ namespace Services.JwtToken
             _configuration = configuration;
         }
 
-        public string CreateJwtToken(User user)
+        public string CreateJwtToken(User user, int tokenValidTime)
         {
             List<Claim> claims = [
                 new("userId", user.Id.ToString()),
@@ -31,7 +31,7 @@ namespace Services.JwtToken
                 _configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
                 claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(tokenValidTime),
                 signingCredentials: creds
             );
             return new JwtSecurityTokenHandler().WriteToken(token);

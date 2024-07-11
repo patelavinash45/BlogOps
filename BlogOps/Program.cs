@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(Options =>
 {
-    Options.Cookie.Name = ".session";
+    Options.Cookie.Name = ".Session";
     Options.IdleTimeout = TimeSpan.FromMinutes(20);
     Options.Cookie.HttpOnly = true;
     Options.Cookie.IsEssential = true;

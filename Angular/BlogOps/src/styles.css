@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+.focusText{
+    background-color: white;
+    color: #6fd6eb;
+    border: 1px solid #6fd6eb;
+    border-radius: 10px;
+}
+
+.focusBackground{
+    background-color: #6fd6eb;
+    color: white;
+    border: 1px solid white;
+}
+
+.bg-main{
+    background-color: #6fd6eb;
+}

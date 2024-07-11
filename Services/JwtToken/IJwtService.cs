@@ -7,6 +7,6 @@ namespace Services.JwtToken
     {
         bool ValidateJwtToken(string token, out JwtSecurityToken? jwtSecurityToken);
 
-        string CreateJwtToken(User user);
+        string CreateJwtToken(User user, int tokenValidTime);
     }
 }

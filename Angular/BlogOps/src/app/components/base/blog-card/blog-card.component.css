@@ -1,0 +1,20 @@
+.blogCard{
+    height: 450px;
+    max-height: 450px;
+}
+
+.card-title{
+    display: -webkit-box;
+    height: 100px;
+    max-height: 100px;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-text{
+    display: -webkit-box;
+    height: 260px;
+    max-height: 260px;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

@@ -1,0 +1,21 @@
+<div class="card blogCard mt-2">
+    <div class="card-body">
+        <h5 class="card-title">
+            {{blog.title}}
+        </h5>
+        <hr class="my-2" />
+        <p class="card-text">
+            {{blog.content}}
+        </p>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+        <div>
+            <i class="bi bi-award-fill"></i>
+            : {{blog.status?.toString}}
+        </div>
+        <div>
+            <i class="bi bi-calendar-check"></i>
+            : {{blog.createdDate | date }}
+        </div>
+    </div>
+</div>

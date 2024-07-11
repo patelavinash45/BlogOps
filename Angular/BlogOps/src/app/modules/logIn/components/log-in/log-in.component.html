@@ -2,11 +2,12 @@
   <div class="container d-flex justify-content-center align-items-center h-100">
     <div class="card logInCard p-3">
       <div class="text-center card-title fs-3 fw-bold">BlogOps</div>
-      <form>
-        <div class="input-group mb-3">
+      <form [formGroup]="loginForm" (submit)="onFormSubmit()">
+        <div class="input-group">
           <div class="form-floating">
             <input
               type="email"
+              formControlName = "email"
               class="form-control"
               id="floatingInput"
               placeholder="name@example.com"
@@ -17,10 +18,25 @@
             <i class="bi bi-envelope btn"></i>
           </span>
         </div>
-        <div class="form-floating input-group">
+        @if(loginForm.controls['email'].invalid && 
+                    (loginForm.controls['email'].touched || loginForm.controls['email'].dirty))
+        {
+          <span class="text-danger mt-1 mx-1">
+          @if(loginForm.controls['email'].errors?.['required'])
+          {
+              Email Is Required.
+          }
+          @else if(loginForm.controls['email'].errors?.['email'])
+          {
+              Email Is Invalid.
+          }
+          </span>
+        }
+        <div class="input-group mt-3">
           <div class="form-floating">
             <input
               [type]="isShowPassword ? 'text' : 'password'"
+              formControlName = "password"
               class="form-control"
               id="floatingPassword"
               placeholder="Password"
@@ -39,6 +55,20 @@
             </button>
           </span>
         </div>
+        @if(loginForm.controls['password'].invalid && 
+                    (loginForm.controls['password'].touched || loginForm.controls['password'].dirty))
+        {
+          <span class="text-danger mt-1 mx-1">
+          @if(loginForm.controls['password'].errors?.['required'])
+          {
+              Password Is Required.
+          }
+          @else if(loginForm.controls['password'].errors?.['minlength'])
+          {
+              Password Is Invalid.
+          }
+          </span>
+        }
         <div class="d-flex justify-content-start align-items-center mt-2 mx-2">
             <input type="checkbox" class="me-2"/>
             <span>

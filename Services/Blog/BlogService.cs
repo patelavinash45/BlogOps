@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using DbContexts.DataModels;
 using DbContexts.Enums;
 using Dtos.Mapper;
@@ -29,7 +30,7 @@ namespace Services.BlogService
 
         public PaginationDto<BlogResponseDto> GetAllBlogs(BlogFilterDto blogFilterDto, int userId, int pageNo)
         {
-            int skip = (pageNo - 1) * 9;
+            int skip = (pageNo - 1) * 12;
             Func<Blog, bool> func = a => a.CreatedBy == userId
                             && (blogFilterDto.Status == null || a.Status == blogFilterDto.Status)
                             && (blogFilterDto.SearchContent == null || a.Title == null || a.Title.Contains(blogFilterDto.SearchContent, StringComparison.CurrentCultureIgnoreCase));
@@ -117,12 +118,19 @@ namespace Services.BlogService
 
         public async Task<bool> DeleteBlog(int id, int userId)
         {
-            Blog? blog = GetById(id) ?? throw new Exception("Blog Not Found");
-            blog.Status = BlogStatus.Deleted;
-            blog.UpdatedBy = userId;
-            blog.UpdatedDate = DateTime.UtcNow;
-            Update(blog);
-            return await SaveAsync() ? true : throw new Exception("");
+            Expression<Func<Blog, bool>> func = a => a.Id == id;
+            Expression<Func<Blog, object>> include = a => a.BlogsCategories;
+            IEnumerable<Blog>? response = GetByCriteria([include], func) ?? throw new Exception("Blog Not Found");
+
+            response.First().Status = BlogStatus.Deleted;
+            response.First().UpdatedBy = userId;
+            response.First().UpdatedDate = DateTime.UtcNow;
+            foreach (var blogsCategory in response.First().BlogsCategories)
+            {
+                blogsCategory.IsDeleted = true;
+            }
+            Update(response.First());
+            return await SaveAsync() ? true : throw new Exception();
         }
     }
 }
