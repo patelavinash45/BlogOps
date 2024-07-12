@@ -17,6 +17,8 @@ namespace DbContexts.Enums
         Deleted,
 
         [PgName("Draft")]
-        Draft
+        Draft,
+
+        All
     }
 }

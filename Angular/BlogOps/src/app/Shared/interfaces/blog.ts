@@ -1,4 +1,4 @@
-import { BlogStatus } from "../Enums/blog-status";
+import { BlogStatus } from "../enums/blog-status";
 
 export interface Blog {
     id : number,

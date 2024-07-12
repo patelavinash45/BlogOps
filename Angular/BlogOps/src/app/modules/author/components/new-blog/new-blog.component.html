@@ -1,0 +1,84 @@
+<app-header />
+<div class="container">
+    <div class="text-center fw-bold fs-3">New Blog</div>
+    <form class="p-2 shadow main-div mb-3" [formGroup]="createBlogForm"
+        (submit)="onFormSubmit()">
+        @defer (when categories.length > 0) {
+        <div class="fs-5 fw-bolder mb-2 mx-1">Blog Title</div>
+        <div class="form-floating">
+            <textarea
+                formControlName="title"
+                class="form-control title"
+                placeholder="Title"
+                id="title"
+                maxlength="100px"></textarea>
+            <label for="title">Title</label>
+        </div>
+        @if(createBlogForm.controls['title'].invalid &&
+        (createBlogForm.controls['title'].touched ||
+        createBlogForm.controls['title'].dirty))
+        {
+        <span class="text-danger mt-1 mx-1">
+            @if(createBlogForm.controls['title'].errors?.['required'])
+            {
+            Title Is Required.
+            }
+            @else if(createBlogForm.controls['title'].errors?.['minlength'])
+            {
+            Password Length Is Only 128.
+            }
+        </span>
+        }
+        <div class="fs-5 fw-bolder mb-2 mt-3 mx-1">Blog Content</div>
+        <angular-editor
+            [config]="editConfig"
+            formControlName="content"
+            form
+            class="content"
+            placeholder="Content" />
+        @if(createBlogForm.controls['content'].invalid &&
+        (createBlogForm.controls['content'].touched ||
+        createBlogForm.controls['content'].dirty))
+        {
+        <span class="text-danger mt-1 mx-1">
+            @if(createBlogForm.controls['content'].errors?.['required'])
+            {
+            Content Is Required.
+            }
+        </span>
+        }
+        <div class="d-flex align-items-baseline">
+            <div class="fs-5 fw-bolder mb-2 mt-3 mx-1">Blog Categories :</div>
+            <div>
+                @for(category of categories; track category.id;let i = $index){
+                <div class="form-check form-check-inline">
+                    <input
+                        (change)="onCategoryChange($event)"
+                        class="form-check-input"
+                        type="checkbox"
+                        id="{{ category.name }}"
+                        value="{{ category.id }}" />
+                    <label class="form-check-label"
+                        for="{{ category.name }}">{{category.name}}</label>
+                </div>
+                }
+            </div>
+        </div>
+        @if(createBlogForm.controls['blogsCategoryIds'].invalid &&
+        (createBlogForm.controls['blogsCategoryIds'].touched ||
+        createBlogForm.controls['blogsCategoryIds'].dirty))
+        {
+        <span class="text-danger mt-1 mx-1">
+            @if(createBlogForm.controls['blogsCategoryIds'].errors?.['required'])
+            {
+            Any One Category Is Required.
+            }
+        </span>
+        }
+        <div class="d-flex justify-content-end me-2">
+            <button class="btn me-2">Save as Draft</button>
+            <button class="btn">Post</button>
+        </div>
+        } @loading {}
+    </form>
+</div>

@@ -1,0 +1,21 @@
+.main-div{
+    border-radius: 10px;
+    background-color: white;
+}
+
+.title{
+    height: 100px;
+}
+
+.content{
+    height: 500px!important;
+}
+
+textarea,
+input{
+    border-color: black;
+}
+
+.btn{
+    background-color: #6fd6eb;
+}

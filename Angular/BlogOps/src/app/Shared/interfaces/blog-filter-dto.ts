@@ -1,6 +1,6 @@
-import { BlogStatus } from "../Enums/blog-status";
+import { BlogStatus } from "../enums/blog-status";
 
 export interface BlogFilterDto {
-    status: BlogStatus | null,
+    status: BlogStatus ,
     searchContent : string | null,
 }

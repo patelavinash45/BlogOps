@@ -1,11 +1,13 @@
 export enum BlogStatus {
-        Pending,
+    Pending = 0,
 
-        Approved,
+    Approved = 1,
 
-        Rejected,
+    Rejected = 2,
 
-        Deleted,
+    Deleted = 3,
 
-        Draft
+    Draft = 4,
+
+    All = 5
 }

@@ -6,10 +6,11 @@ import { catchError, throwError } from 'rxjs';
 export const httpRequestInterceptor: HttpInterceptorFn = (req, next) => {
   const cookiesService = inject(CookieService);
   const jwtToken = cookiesService.get("JwtToken");
+  console.log(jwtToken);
   const newRequest = req.clone({
     setHeaders: {
       'Content-Type': 'application/json',
-      Authorization: jwtToken || "",
+      Authorization: jwtToken,
     },
   });
   return next(newRequest).pipe(

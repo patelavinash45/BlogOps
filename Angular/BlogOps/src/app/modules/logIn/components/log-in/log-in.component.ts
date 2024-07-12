@@ -4,7 +4,6 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { LogInService } from '../../service/log-in.service';
 import { Router } from '@angular/router';
 import { LogInResponseDto } from '../../../../Shared/interfaces/log-in-response-dto';
-import { CookieService } from 'ngx-cookie-service';
 import { LogInRequestDto } from '../../../../Shared/interfaces/log-in-request-dto';
 
 

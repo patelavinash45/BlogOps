@@ -4,9 +4,7 @@ import { HeaderComponent } from '../../../../components/base/header/header.compo
 import { DashboardService } from '../../service/dashboard.service';
 import { PaginationDto } from '../../../../Shared/interfaces/pagination-dto';
 import { BlogFilterDto } from '../../../../Shared/interfaces/blog-filter-dto';
-import { BlogStatus } from '../../../../Shared/Enums/blog-status';
-import { Blog } from '../../../../Shared/interfaces/blog';
-
+import { BlogStatus } from '../../../../Shared/enums/blog-status';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,16 +17,32 @@ export class DashboardComponent {
   response!: PaginationDto;
   pageNo: number = 1;
   blogFilterDto: BlogFilterDto = {
-    status: null,
+    status: BlogStatus.All,
     searchContent: null,
   };
 
   constructor(private dashboardService: DashboardService) { }
 
-  ngOnInit(): void {
+  getDate() {
+    console.log(this.blogFilterDto)
     this.dashboardService.GetBlogs(this.blogFilterDto, this.pageNo).subscribe((response: PaginationDto) => {
       this.response = response;
       console.log(this.response);
-    })
+    });
   }
+
+  ngOnInit(): void {
+    this.getDate();
+  };
+
+  onSearchInputChange(event: any) {
+    this.blogFilterDto.searchContent = event.target.value;
+    this.getDate();
+  }
+
+  onStatusChange(event : any){
+    this.blogFilterDto.status = event.target.value;
+    this.getDate();
+  }
+
 }

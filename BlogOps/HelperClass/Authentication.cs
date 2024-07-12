@@ -38,6 +38,6 @@ public class Authentication : Attribute, IAuthorizationFilter
                 return;
             }
         }
-        throw new UnauthorizedAccessException("Unauthorized Access.");
+        throw new UnauthorizedAccessException(Constants.UnauthorizedString);
     }
 }

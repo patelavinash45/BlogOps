@@ -9,7 +9,7 @@ namespace Dtos.RequestDtos
 
         public string? Content { get; set; }
 
-        public Boolean IsDraft { get; set; } = true;
+        public bool IsDraft { get; set; } = true;
 
         public List<int>? BlogsCategoryIds { get; set; }
     }

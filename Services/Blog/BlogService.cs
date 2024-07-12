@@ -32,7 +32,7 @@ namespace Services.BlogService
         {
             int skip = (pageNo - 1) * 12;
             Func<Blog, bool> func = a => a.CreatedBy == userId
-                            && (blogFilterDto.Status == null || a.Status == blogFilterDto.Status)
+                            && (blogFilterDto.Status == BlogStatus.All || a.Status == blogFilterDto.Status)
                             && (blogFilterDto.SearchContent == null || a.Title == null || a.Title.Contains(blogFilterDto.SearchContent, StringComparison.CurrentCultureIgnoreCase));
 
             List<BlogResponseDto> blogResponseDtos =
