@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
 import { HeaderComponent } from '../../../../components/base/header/header.component';
 import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
-import { editorConfig } from '../../../../Shared/consent/Consent';
-import { CategoryResponseDto } from '../../../../Shared/interfaces/category-response-dto';
+import { editorConfig } from '../../../../shared/consent/consent';
 import { NewBlogService } from '../../service/new-blog.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { response } from 'express';
+import { CategoryResponseDto } from '../../../../shared/interfaces/category-response-dto';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-new-blog',
   standalone: true,
-  imports: [HeaderComponent, AngularEditorModule, ReactiveFormsModule],
+  imports: [HeaderComponent, AngularEditorModule, ReactiveFormsModule, RouterLink],
   templateUrl: './new-blog.component.html',
   styleUrl: './new-blog.component.css'
 })

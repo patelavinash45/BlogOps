@@ -1,16 +1,13 @@
 using System.IdentityModel.Tokens.Jwt;
+using Dtos.Constants;
 using Dtos.Enums;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
-using Services.JwtToken;
+using Services.JwtService;
 
-public class Authentication : Attribute, IAuthorizationFilter
+public class Authentication(RoleEnum role) : Attribute, IAuthorizationFilter
 {
-    private readonly RoleEnum _role;
-    public Authentication(RoleEnum role)
-    {
-        _role = role;
-    }
+    private readonly RoleEnum _role = role;
 
     public void OnAuthorization(AuthorizationFilterContext context)
     {
@@ -32,12 +29,12 @@ public class Authentication : Attribute, IAuthorizationFilter
                     string jwtRole = jwtSecurityToken!.Claims.First(a => a.Type == "role").Value;
                     if (Enum.TryParse(jwtRole, out RoleEnum role) && _role != role)
                     {
-                        throw new UnauthorizedAccessException(Constants.UnauthorizedString);
+                        throw new UnauthorizedAccessException(ConstantValue.UnauthorizedString);
                     }
                 }
                 return;
             }
         }
-        throw new UnauthorizedAccessException(Constants.UnauthorizedString);
+        throw new UnauthorizedAccessException(ConstantValue.UnauthorizedString);
     }
 }

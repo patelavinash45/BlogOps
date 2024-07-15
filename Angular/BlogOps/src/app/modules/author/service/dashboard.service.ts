@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BlogFilterDto } from '../../../Shared/interfaces/blog-filter-dto';
-import { baseUrl } from '../../../Shared/consent/Consent';
+import { BlogFilterDto } from '../../../shared/interfaces/blog-filter-dto';
+import { baseUrl } from '../../../shared/consent/consent';
 import { Observable } from 'rxjs';
 
 @Injectable({

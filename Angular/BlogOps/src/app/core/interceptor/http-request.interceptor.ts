@@ -1,11 +1,11 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { catchError, throwError } from 'rxjs';
+import { ManageCookieService } from '../service/manage-cookie.service';
 
 export const httpRequestInterceptor: HttpInterceptorFn = (req, next) => {
-  const cookiesService = inject(CookieService);
-  const jwtToken = cookiesService.get("JwtToken");
+  const cookiesService = inject(ManageCookieService);
+  const jwtToken = cookiesService.GetJwtToken();
   console.log(jwtToken);
   const newRequest = req.clone({
     setHeaders: {

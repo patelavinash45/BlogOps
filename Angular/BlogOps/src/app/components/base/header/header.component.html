@@ -7,17 +7,25 @@
             <li><a href="#" class="nav-link px-2 text-black">Home</a></li>
             <li><a href="#" class="nav-link px-2">Categories</a></li>
         </ul>
-        <div class="dropdown">
-            <button
-                class="btn dropdown-toggle"
-                type="button"
-                data-bs-toggle="dropdown">
-                {{firstName}} {{lastName}}
-            </button>
-            <ul class="dropdown-menu">
-                <li><a href="#" class="dropdown-item">Profile</a></li>
-                <li><button type="button" class="dropdown-item" (click)="onLogOutButtonClick()">Log Out</button></li>
-            </ul>
+        <div class="d-flex align-items-center">
+            Welcome
+            <div class="dropdown">
+                <button
+                    class="btn dropdown-toggle border-0"
+                    type="button"
+                    data-bs-toggle="dropdown">
+                    {{firstName}} {{lastName}}
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" class="dropdown-item">Profile</a></li>
+                    <li>
+                        <button type="button" class="dropdown-item"
+                            (click)="onLogOutButtonClick()">
+                            Log Out
+                        </button>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </header>

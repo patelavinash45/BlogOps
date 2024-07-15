@@ -1,9 +1,8 @@
-namespace Dtos.Response
+namespace Dtos.ResponseDtos;
+
+public class CategoryResponseDto
 {
-    public class CategoryResponseDto
-    {
-        public int Id { get; set; }
-        
-        public required string Name { get; set; }
-    }
+    public int Id { get; set; }
+
+    public required string Name { get; set; }
 }

@@ -1,6 +1,8 @@
 import { AngularEditorConfig } from "@kolkov/angular-editor";
 
-export const baseUrl = 'http://localhost:5014';
+export const baseUrl = 'http://localhost:5014/api';
+
+export const LogInSuccessMessage = "LogIn SuccessFully."
 
 export const editorConfig: AngularEditorConfig =  {
     editable: true,
@@ -13,3 +15,5 @@ export const editorConfig: AngularEditorConfig =  {
     defaultFontName: 'Arial',
     defaultFontSize: '4',
   };
+
+ 

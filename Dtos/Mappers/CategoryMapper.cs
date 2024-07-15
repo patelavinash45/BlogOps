@@ -1,30 +1,29 @@
 using DbContexts.DataModels;
 using Dtos.RequestDtos;
-using Dtos.Response;
+using Dtos.ResponseDtos;
 
-namespace Dtos.Mapper
+namespace Dtos.Mappers;
+
+public static class CategoryMapper
 {
-    public static class CategoryMapper
+    public static Category ToCategory(this CreateCategoryRequestDto createCategoryRequestDto, int userId)
     {
-        public static Category ToCategory(this CreateCategoryRequestDto createCategoryRequestDto, int userId)
+        return new Category
         {
-            return new Category
-            {
-                Name = createCategoryRequestDto.Name,
-                CreatedBy = userId,
-                CreatedDate = DateTime.UtcNow,
-                UpdatedBy = userId,
-                UpdatedDate = DateTime.UtcNow,
-            };
-        }
+            Name = createCategoryRequestDto.Name,
+            CreatedBy = userId,
+            CreatedDate = DateTime.UtcNow,
+            UpdatedBy = userId,
+            UpdatedDate = DateTime.UtcNow,
+        };
+    }
 
-        public static CategoryResponseDto ToCategoryResponseDto(this Category category)
+    public static CategoryResponseDto ToCategoryResponseDto(this Category category)
+    {
+        return new CategoryResponseDto
         {
-            return new CategoryResponseDto
-            {
-                Id = category.Id,
-                Name = category.Name,
-            };
-        }
+            Id = category.Id,
+            Name = category.Name,
+        };
     }
 }

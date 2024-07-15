@@ -1,55 +1,49 @@
 using System.Linq.Expressions;
 using Repositories.GenericRepository;
 
-namespace Services.GenericService
+namespace Services.GenericService;
+
+public class GenericService<T>(IGenericRepository<T> genericRepository) : IGenericService<T> where T : class
 {
-    public class GenericService<T> : IGenericService<T> where T : class
+    private readonly IGenericRepository<T> _repository = genericRepository;
+
+    public void Add(T objModel)
     {
-        private readonly IGenericRepository<T> _repository;
+        _repository.Add(objModel);
+    }
 
-        public GenericService(IGenericRepository<T> genericRepository)
-        {
-            _repository = genericRepository;
-        }
+    public IEnumerable<T> GetAll()
+    {
+        return _repository.GetAll();
+    }
 
-        public void Add(T objModel)
-        {
-            _repository.Add(objModel);
-        }
+    public T? GetById(int id)
+    {
+        return _repository.GetById(id);
+    }
 
-        public IEnumerable<T> GetAll()
-        {
-            return _repository.GetAll();
-        }
+    public bool Remove(int id)
+    {
+        return _repository.Remove(id);
+    }
 
-        public T? GetById(int id)
-        {
-            return _repository.GetById(id);
-        }
+    public int Save()
+    {
+        return _repository.Save();
+    }
 
-        public bool Remove(int id)
-        {
-            return _repository.Remove(id);
-        }
+    public async Task<bool> SaveAsync()
+    {
+        return await _repository.SaveAsync();
+    }
 
-        public int Save()
-        {
-            return _repository.Save();
-        }
+    public void Update(T objModel)
+    {
+        _repository.Update(objModel);
+    }
 
-        public async Task<bool> SaveAsync()
-        {
-            return await _repository.SaveAsync();
-        }
-
-        public void Update(T objModel)
-        {
-            _repository.Update(objModel);
-        }
-
-        public IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? func = null, Expression<Func<T, Object>>? orderBy = null)
-        {
-            return _repository.GetByCriteria(includes,func,orderBy);
-        }
+    public IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? func = null, Expression<Func<T, Object>>? orderBy = null)
+    {
+        return _repository.GetByCriteria(includes, func, orderBy);
     }
 }

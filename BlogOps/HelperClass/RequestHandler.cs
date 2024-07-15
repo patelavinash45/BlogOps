@@ -1,14 +1,10 @@
 using System.Net;
+using Dtos.Constants;
 using Newtonsoft.Json;
 
-public class RequestHandler
+public class RequestHandler(RequestDelegate request)
 {
-    private readonly RequestDelegate _request;
-
-    public RequestHandler(RequestDelegate request)
-    {
-        _request = request;
-    }
+    private readonly RequestDelegate _request = request;
 
     public async Task Invoke(HttpContext httpContext)
     {
@@ -28,7 +24,7 @@ public class RequestHandler
         httpContext.Response.ContentType = "application/json";
         object errorMessage = ex switch
         {
-            BadHttpRequestException => new { error = Constants.BadRequestString },
+            BadHttpRequestException => new { error = ConstantValue.BadRequestString },
             ArgumentException => new { error = ex.Message },
             //_ => new { error = "Internal Server Error." },
             _ => new { error = ex },

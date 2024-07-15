@@ -1,23 +1,22 @@
 using System.Linq.Expressions;
 
-namespace Services.GenericService
+namespace Services.GenericService;
+
+public interface IGenericService<T> where T : class
 {
-    public interface IGenericService<T> where T : class
-    {
-        T? GetById(int id);
+    T? GetById(int id);
 
-        IEnumerable<T> GetAll();
+    IEnumerable<T> GetAll();
 
-        void Add(T objModel);
+    void Add(T objModel);
 
-        bool Remove(int id);
+    bool Remove(int id);
 
-        void Update(T objModel);
+    void Update(T objModel);
 
-        int Save();
+    int Save();
 
-        Task<bool> SaveAsync();
+    Task<bool> SaveAsync();
 
-        IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? func = null, Expression<Func<T, Object>>? orderBy = null);
-    }
+    IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? func = null, Expression<Func<T, Object>>? orderBy = null);
 }

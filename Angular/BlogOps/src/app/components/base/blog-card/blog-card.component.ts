@@ -1,15 +1,16 @@
 import { Component, Input, input } from '@angular/core';
-import { Blog } from '../../../Shared/interfaces/blog';
 import { CommonModule } from '@angular/common';
+import { Blog } from '../../../shared/interfaces/blog';
+import { EnumIntToValuePipe } from '../../../core/pipe/enum-int-to-value.pipe';
+import { BlogStatus } from '../../../shared/enums/blog-status';
 
 @Component({
   selector: 'app-blog-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, EnumIntToValuePipe],
   templateUrl: './blog-card.component.html',
   styleUrl: './blog-card.component.css'
 })
 export class BlogCardComponent {
-  @Input() blog!: Blog;
-value: any;
+  @Input() blogs: Blog[] = [];
 }

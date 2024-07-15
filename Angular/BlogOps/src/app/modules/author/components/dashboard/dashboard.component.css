@@ -3,6 +3,10 @@
     height: 55px;
 }
 
+.btn{
+    background-color: #6fd6eb;
+}
+
 @media only screen and (max-width: 768px) {
     .filter-options{
         flex-direction: column;

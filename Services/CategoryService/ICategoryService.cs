@@ -1,16 +1,15 @@
 using DbContexts.DataModels;
 using Dtos.RequestDtos;
-using Dtos.Response;
+using Dtos.ResponseDtos;
 using Repositories.GenericRepository;
 
-namespace Services.BlogService
+namespace Services.CategoryService;
+
+public interface ICategoryService : IGenericRepository<Category>
 {
-    public interface ICategoryService : IGenericRepository<Category>
-    {
-        CategoryResponseDto GetCategory(int id);
-        List<CategoryResponseDto> GetAllCategories();
-        Task<bool> CreateCategory(CreateCategoryRequestDto createCategoryRequestDto, int userId);
-        Task<bool> UpdateCategory(UpdateCategoryRequestDto updateCategoryRequestDto, int userId);
-        Task<bool> DeleteCategory(int id, int userId);
-    }
+    CategoryResponseDto GetCategory(int id);
+    List<CategoryResponseDto> GetAllCategories();
+    Task<bool> CreateCategory(CreateCategoryRequestDto createCategoryRequestDto, int userId);
+    Task<bool> UpdateCategory(UpdateCategoryRequestDto updateCategoryRequestDto, int userId);
+    Task<bool> DeleteCategory(int id, int userId);
 }

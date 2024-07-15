@@ -1,19 +1,18 @@
 using DbContexts.DataModels;
 
-namespace Dtos.Mapper
+namespace Dtos.Mappers;
+
+public static class BlogCategoryMapper
 {
-    public static class BlogCategoryMapper
+    public static BlogsCategory ToBlogCategory(this int categoryId, int userId)
     {
-        public static BlogsCategory ToBlogCategory(this int categoryId, int userId)
+        return new BlogsCategory
         {
-            return new BlogsCategory
-            {
-                CategoryId = categoryId,
-                CreatedDate = DateTime.UtcNow,
-                UpdatedDate = DateTime.UtcNow,
-                CreatedBy = userId,
-                UpdatedBy = userId,
-            };
-        }
+            CategoryId = categoryId,
+            CreatedDate = DateTime.UtcNow,
+            UpdatedDate = DateTime.UtcNow,
+            CreatedBy = userId,
+            UpdatedBy = userId,
+        };
     }
 }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
+import { ManageCookieService } from '../../../core/service/manage-cookie.service';
 
 @Component({
   selector: 'app-header',
@@ -13,15 +13,14 @@ export class HeaderComponent {
   firstName!: string;
   lastName!: string;
 
-  constructor(private cookieService: CookieService, private router: Router) { }
+  constructor(private manageCookieService: ManageCookieService, private router: Router) { }
 
   ngOnInit(): void {
-    this.firstName = this.cookieService.get('FirstName');
-    this.lastName = this.cookieService.get('LastName');
+    this.firstName = this.manageCookieService.GetFirstName();
+    this.lastName = this.manageCookieService.GetLastName();
   }
 
   onLogOutButtonClick() {
-    this.cookieService.deleteAll('/', 'http://localhost:4200');
-    this.router.navigate(['/login']);
+    this.manageCookieService.RemoveAllCookie();
   }
 }

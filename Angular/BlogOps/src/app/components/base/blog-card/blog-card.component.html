@@ -1,21 +1,27 @@
-<div class="card blogCard mt-2">
-    <div class="card-body">
-        <h5 class="card-title">
-            {{blog.title}}
-        </h5>
-        <hr class="my-2" />
-        <p class="card-text">
-            <span [innerHTML]="blog.content"></span>
-        </p>
-    </div>
-    <div class="card-footer d-flex justify-content-between">
-        <div>
-            <i class="bi bi-award-fill"></i>
-            : {{blog.status}}
+<div class="row">
+    @for(blog of blogs;track blog.id){
+    <div class="col-xl-3 col-ld-4 col-md-4 col-sm-6 col-12">
+        <div class="card blogCard mt-2">
+            <div class="card-body">
+                <h5 class="card-title">
+                    {{blog.title}}
+                </h5>
+                <hr class="my-2" />
+                <p class="card-text">
+                    <span [innerHTML]="blog.content"></span>
+                </p>    
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <div>
+                    <i class="bi bi-award-fill"></i>
+                    : {{blog.status | enumIntToValue}}
+                </div>
+                <div>
+                    <i class="bi bi-calendar-check"></i>
+                    : {{blog.createdDate | date }}
+                </div>
+            </div>
         </div>
-        <div>
-            <i class="bi bi-calendar-check"></i>
-            : {{blog.createdDate | date }}
-        </div>
     </div>
+    }
 </div>

@@ -1,9 +1,8 @@
-namespace Dtos.Enums
+namespace Dtos.Enums;
+
+public enum RoleEnum
 {
-    public enum RoleEnum
-    {
-        Admin,
-        Author,
-        All
-    }
+    All,
+    Admin,
+    Author
 }

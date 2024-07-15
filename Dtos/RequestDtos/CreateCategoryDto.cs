@@ -1,10 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Dtos.RequestDtos
+namespace Dtos.RequestDtos;
+
+public class CreateCategoryRequestDto
 {
-    public class CreateCategoryRequestDto
-    {
-        [StringLength(48)]
-        public required string Name { get; set; }
-    }
+    [StringLength(48)]
+    public required string Name { get; set; }
 }

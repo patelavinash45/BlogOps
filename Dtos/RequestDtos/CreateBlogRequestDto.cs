@@ -1,16 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Dtos.RequestDtos
+namespace Dtos.RequestDtos;
+
+public class CreateBlogRequestDto
 {
-    public class CreateBlogRequestDto
-    {
-        [StringLength(128)]
-        public string? Title { get; set; }
+    [StringLength(128)]
+    public string? Title { get; set; }
 
-        public string? Content { get; set; }
+    public string? Content { get; set; }
 
-        public bool IsDraft { get; set; } = true;
+    public bool IsDraft { get; set; } = true;
 
-        public List<int>? BlogsCategoryIds { get; set; }
-    }
+    public List<int>? BlogsCategoryIds { get; set; }
 }

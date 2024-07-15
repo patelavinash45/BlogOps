@@ -5,9 +5,11 @@ using Microsoft.OpenApi.Models;
 using Npgsql;
 using Repositories.BlogRepository;
 using Repositories.GenericRepository;
+using Services.BlogCategoryService;
 using Services.BlogService;
+using Services.CategoryService;
 using Services.GenericService;
-using Services.JwtToken;
+using Services.JwtService;
 using Services.UserService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -79,7 +81,6 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 var app = builder.Build();
 app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

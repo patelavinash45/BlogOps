@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { baseUrl } from '../../../Shared/consent/Consent';
+import { baseUrl } from '../../../shared/consent/consent';
 import { CreateBlogRequestDto } from '../../../Shared/interfaces/create-blog-request-dto';
 
 @Injectable({
