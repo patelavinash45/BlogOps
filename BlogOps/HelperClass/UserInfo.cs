@@ -1,5 +1,6 @@
-
 using Dtos.Constants;
+
+namespace BlogOps.HelperClass;
 
 public class UserInfo(IHttpContextAccessor httpContextAccessor)
 {

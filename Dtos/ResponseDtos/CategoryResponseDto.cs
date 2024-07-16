@@ -1,6 +1,6 @@
 namespace Dtos.ResponseDtos;
 
-public class CategoryResponseDto
+public record CategoryResponseDto
 {
     public int Id { get; set; }
 

@@ -2,9 +2,9 @@ using DbContexts.Enums;
 
 namespace Dtos.RequestDtos;
 
-    public class BlogFilterDto
-    {
-        public BlogStatus Status { get; set; }
+public record BlogFilterDto
+{
+    public BlogStatus Status { get; set; }
 
-        public string? SearchContent { get; set; }
-    }
+    public string? SearchContent { get; set; }
+}

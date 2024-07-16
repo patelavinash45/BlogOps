@@ -17,6 +17,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\DbContexts\DbContexts.csproj" />
+    <ProjectReference Include="..\Dtos\Dtos.csproj" />
   </ItemGroup>
 
 </Project>

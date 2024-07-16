@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LogInRequestDto } from '../../../shared/interfaces/log-in-request-dto';
-import { baseUrl } from '../../../shared/consent/consent';
 import { Observable } from 'rxjs';
 import { LogInResponseDto } from '../../../shared/interfaces/log-in-response-dto';
 import { ManageCookieService } from '../../../core/service/manage-cookie.service';
+import { baseUrl } from '../../../shared/constants/constant';
 
 @Injectable({
   providedIn: 'root'

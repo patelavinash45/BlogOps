@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { baseUrl } from '../../../shared/consent/consent';
-import { CreateBlogRequestDto } from '../../../Shared/interfaces/create-blog-request-dto';
+import { CreateBlogRequestDto } from '../../../shared/interfaces/create-blog-request-dto';
+import { UpdateBlogRequestDto } from '../../../shared/interfaces/update-blog-request-dto';
+import { baseUrl } from '../../../shared/constants/constant';
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,5 +19,13 @@ export class NewBlogService {
 
   public CreateNewBlog(createBlogRequestDto: CreateBlogRequestDto): Observable<any> {
     return this.httpClient.post(`${baseUrl}/blogs/blog`, createBlogRequestDto);
+  }
+
+  public GetBlogDetails(blogId: number): Observable<any> {
+    return this.httpClient.get(`${baseUrl}/blogs/blog/${blogId}`);
+  }
+
+  public UpdateBlog(updateBlogRequestDto : UpdateBlogRequestDto){
+    return this.httpClient.put(`${baseUrl}/blogs/blog/${updateBlogRequestDto.id}`, updateBlogRequestDto);
   }
 }

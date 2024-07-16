@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Dtos.PaginationDto;
 using Repositories.GenericRepository;
 
 namespace Services.GenericService;
@@ -7,43 +8,31 @@ public class GenericService<T>(IGenericRepository<T> genericRepository) : IGener
 {
     private readonly IGenericRepository<T> _repository = genericRepository;
 
-    public void Add(T objModel)
-    {
-        _repository.Add(objModel);
-    }
+    public void Add(T objModel) => _repository.Add(objModel);
 
-    public IEnumerable<T> GetAll()
-    {
-        return _repository.GetAll();
-    }
+    public IEnumerable<T> GetAll() => _repository.GetAll();
 
-    public T? GetById(int id)
-    {
-        return _repository.GetById(id);
-    }
+    public T? GetById(int id) => _repository.GetById(id);
 
-    public bool Remove(int id)
-    {
-        return _repository.Remove(id);
-    }
+    public bool Remove(int id) => _repository.Remove(id);
 
-    public int Save()
-    {
-        return _repository.Save();
-    }
+    public int Save() => _repository.Save();
 
-    public async Task<bool> SaveAsync()
-    {
-        return await _repository.SaveAsync();
-    }
+    public async Task<bool> SaveAsync() => await _repository.SaveAsync();
 
-    public void Update(T objModel)
-    {
-        _repository.Update(objModel);
-    }
+    public void Update(T objModel) => _repository.Update(objModel);
 
-    public IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? func = null, Expression<Func<T, Object>>? orderBy = null)
-    {
-        return _repository.GetByCriteria(includes, func, orderBy);
-    }
+    public IEnumerable<T> GetByCriteria(
+        Expression<Func<T, object>>[]? includes = null,
+        Expression<Func<T, bool>>? where = null,
+        Expression<Func<T, Object>>? orderBy = null
+    ) => _repository.GetByCriteria(includes, where, orderBy);
+
+    public PaginationFromRepository<T> GetByCriteriaAndPagination(
+        int skip,
+        int pageSize,
+        Expression<Func<T, object>>[]? includes = null,
+        Expression<Func<T, bool>>? where = null,
+        Expression<Func<T, Object>>? orderBy = null
+    ) => _repository.GetByCriteriaAndPagination(skip, pageSize, includes, where, orderBy);
 }

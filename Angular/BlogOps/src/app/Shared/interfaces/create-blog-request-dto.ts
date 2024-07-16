@@ -1,7 +1,7 @@
 export interface CreateBlogRequestDto {
-    title: string | null,
-    Content: string | null,
+    title: string,
+    Content: string,
     isDraft: boolean,
-    blogsCategoryIds: number[] | null,
+    blogsCategories: number[] | null,
 }
 

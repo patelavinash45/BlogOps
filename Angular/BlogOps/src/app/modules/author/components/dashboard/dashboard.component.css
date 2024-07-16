@@ -1,19 +1,37 @@
-.filter-div{
+.filter-div {
     width: 350px;
     height: 55px;
 }
 
-.btn{
-    background-color: #6fd6eb;
+.btn {
+    background-color: #0486a1;
 }
 
-@media only screen and (max-width: 768px) {
-    .filter-options{
+.top-options a{
+    width: 200px;
+    height: 55px;
+}
+
+@media only screen and (max-width: 996px) {
+    .top-options {
         flex-direction: column;
     }
 
-    .filter-div{
+    .top-options a{
+        width: 100%;
+        margin-top: 20px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .filter-div {
         width: 100%;
         margin-bottom: 10px;
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    .filter-options {
+        flex-direction: column;
     }
 }

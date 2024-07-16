@@ -8,9 +8,9 @@
             </a>
         </div>
     </div>
-    <form class="p-2 shadow main-div mb-3" [formGroup]="createBlogForm"
+    @defer (when categories.length > 0) {
+    <form class="p-2 shadow main-div mb-3" [formGroup]="blogForm"
         (submit)="onFormSubmit()">
-        @defer (when categories.length > 0) {
         <div class="fs-5 fw-bolder mb-2 mx-1">Blog Title</div>
         <div class="form-floating">
             <textarea
@@ -21,16 +21,16 @@
                 length="70px"></textarea>
             <label for="title">Title</label>
         </div>
-        @if(createBlogForm.controls['title'].invalid &&
-        (createBlogForm.controls['title'].touched ||
-        createBlogForm.controls['title'].dirty))
+        @if(blogForm.controls['title'].invalid &&
+        (blogForm.controls['title'].touched ||
+        blogForm.controls['title'].dirty))
         {
         <span class="text-danger mt-1 mx-1">
-            @if(createBlogForm.controls['title'].errors?.['required'])
+            @if(blogForm.controls['title'].errors?.['required'])
             {
             Title Is Required.
             }
-            @else if(createBlogForm.controls['title'].errors?.['malength'])
+            @else if(blogForm.controls['title'].errors?.['maxlength'])
             {
             Password Length Is Only 128.
             }
@@ -43,12 +43,12 @@
             form
             class="content"
             placeholder="Content" />
-        @if(createBlogForm.controls['content'].invalid &&
-        (createBlogForm.controls['content'].touched ||
-        createBlogForm.controls['content'].dirty))
+        @if(blogForm.controls['content'].invalid &&
+        (blogForm.controls['content'].touched ||
+        blogForm.controls['content'].dirty))
         {
         <span class="text-danger mt-1 mx-1">
-            @if(createBlogForm.controls['content'].errors?.['required'])
+            @if(blogForm.controls['content'].errors?.['required'])
             {
             Content Is Required.
             }
@@ -64,28 +64,36 @@
                         class="form-check-input"
                         type="checkbox"
                         id="{{ category.name }}"
-                        value="{{ category.id }}" />
+                        value="{{ category.id }}"
+                        [checked]="selectedCategories.includes(category.id)" />
                     <label class="form-check-label"
                         for="{{ category.name }}">{{category.name}}</label>
                 </div>
                 }
             </div>
         </div>
-        @if(createBlogForm.controls['blogsCategoryIds'].invalid &&
-        (createBlogForm.controls['blogsCategoryIds'].touched ||
-        createBlogForm.controls['blogsCategoryIds'].dirty))
+        @if(blogForm.controls['blogCategories'].invalid &&
+        (blogForm.controls['blogCategories'].touched ||
+        blogForm.controls['blogCategories'].dirty))
         {
         <span class="text-danger mt-1 mx-1">
-            @if(createBlogForm.controls['blogsCategoryIds'].errors?.['required'])
+            @if(blogForm.controls['blogCategories'].errors?.['required'])
             {
             Any One Category Is Required.
             }
         </span>
         }
-        <div class="d-flex justify-content-end me-2">
-            <button class="btn me-2">Save as Draft</button>
-            <button class="btn">Post</button>
+        <div class="input-group d-flex justify-content-end me-2 mb-2">
+            <select (change)="onBlogTypeChange($event)">
+                <option value=0>Draft</option>
+                <option value=1 selected>Post</option>
+            </select>
+            <div class="input-group-append">
+                <button class="btn send-button" (click)="onFormSubmit()">
+                    <i class="bi bi-send text-black"></i>
+                </button>
+            </div>
         </div>
-        } @loading {}
     </form>
+    } @loading {}
 </div>

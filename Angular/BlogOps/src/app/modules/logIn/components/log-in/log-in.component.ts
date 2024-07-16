@@ -6,8 +6,7 @@ import { Router } from '@angular/router';
 import { LogInResponseDto } from '../../../../shared/interfaces/log-in-response-dto';
 import { LogInRequestDto } from '../../../../shared/interfaces/log-in-request-dto';
 import { ManageToastrService } from '../../../../core/service/manage-toastr.service';
-import { LogInSuccessMessage } from '../../../../shared/consent/consent';
-
+import { LogInSuccessMessage } from '../../../../shared/constants/constant';
 
 @Component({
   selector: 'app-log-in',
@@ -20,7 +19,7 @@ export class LogInComponent {
   isShowPassword: boolean = false;
   loginForm!: FormGroup;
 
-  constructor(private logInService: LogInService, private router: Router, private toastr:ManageToastrService) { }
+  constructor(private logInService: LogInService, private router: Router, private toastr: ManageToastrService) { }
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -39,9 +38,11 @@ export class LogInComponent {
       const logInRequestDto: LogInRequestDto = this.loginForm.value;
       this.logInService.LogIn(logInRequestDto).subscribe((response: LogInResponseDto) => {
         this.toastr.showSuccess(LogInSuccessMessage)
-        this.logInService.SetCookies(response,logInRequestDto.keepMeSignIn);
+        this.logInService.SetCookies(response, logInRequestDto.keepMeSignIn);
         this.router.navigate(['/author/dashboard']);
       })
+    }else{
+      this.loginForm.markAllAsTouched();
     }
   }
 }

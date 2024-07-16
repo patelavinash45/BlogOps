@@ -16,7 +16,7 @@ public class BlogCategoryService(IGenericRepository<BlogsCategory> genericReposi
 
     public IEnumerable<BlogsCategory>? GetBlogsCategoriesBlogWise(int blogId)
     {
-        Expression<Func<BlogsCategory, bool>>? func = a => a.BlogId == blogId;
-        return GetByCriteria(func: func);
+        Expression<Func<BlogsCategory, bool>>? where = a => a.BlogId == blogId;
+        return GetByCriteria(where: where);
     }
 }

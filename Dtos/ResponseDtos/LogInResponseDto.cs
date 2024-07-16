@@ -2,7 +2,7 @@ using Dtos.Enums;
 
 namespace Dtos.ResponseDtos;
 
-public class LogInResponseDto
+public record LogInResponseDto
 {
     public required string Email { get; set; }
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BlogFilterDto } from '../../../shared/interfaces/blog-filter-dto';
-import { baseUrl } from '../../../shared/consent/consent';
 import { Observable } from 'rxjs';
+import { baseUrl } from '../../../shared/constants/constant';
 
 @Injectable({
   providedIn: 'root'

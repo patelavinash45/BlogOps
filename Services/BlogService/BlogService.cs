@@ -13,37 +13,43 @@ using Services.GenericService;
 
 namespace Services.BlogService;
 
-public class BlogService : GenericService<Blog>, IBlogService
+public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCategoryService blogCategoryService, IBlogRepository blogRepository) : GenericService<Blog>(genericRepository), IBlogService
 {
-    private readonly IBlogCategoryService _blogCategoryService;
-    private readonly IBlogRepository _blogRepository;
-    public BlogService(IGenericRepository<Blog> genericRepository, IBlogCategoryService blogCategoryService, IBlogRepository blogRepository) : base(genericRepository)
-    {
-        _blogCategoryService = blogCategoryService;
-        _blogRepository = blogRepository;
-    }
+    private readonly IBlogCategoryService _blogCategoryService = blogCategoryService;
+    private readonly IBlogRepository _blogRepository = blogRepository;
 
     public BlogResponseDto GetBlog(int id)
     {
-        Blog? blog = GetById(id) ?? throw new Exception("Blog Not Found");
-        return blog.ToResponseDto();
+        Expression<Func<Blog, bool>> where = a => a.Id == id;
+        Expression<Func<Blog, object>> include = a => a.BlogsCategories;
+
+        IEnumerable<Blog>? blogs = GetByCriteria([include], where)
+                                            ?? throw new Exception("Blog Not Found");
+        return blogs.First().ToResponseDto();
     }
 
     public PaginationDto<BlogResponseDto> GetAllBlogs(BlogFilterDto blogFilterDto, int userId, int pageNo)
     {
         int skip = (pageNo - 1) * 12;
-        Func<Blog, bool> func = a => a.CreatedBy == userId
+        Expression<Func<Blog, bool>> where = a => a.CreatedBy == userId
                         && (blogFilterDto.Status == BlogStatus.All || a.Status == blogFilterDto.Status)
-                        && (blogFilterDto.SearchContent == null || a.Title == null || a.Title.Contains(blogFilterDto.SearchContent, StringComparison.CurrentCultureIgnoreCase));
+                        && (blogFilterDto.SearchContent == null || a.Title == null
+                            || a.Title.Contains(blogFilterDto.SearchContent, StringComparison.CurrentCultureIgnoreCase));
+        Expression<Func<Blog, object>> include = a => a.BlogsCategories;
+        Expression<Func<Blog, object>> orderBy = a => a.Id;
 
-        List<BlogResponseDto> blogResponseDtos =
-                   _blogRepository.GetBlogs(skip, func).Select(blog => blog.ToResponseDto()).ToList();
+        PaginationFromRepository<Blog> paginationFromRepository = GetByCriteriaAndPagination(skip, 12, [include], where, orderBy);
 
-        int totalBlogs = _blogRepository.CountBlogs(func);
+        List<BlogResponseDto> blogResponseDtos = [];
+        foreach (Blog blog in paginationFromRepository.Entities ?? [])  
+        {
+            blogResponseDtos.Add(blog.ToResponseDto());
+        }
+
         return new PaginationDto<BlogResponseDto>
         {
             DtoList = blogResponseDtos,
-            TotalBlogs = totalBlogs,
+            TotalCount = paginationFromRepository.TotalCount,
             PageNo = pageNo,
         };
     }
@@ -51,7 +57,7 @@ public class BlogService : GenericService<Blog>, IBlogService
     public async Task<bool> CreateBlog(CreateBlogRequestDto createBlogRequestDto, int userId)
     {
         List<BlogsCategory>? blogsCategories = [];
-        foreach (var categoryId in createBlogRequestDto.BlogsCategoryIds ?? [])
+        foreach (var categoryId in createBlogRequestDto.BlogsCategories ?? [])
         {
             blogsCategories.Add(categoryId.ToBlogCategory(userId));
         };
@@ -72,7 +78,7 @@ public class BlogService : GenericService<Blog>, IBlogService
         List<BlogsCategory>? categoriesToRemove = new();
         foreach (var blogsCategory in blogsCategories)
         {
-            if (!updateBlogRequestDto.BlogsCategoryIds!.Contains(blogsCategory.CategoryId))
+            if (!updateBlogRequestDto.BlogCategories!.Contains(blogsCategory.CategoryId))
             {
                 blogsCategory.IsDeleted = true;
                 blogsCategory.UpdatedBy = userId;
@@ -96,7 +102,7 @@ public class BlogService : GenericService<Blog>, IBlogService
 
         if (!blogsCategories.IsNullOrEmpty())
         {
-            foreach (var categoryId in updateBlogRequestDto.BlogsCategoryIds ?? [])
+            foreach (var categoryId in updateBlogRequestDto.BlogCategories ?? [])
             {
                 if (!blogsCategories.Any(a => a.CategoryId == categoryId))
                 {
@@ -106,7 +112,7 @@ public class BlogService : GenericService<Blog>, IBlogService
         }
         else
         {
-            foreach (var categoryId in updateBlogRequestDto.BlogsCategoryIds ?? [])
+            foreach (var categoryId in updateBlogRequestDto.BlogCategories ?? [])
             {
                 _blogCategoryService.CreateBlogCategories(categoryId, updateBlogRequestDto.Id, userId);
             }
@@ -121,7 +127,8 @@ public class BlogService : GenericService<Blog>, IBlogService
     {
         Expression<Func<Blog, bool>> func = a => a.Id == id;
         Expression<Func<Blog, object>> include = a => a.BlogsCategories;
-        IEnumerable<Blog>? response = GetByCriteria([include], func) ?? throw new Exception("Blog Not Found");
+        IEnumerable<Blog>? response = GetByCriteria([include], func)
+                                            ?? throw new Exception("Blog Not Found");
 
         response.First().Status = BlogStatus.Deleted;
         response.First().UpdatedBy = userId;

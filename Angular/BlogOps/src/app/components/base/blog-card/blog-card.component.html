@@ -1,25 +1,28 @@
 <div class="row">
     @for(blog of blogs;track blog.id){
-    <div class="col-xl-3 col-ld-4 col-md-4 col-sm-6 col-12">
+    <div class="col-xl-4 col-ld-4 col-md-6 col-sm-6 col-12">
         <div class="card blogCard mt-2">
-            <div class="card-body">
+            <div class="card-header" ngClass="{{borderColors[blog.status]}}">
                 <h5 class="card-title">
                     {{blog.title}}
                 </h5>
-                <hr class="my-2" />
+            </div>
+            <div class="card-body">
                 <p class="card-text">
                     <span [innerHTML]="blog.content"></span>
-                </p>    
+                </p>
             </div>
-            <div class="card-footer d-flex justify-content-between">
-                <div>
-                    <i class="bi bi-award-fill"></i>
-                    : {{blog.status | enumIntToValue}}
-                </div>
+            <div class="card-footer d-flex justify-content-between fw-bolder align-items-center" ngClass="{{borderColors[blog.status]}}">
                 <div>
                     <i class="bi bi-calendar-check"></i>
                     : {{blog.createdDate | date }}
                 </div>
+                @if(blog.status == 4){
+                    <a class="text-black border-1 border border-black rounded-circle d-flex justify-content-center align-items-center"
+                        [routerLink]="['/author/edit-blog', blog.id]">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+                    }
             </div>
         </div>
     </div>

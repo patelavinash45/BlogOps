@@ -17,6 +17,7 @@ public static class BlogMapper
             AdminComment = blog.AdminComment,
             Status = blog.Status,
             CreatedDate = blog.CreatedDate,
+            BlogCategories = blog.BlogsCategories.Select(blogCategory => blogCategory.CategoryId).ToList(),
         };
     }
 

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dtos.RequestDtos;
 
-public class LogInRequestDto
+public record LogInRequestDto
 {
     [StringLength(256)]
     [DataType(DataType.EmailAddress)]

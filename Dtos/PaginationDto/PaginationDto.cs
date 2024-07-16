@@ -1,10 +1,17 @@
 namespace Dtos.PaginationDto;
 
-public class PaginationDto<T>
+public record PaginationDto<T>
 {
     public List<T>? DtoList { get; set; }
 
     public int PageNo { get; set; }
 
-    public int TotalBlogs { get; set; }
+    public int TotalCount { get; set; }
+}
+
+public record PaginationFromRepository<T>
+{
+    public IEnumerable<T>? Entities { get; set; }
+
+    public int TotalCount { get; set; }
 }

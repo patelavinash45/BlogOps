@@ -1,6 +1,11 @@
 .blogCard{
-    height: 450px;
-    max-height: 450px;
+    height: 500px;
+    max-height: 500px;
+}
+
+.card-footer{
+    height: 60px;
+    max-height: 60px;
 }
 
 .card-title{
@@ -11,10 +16,23 @@
     overflow: hidden;
 }
 
+.card-footer a{
+    width: 30px;
+    height: 30px;
+}
+
+.card-body{
+    background-color: #f9f9f9;
+}
+
 .card-text{
     display: -webkit-box;
     height: 260px;
     max-height: 260px;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+.btn {
+    background-color: #0486a1;
 }

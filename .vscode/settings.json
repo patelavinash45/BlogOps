@@ -12,6 +12,7 @@
         "Npgsql",
         "prerender",
         "SAJDN",
+        "Scrutor",
         "toastr",
         "Tuser"
     ],

@@ -2,6 +2,8 @@ using System.Net;
 using Dtos.Constants;
 using Newtonsoft.Json;
 
+namespace BlogOps.HelperClass;
+
 public class RequestHandler(RequestDelegate request)
 {
     private readonly RequestDelegate _request = request;

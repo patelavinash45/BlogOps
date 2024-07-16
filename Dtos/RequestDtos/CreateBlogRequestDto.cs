@@ -1,15 +1,17 @@
 using System.ComponentModel.DataAnnotations;
+using Dtos.CustomValidation;
 
 namespace Dtos.RequestDtos;
 
-public class CreateBlogRequestDto
+public record CreateBlogRequestDto
 {
     [StringLength(128)]
-    public string? Title { get; set; }
+    public required string Title { get; set; }
 
-    public string? Content { get; set; }
+    public required string Content { get; set; }
 
     public bool IsDraft { get; set; } = true;
 
-    public List<int>? BlogsCategoryIds { get; set; }
+    [IntListValidation(ErrorMessage = "CategoryId is not Valid.")]
+    public List<int>? BlogsCategories { get; set; }
 }

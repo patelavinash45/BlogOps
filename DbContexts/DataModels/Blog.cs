@@ -16,10 +16,10 @@ public partial class Blog
 
     [Column("title")]
     [StringLength(128)]
-    public string? Title { get; set; }
+    public string Title { get; set; } = null!;
 
     [Column("content", TypeName = "character varying")]
-    public string? Content { get; set; }
+    public string Content { get; set; } = null!;
 
     [Column("admin_comment")]
     [StringLength(256)]

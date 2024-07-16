@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using Services.JwtService;
 
+namespace BlogOps.HelperClass;
+
 public class Authentication(RoleEnum role) : Attribute, IAuthorizationFilter
 {
     private readonly RoleEnum _role = role;

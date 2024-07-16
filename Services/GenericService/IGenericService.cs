@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Dtos.PaginationDto;
 
 namespace Services.GenericService;
 
@@ -18,5 +19,7 @@ public interface IGenericService<T> where T : class
 
     Task<bool> SaveAsync();
 
-    IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? func = null, Expression<Func<T, Object>>? orderBy = null);
+    IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, Object>>? orderBy = null);
+
+    PaginationFromRepository<T> GetByCriteriaAndPagination(int skip, int pageSize, Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, Object>>? orderBy = null);
 }

@@ -3,12 +3,25 @@
     background-color: white;
 }
 
+select{
+    width: 150px;
+    border: 0.5px solid black;
+    border-start-start-radius: 5px;
+    border-end-start-radius: 5px;
+}
+
+.send-button{
+    border-radius: 0px;
+    border-start-end-radius: 5px;
+    border-end-end-radius: 5px;
+}
+
 .title{
     height: 100px;
 }
 
 .content{
-    height: 500px!important;
+    height: 700px!important;
 }
 
 textarea,
@@ -17,5 +30,5 @@ input{
 }
 
 .btn{
-    background-color: #6fd6eb;
+    background-color: #0486a1;
 }

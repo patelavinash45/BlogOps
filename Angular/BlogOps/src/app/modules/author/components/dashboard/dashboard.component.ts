@@ -25,7 +25,6 @@ export class DashboardComponent {
   constructor(private dashboardService: DashboardService) { }
 
   getDate() {
-    console.log(this.blogFilterDto)
     this.dashboardService.GetBlogs(this.blogFilterDto, this.pageNo).subscribe((response: PaginationDto) => {
       this.response = response;
       console.log(this.response);

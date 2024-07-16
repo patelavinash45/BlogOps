@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using BlogOpsDbContext;
 using Microsoft.EntityFrameworkCore;
+using Dtos.PaginationDto;
 
 namespace Repositories.GenericRepository;
 
@@ -50,12 +51,12 @@ public class GenericRepository<T>(BlogOpsContext context) : IGenericRepository<T
         _dbSet.Update(objModel);
     }
 
-    public IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? func = null, Expression<Func<T, Object>>? orderBy = null)
+    public IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, Object>>? orderBy = null)
     {
         IQueryable<T> query = _dbSet;
-        if (func != null)
+        if (where != null)
         {
-            query = query.Where(func);
+            query = query.Where(where);
         }
         if (includes != null)
         {
@@ -69,5 +70,32 @@ public class GenericRepository<T>(BlogOpsContext context) : IGenericRepository<T
             query = query.OrderBy(orderBy);
         }
         return query.AsEnumerable<T>();
+    }
+
+    public PaginationFromRepository<T> GetByCriteriaAndPagination(int skip, int pageSize, Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, Object>>? orderBy = null)
+    {
+        IQueryable<T> query = _dbSet;
+        if (where != null)
+        {
+            query = query.Where(where);
+        }
+        if (includes != null)
+        {
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+        }
+        if (orderBy != null)
+        {
+            query = query.OrderBy(orderBy);
+        }
+        int count = query.Count();
+        query = query.Skip(skip).Take(pageSize);
+        return new PaginationFromRepository<T>
+        {
+            TotalCount = count,
+            Entities = query.AsEnumerable<T>()
+        };
     }
 }
