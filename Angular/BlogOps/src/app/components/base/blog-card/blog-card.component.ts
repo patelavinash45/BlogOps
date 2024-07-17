@@ -13,5 +13,5 @@ import { RouterLink } from '@angular/router';
 })
 export class BlogCardComponent {
   @Input() blogs: Blog[] = [];
-  borderColors: string[] = ['bg-success text-white', 'bg-primary text-white', 'bg-success text-white', 'bg-secondary text-white', 'bg-warning text-black']
+  borderColors: string[] = ['bg-primary text-white border-white', 'bg-primary text-white border-white', 'bg-success text-white border-white', 'bg-secondary text-white border-white', 'bg-warning text-black border-black']
 }

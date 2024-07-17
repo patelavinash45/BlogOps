@@ -1,6 +1,7 @@
 import { Routes } from "@angular/router"
 import { DashboardComponent } from "../components/dashboard/dashboard.component"
-import { NewBlogComponent } from "../components/new-blog/new-blog.component"
+import { AddEditBlogComponent } from "../components/add-edit-blog/add-edit-blog.component"
+import { ViewBlogComponent } from "../components/view-blog/view-blog.component"
 
 export const AuthorRoutes: Routes = [
     {
@@ -9,10 +10,14 @@ export const AuthorRoutes: Routes = [
     },
     {
         path: 'new-blog',
-        component: NewBlogComponent
+        component: AddEditBlogComponent
     },
     {
         path: 'edit-blog/:blogId',
-        component: NewBlogComponent,
+        component: AddEditBlogComponent,
+    },
+    {
+        path: 'view-blog/:blogId',
+        component: ViewBlogComponent,
     }
 ]

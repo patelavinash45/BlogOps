@@ -12,6 +12,10 @@
     height: 55px;
 }
 
+.skeleton{
+    height: 500px;
+}
+
 @media only screen and (max-width: 996px) {
     .top-options {
         flex-direction: column;

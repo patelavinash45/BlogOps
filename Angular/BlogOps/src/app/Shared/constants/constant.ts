@@ -6,6 +6,8 @@ export const LogInSuccessMessage = "LogIn SuccessFully.";
 
 export const BlogSaveMessage = "Blog Created SuccessFully.";
 
+export const BlogUpdateMessage = "Blog Updated SuccessFully.";
+
 export const editorConfig: AngularEditorConfig =  {
     editable: true,
     spellcheck: true,

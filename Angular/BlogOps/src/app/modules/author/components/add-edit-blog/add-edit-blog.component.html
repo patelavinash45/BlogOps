@@ -1,15 +1,24 @@
 <app-header />
 <div class="container">
-    <div class="d-flex justify-content-between mt-2 mb-2">
-        <div class="text-center fw-bold fs-3">New Blog</div>
-        <div>
-            <a class="btn" [routerLink]="['/author/dashboard']">
-                Back
-            </a>
+    <div class="shadow-sm card main-div p-2 mt-2">
+        <div class="d-flex justify-content-between">
+            <div class="text-center fw-bold fs-3">
+                @if (this.blogId != undefined) {
+                    Edit Blog
+                }
+                @else {
+                    New Blog
+                }
+            </div>
+            <div>
+                <a class="btn text-white" [routerLink]="['/author/dashboard']">
+                    Back
+                </a>
+            </div>
         </div>
     </div>
     @defer (when categories.length > 0) {
-    <form class="p-2 shadow main-div mb-3" [formGroup]="blogForm"
+    <form class="p-2 shadow-sm card main-div my-3" [formGroup]="blogForm"
         (submit)="onFormSubmit()">
         <div class="fs-5 fw-bolder mb-2 mx-1">Blog Title</div>
         <div class="form-floating">
@@ -85,12 +94,12 @@
         }
         <div class="input-group d-flex justify-content-end me-2 mb-2">
             <select (change)="onBlogTypeChange($event)">
-                <option value=0>Draft</option>
-                <option value=1 selected>Post</option>
+                <option value=0 [selected]="isDraft">Draft</option>
+                <option value=1 [selected]="!isDraft">Post</option>
             </select>
             <div class="input-group-append">
-                <button class="btn send-button" (click)="onFormSubmit()">
-                    <i class="bi bi-send text-black"></i>
+                <button class="btn send-button">
+                    <i class="bi bi-send text-white"></i>
                 </button>
             </div>
         </div>

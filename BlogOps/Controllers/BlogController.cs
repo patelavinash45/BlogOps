@@ -36,7 +36,7 @@ public class BlogController(IBlogService blogService, UserInfo userInfo) : Contr
     [Route("blog")]
     public async Task<IActionResult> CreateBlog(CreateBlogRequestDto createBlogRequestDto)
     {
-        if (string.IsNullOrEmpty(createBlogRequestDto.Title) && string.IsNullOrEmpty(createBlogRequestDto.Content))
+        if (!ModelState.IsValid)
             throw new BadHttpRequestException(nameof(CreateBlogRequestDto));
 
         await _blogService.CreateBlog(createBlogRequestDto, _userInfo.UserId);

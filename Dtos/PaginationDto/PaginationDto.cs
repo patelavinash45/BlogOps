@@ -7,6 +7,10 @@ public record PaginationDto<T>
     public int PageNo { get; set; }
 
     public int TotalCount { get; set; }
+
+    public bool IsNext { get; set; }
+
+    public bool IsPrevious { get; set; }
 }
 
 public record PaginationFromRepository<T>

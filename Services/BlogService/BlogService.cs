@@ -6,17 +6,15 @@ using Dtos.PaginationDto;
 using Dtos.RequestDtos;
 using Dtos.ResponseDtos;
 using Microsoft.IdentityModel.Tokens;
-using Repositories.BlogRepository;
 using Repositories.GenericRepository;
 using Services.BlogCategoryService;
 using Services.GenericService;
 
 namespace Services.BlogService;
 
-public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCategoryService blogCategoryService, IBlogRepository blogRepository) : GenericService<Blog>(genericRepository), IBlogService
+public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCategoryService blogCategoryService) : GenericService<Blog>(genericRepository), IBlogService
 {
     private readonly IBlogCategoryService _blogCategoryService = blogCategoryService;
-    private readonly IBlogRepository _blogRepository = blogRepository;
 
     public BlogResponseDto GetBlog(int id)
     {
@@ -30,27 +28,32 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
 
     public PaginationDto<BlogResponseDto> GetAllBlogs(BlogFilterDto blogFilterDto, int userId, int pageNo)
     {
-        int skip = (pageNo - 1) * 12;
+        int skip = (pageNo - 1) * 9;
         Expression<Func<Blog, bool>> where = a => a.CreatedBy == userId
+                        && a.Status != BlogStatus.Deleted
                         && (blogFilterDto.Status == BlogStatus.All || a.Status == blogFilterDto.Status)
                         && (blogFilterDto.SearchContent == null || a.Title == null
                             || a.Title.Contains(blogFilterDto.SearchContent, StringComparison.CurrentCultureIgnoreCase));
         Expression<Func<Blog, object>> include = a => a.BlogsCategories;
         Expression<Func<Blog, object>> orderBy = a => a.Id;
 
-        PaginationFromRepository<Blog> paginationFromRepository = GetByCriteriaAndPagination(skip, 12, [include], where, orderBy);
+        PaginationFromRepository<Blog> paginationFromRepository
+                                        = GetByCriteriaAndPagination(skip, 9, [include], where, orderBy);
 
         List<BlogResponseDto> blogResponseDtos = [];
-        foreach (Blog blog in paginationFromRepository.Entities ?? [])  
+        foreach (Blog blog in paginationFromRepository.Entities ?? [])
         {
             blogResponseDtos.Add(blog.ToResponseDto());
         }
 
+        int totalPages = (paginationFromRepository.TotalCount + 8) / 9;
         return new PaginationDto<BlogResponseDto>
         {
             DtoList = blogResponseDtos,
             TotalCount = paginationFromRepository.TotalCount,
             PageNo = pageNo,
+            IsNext = pageNo < totalPages,
+            IsPrevious = pageNo != 1,
         };
     }
 
@@ -126,7 +129,7 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
     public async Task<bool> DeleteBlog(int id, int userId)
     {
         Expression<Func<Blog, bool>> func = a => a.Id == id;
-        Expression<Func<Blog, object>> include = a => a.BlogsCategories;
+        Expression<Func<Blog, object>> include = a => a.BlogsCategories.Where(x => !x.IsDeleted);
         IEnumerable<Blog>? response = GetByCriteria([include], func)
                                             ?? throw new Exception("Blog Not Found");
 

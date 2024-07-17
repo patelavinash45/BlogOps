@@ -11,6 +11,7 @@
         "Newtonsoft",
         "Npgsql",
         "prerender",
+        "primeng",
         "SAJDN",
         "Scrutor",
         "toastr",

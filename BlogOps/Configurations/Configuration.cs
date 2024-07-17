@@ -4,14 +4,8 @@ using DbContexts.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Npgsql;
-using Repositories.BlogRepository;
 using Repositories.GenericRepository;
-using Services.BlogCategoryService;
-using Services.BlogService;
-using Services.CategoryService;
 using Services.GenericService;
-using Services.JwtService;
-using Services.UserService;
 
 namespace BlogOps.Configurations;
 
@@ -21,13 +15,14 @@ public static class Configuration
     {
         services.AddControllers().AddNewtonsoftJson();
         var connectionString = configuration.GetConnectionString("BaseConnectionString");
+        NpgsqlDataSourceBuilder builder = new(connectionString);
+        builder.MapEnum<BlogStatus>();
+        builder.MapEnum<UserStatus>();
+        builder.EnableUnmappedTypes();
+        var dbBuild = builder.Build();
         services.AddDbContext<BlogOpsContext>(options =>
         {
-            NpgsqlDataSourceBuilder builder = new(connectionString);
-            builder.MapEnum<BlogStatus>();
-            builder.MapEnum<UserStatus>();
-            builder.EnableUnmappedTypes();
-            options.UseNpgsql(builder.Build());
+            options.UseNpgsql(dbBuild);
         });
         services.AddCors(c =>
         {
@@ -85,22 +80,22 @@ public static class Configuration
     public static IServiceCollection AddDependenceInjection(this IServiceCollection services)
     {
         services.AddScoped<UserInfo>();
-        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-        services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IJwtService, JwtService>();
-        services.AddScoped<IBlogService, BlogService>();
-        services.AddScoped<IBlogCategoryService, BlogCategoryService>();
-        services.AddScoped<IBlogRepository, BlogRepository>();
-        services.AddScoped<ICategoryService, CategoryService>();
-        // services.Scan(selector => selector
-        //     .FromAssemblies(
-        //     typeof(IGenericRepository<>).Assembly,
-        //     typeof(IGenericService<>).Assembly
-        //     )
-        // .AddClasses(publicOnly: false)
-        // .AsMatchingInterface()
-        // .WithScopedLifetime());
+        // services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        // services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
+        // services.AddScoped<IUserService, UserService>();
+        // services.AddScoped<IJwtService, JwtService>();
+        // services.AddScoped<IBlogService, BlogService>();
+        // services.AddScoped<IBlogCategoryService, BlogCategoryService>();
+        // services.AddScoped<IBlogRepository, BlogRepository>();
+        // services.AddScoped<ICategoryService, CategoryService>();
+        services.Scan(selector => selector
+            .FromAssemblies(
+            typeof(IGenericRepository<>).Assembly,
+            typeof(IGenericService<>).Assembly
+            )
+        .AddClasses(publicOnly: false)
+        .AsMatchingInterface()
+        .WithScopedLifetime());
         return services;
     }
 

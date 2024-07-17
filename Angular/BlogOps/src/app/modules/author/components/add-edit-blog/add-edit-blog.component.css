@@ -20,10 +20,6 @@ select{
     height: 100px;
 }
 
-.content{
-    height: 700px!important;
-}
-
 textarea,
 input{
     border-color: black;

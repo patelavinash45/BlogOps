@@ -9,20 +9,21 @@ import { ManageToastrService } from '../../../../core/service/manage-toastr.serv
 import { Blog } from '../../../../shared/interfaces/blog';
 import { CreateBlogRequestDto } from '../../../../shared/interfaces/create-blog-request-dto';
 import { UpdateBlogRequestDto } from '../../../../shared/interfaces/update-blog-request-dto';
-import { BlogSaveMessage, editorConfig } from '../../../../shared/constants/constant';
+import { BlogSaveMessage, BlogUpdateMessage, editorConfig } from '../../../../shared/constants/constant';
 
 @Component({
-  selector: 'app-new-blog',
+  selector: 'app-add-edit-blog',
   standalone: true,
   imports: [HeaderComponent, AngularEditorModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './new-blog.component.html',
-  styleUrl: './new-blog.component.css'
+  templateUrl: './add-edit-blog.component.html',
+  styleUrl: './add-edit-blog.component.css'
 })
-export class NewBlogComponent {
+export class AddEditBlogComponent {
   editConfig: AngularEditorConfig = editorConfig;
   categories: CategoryResponseDto[] = [];
   blogForm!: FormGroup;
   blogId!: number;
+  isDraft: boolean = true;
   createBlogRequestDto!: CreateBlogRequestDto;
   selectedCategories: number[] = [];
 
@@ -39,18 +40,19 @@ export class NewBlogComponent {
     this.blogForm = new FormGroup({
       title: new FormControl('', [Validators.required, Validators.maxLength(128)]),
       content: new FormControl('', [Validators.required]),
-      blogCategories: new FormControl([], [Validators.required]),
-      isDraft: new FormControl(false),
+      blogCategories: new FormControl([], this.isDraft ? [] : [Validators.required]),
+      isDraft: new FormControl(this.isDraft),
     });
   }
 
   getBlogDetails() {
     this.newBlogService.GetBlogDetails(this.blogId).subscribe((response: Blog) => {
+      this.isDraft = response.status == 4;
       this.blogForm.setValue({
         title: response.title,
         content: response.content,
         blogCategories: response.blogCategories,
-        isDraft: response.status == 4,
+        isDraft: this.isDraft,
       });
       this.selectedCategories = response.blogCategories;
     })
@@ -74,25 +76,25 @@ export class NewBlogComponent {
   }
 
   onFormSubmit() {
+    console.log(this.blogForm.value);
     if (this.blogForm.valid) {
-      console.log(this.blogForm.value);
       if (this.blogId == undefined) {
         this.newBlogService.CreateNewBlog(this.blogForm.value).subscribe((response) => {
           this.manageToastrService.showSuccess(BlogSaveMessage);
           this.router.navigate(['/author/dashboard']);
         });
       }
-      else{
+      else {
         const updateBlogRequestDto: UpdateBlogRequestDto = {
           id: this.blogId,
           title: this.blogForm.controls['title'].value,
           content: this.blogForm.controls['content'].value,
           adminComment: null,
-          blogCategories: this.blogForm.controls['blogsCategories'].value,
-          isDraft: this.blogForm.controls['isDraft'].value,
+          blogCategories: this.blogForm.controls['blogCategories'].value,
+          status: this.blogForm.controls['isDraft'].value ? 4 : 0,
         };
         this.newBlogService.UpdateBlog(updateBlogRequestDto).subscribe((response) => {
-          this.manageToastrService.showSuccess(BlogSaveMessage);
+          this.manageToastrService.showSuccess(BlogUpdateMessage);
           this.router.navigate(['/author/dashboard']);
         });
       }
@@ -113,5 +115,4 @@ export class NewBlogComponent {
     }
     this.blogForm.controls['blogCategories'].updateValueAndValidity();
   }
-
 }

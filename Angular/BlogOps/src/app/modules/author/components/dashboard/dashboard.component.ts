@@ -6,16 +6,19 @@ import { RouterLink } from '@angular/router';
 import { PaginationDto } from '../../../../shared/interfaces/pagination-dto';
 import { BlogFilterDto } from '../../../../shared/interfaces/blog-filter-dto';
 import { BlogStatus } from '../../../../shared/enums/blog-status';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [BlogCardComponent, HeaderComponent, RouterLink],
+  imports: [CommonModule, BlogCardComponent, HeaderComponent, RouterLink, NgxSkeletonLoaderModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
   response!: PaginationDto;
+  loopArray: number[] = Array.from({ length: 9 });
   pageNo: number = 1;
   blogFilterDto: BlogFilterDto = {
     status: BlogStatus.All,
@@ -40,8 +43,18 @@ export class DashboardComponent {
     this.getDate();
   }
 
-  onStatusChange(event : any){
+  onStatusChange(event: any) {
     this.blogFilterDto.status = event.target.value;
+    this.getDate();
+  }
+
+  onNextPageButtonClick() {
+    this.pageNo++;
+    this.getDate();
+  }
+
+  onPreviousPageButtonClick(){
+    this.pageNo--;
     this.getDate();
   }
 

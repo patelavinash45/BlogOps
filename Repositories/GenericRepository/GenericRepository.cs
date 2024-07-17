@@ -88,7 +88,7 @@ public class GenericRepository<T>(BlogOpsContext context) : IGenericRepository<T
         }
         if (orderBy != null)
         {
-            query = query.OrderBy(orderBy);
+            query = query.OrderByDescending(orderBy);
         }
         int count = query.Count();
         query = query.Skip(skip).Take(pageSize);

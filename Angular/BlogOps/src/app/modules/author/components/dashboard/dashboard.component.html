@@ -1,92 +1,64 @@
 <app-header />
 <div class="container card shadow-sm mt-3 rounded-3">
-  <div class="my-3">
-    <div
-      class="d-flex mb-3 top-options justify-content-between align-items-center"
-    >
-      <div class="d-flex w-100 filter-options">
-        <div class="input-group flex-nowrap filter-div me-4">
-          <span class="input-group-text" id="addon-wrapping">
-            <i class="bi bi-search"></i>
-          </span>
-          <input
-            type="search"
-            class="form-control"
-            placeholder="Search"
-            aria-label="Search"
-            aria-describedby="addon-wrapping"
-            (input)="onSearchInputChange($event)"
-          />
-        </div>
-        <div class="form-floating filter-div">
-          <select
-            class="form-select"
-            id="floatingSelect"
-            aria-label="status"
-            (change)="onStatusChange($event)"
-          >
-            <option value="5" selected>All</option>
-            <option value="0">Pending</option>
-            <option value="1">Approved</option>
-            <option value="2">Rejected</option>
-            <option value="3">Deleted</option>
-            <option value="4">Draft</option>
-          </select>
-          <label for="floatingSelect">Status</label>
-        </div>
+  <div
+    class="d-flex mb-3 top-options justify-content-between align-items-center my-3"
+  >
+    <div class="d-flex w-100 filter-options">
+      <div class="input-group flex-nowrap filter-div me-4">
+        <span class="input-group-text" id="addon-wrapping">
+          <i class="bi bi-search"></i>
+        </span>
+        <input
+          type="search"
+          class="form-control"
+          placeholder="Search"
+          aria-label="Search"
+          aria-describedby="addon-wrapping"
+          (input)="onSearchInputChange($event)"
+        />
       </div>
-      <a
-        class="btn d-flex justify-content-center align-items-center fs-5 fw-bolder text-white"
-        [routerLink]="['/author/new-blog']"
-      >
-        Create Blog
-      </a>
+      <div class="form-floating filter-div">
+        <select
+          class="form-select"
+          id="floatingSelect"
+          aria-label="status"
+          (change)="onStatusChange($event)"
+        >
+          <option value="5" selected>All</option>
+          <option value="0">Pending</option>
+          <option value="1">Approved</option>
+          <option value="2">Rejected</option>
+          <option value="4">Draft</option>
+        </select>
+        <label for="floatingSelect">Status</label>
+      </div>
     </div>
+    <a
+      class="btn d-flex justify-content-center align-items-center fs-5 fw-bolder text-white"
+      [routerLink]="['/author/new-blog']"
+    >
+      Create Blog
+    </a>
   </div>
 </div>
-<div class="container card shadow-sm mt-3 rounded-3">
+<div class="container card shadow-sm my-3 rounded-3">
   <div class="my-2">
     <div class="row">
       <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="text-end d-md-flex justify-content-md-end">
           <span class="p-2 border-info" type="button" id="patientdata">
-            <i class="fa-solid fa-square fa-xs me-2 text-primary"></i>
+            <i class="fa-solid fa-square fa-xs me-2 text-success"></i>
             Approved
           </span>
-          <span
-            class="p-2"
-            type="button"
-            onclick="filter(this)"
-            id="familydata"
-          >
+          <span class="p-2 border-info" id="businessdata" type="button">
+            <i class="fa-solid fa-square fa-xs me-2 text-primary"></i>
+            Pending
+          </span>
+          <span class="p-2" type="button" id="familydata">
             <i class="fa-solid fa-square fa-xs me-2 text-danger"></i
             >Rejected</span
           >
-          <span
-            class="p-2 border-info"
-            onclick="filter(this)"
-            id="businessdata"
-            type="button"
-            >
-            <i class="fa-solid fa-square fa-xs me-2 text-success" ></i>
-            Pending
-            </span
-          >
-          <span
-            class="p-2 border-info"
-            onclick="filter(this)"
-            id="businessdata"
-            type="button"
-            >
-            <i class="fa-solid fa-square fa-xs me-2 text-secondary" ></i>
-            Deleted
-            </span
-          >
-          <span
-            class="p-2"
-            type="button"
-            onclick="filter(this)"
-            id="conciergedata"
+          <span class="p-2" type="button" id="conciergedata"
             ><i class="fa-solid fa-square fa-xs me-2 text-warning"></i
             >Draft</span
           >
@@ -96,6 +68,32 @@
   </div>
   @defer (when response!= null) {
   <app-blog-card [blogs]="response.dtoList" />
-  }@loading {}
-  <div class="row"></div>
+  <nav>
+    <ul class="pagination justify-content-end">
+      <li class="page-item" [ngClass]="{'disabled': !response.isPrevious}">
+        <button class="page-link" tabindex="-1" (click)="onPreviousPageButtonClick()">Previous</button>
+      </li>
+      <li class="page-item active">
+        <button class="page-link" [disabled]="true">{{response.pageNo}} <span class="sr-only">(current)</span></button>
+      </li>
+      <li class="page-item" [ngClass]="{'disabled': !response.isNext}">
+        <button class="page-link" (click)="onNextPageButtonClick()">Next</button>
+      </li>
+    </ul>
+  </nav>
+  }@placeholder(minimum 2000ms) {
+  <div class="row">
+    @for(i of loopArray; track i){
+    <div class="col-xl-4 col-ld-4 col-md-6 col-sm-6 col-12">
+      <ngx-skeleton-loader
+        [theme]="{
+              height: '500px',
+            }"
+      >
+      </ngx-skeleton-loader>
+    </div>
+    }
+  </div>
+  }
+  
 </div>
