@@ -2,7 +2,7 @@
     @for(blog of blogs;track blog.id){
     <div class="col-xl-4 col-ld-4 col-md-6 col-sm-6 col-12">
         <div class="card blogCard mt-2">
-            <div class="card-header border-0" ngClass="{{borderColors[blog.status]}}">
+            <div class="card-header border-0" ngClass="{{statusWiseClasses[blog.status]}}">
                 <h5 class="card-title">
                     {{blog.title}}
                 </h5>
@@ -12,19 +12,19 @@
                     <span [innerHTML]="blog.content"></span>
                 </p>
             </div>
-            <div class="card-footer d-flex justify-content-between fw-bolder align-items-center border-0" ngClass="{{borderColors[blog.status]}}">
+            <div class="card-footer d-flex justify-content-between fw-bolder align-items-center border-0" ngClass="{{statusWiseClasses[blog.status]}}">
                 <div>
                     <i class="bi bi-calendar-check"></i>
                     : {{blog.createdDate | date }}
                 </div>
                 <div class="d-flex">
                     <a class="text-black border-1 border border-black rounded-circle d-flex justify-content-center align-items-center"
-                            [routerLink]="['/author/view-blog', blog.id]" ngClass="{{borderColors[blog.status]}}">
+                            [routerLink]="['/author/view-blog', blog.id]" ngClass="{{statusWiseClasses[blog.status]}}">
                             <i class="bi bi-book"></i>
                         </a>
                     @if(blog.status == 4){
                         <a class="text-black border-1 border border-black rounded-circle d-flex justify-content-center align-items-center mx-2"
-                            [routerLink]="['/author/edit-blog', blog.id]" ngClass="{{borderColors[blog.status]}}">
+                            [routerLink]="['/author/edit-blog', blog.id]" ngClass="{{statusWiseClasses[blog.status]}}">
                             <i class="bi bi-pencil-square"></i>
                         </a>
                         }

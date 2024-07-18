@@ -36,11 +36,11 @@ public partial class BlogOpsContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("blogs_pkey");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.BlogCreatedByNavigations)
+            entity.HasOne(d => d.CreatedByUser).WithMany(p => p.BlogCreatedByBlogs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("blogs_created_by_fkey");
 
-            entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.BlogUpdatedByNavigations)
+            entity.HasOne(d => d.UpdatedByUser).WithMany(p => p.BlogUpdatedByBlogs )
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("blogs_updated_by_fkey");
         });

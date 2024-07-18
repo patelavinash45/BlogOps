@@ -1,5 +1,6 @@
 <app-header />
 <div class="container my-3">
+    @defer(when blog != null){
     <div class="d-flex justify-content-between mx-1">
         <div class="text-center fw-semibold fs-5">
             <i class="bi bi-calendar-check"></i>
@@ -8,16 +9,14 @@
             <i class="bi bi-award"></i>
             : {{blog.status | enumIntToValue}}
         </div>
-        <div>
-            <a class="btn text-white" [routerLink]="['/author/dashboard']">
-                Back
-            </a>
-        </div>
+        <button class="btn text-white" (click)="onBackButtonClick()">
+            Back
+        </button>
     </div>
     <div class="container shadow-sm card p-2 mt-2">
         <div class="card-header bg-white">
             <h3 class="card-title bg-white">
-                {{ blog.title }} 
+                {{ blog.title }}
             </h3>
         </div>
         <div class="card-body" [innerHTML]="blog.content"></div>
@@ -30,4 +29,5 @@
         </div>
         }
     </div>
+    }
 </div>

@@ -4,8 +4,10 @@ export interface Blog {
     id: number,
     title: string,
     content: string,
-    adminComment: string | null,
     status: BlogStatus,
+    adminComment: string | null,
     createdDate: string,
     blogCategories: number[],
+    createdBy: string,
+    updatedBy: string,
 }

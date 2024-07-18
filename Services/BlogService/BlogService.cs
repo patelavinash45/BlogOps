@@ -19,9 +19,11 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
     public BlogResponseDto GetBlog(int id)
     {
         Expression<Func<Blog, bool>> where = a => a.Id == id;
-        Expression<Func<Blog, object>> include = a => a.BlogsCategories;
+        Expression<Func<Blog, object>> includeCategories = a => a.BlogsCategories.Where(x => !x.IsDeleted);
+        Expression<Func<Blog, object>> includeCreatedBy = a => a.CreatedByUser;
+        Expression<Func<Blog, object>> includeUpdatedBy = a => a.UpdatedByUser;
 
-        IEnumerable<Blog>? blogs = GetByCriteria([include], where)
+        IEnumerable<Blog>? blogs = GetByCriteria([includeCategories, includeCreatedBy, includeUpdatedBy], where)
                                             ?? throw new Exception("Blog Not Found");
         return blogs.First().ToResponseDto();
     }
@@ -29,16 +31,20 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
     public PaginationDto<BlogResponseDto> GetAllBlogs(BlogFilterDto blogFilterDto, int userId, int pageNo)
     {
         int skip = (pageNo - 1) * 9;
-        Expression<Func<Blog, bool>> where = a => a.CreatedBy == userId
+        Expression<Func<Blog, bool>> where = a =>
+                        ((blogFilterDto.IsAdmin && (blogFilterDto.UserId == 0 || a.CreatedBy == blogFilterDto.UserId)) || a.CreatedBy == userId)
+                        && (!blogFilterDto.IsAdmin || a.Status != BlogStatus.Draft)
                         && a.Status != BlogStatus.Deleted
                         && (blogFilterDto.Status == BlogStatus.All || a.Status == blogFilterDto.Status)
-                        && (blogFilterDto.SearchContent == null || a.Title == null
-                            || a.Title.Contains(blogFilterDto.SearchContent, StringComparison.CurrentCultureIgnoreCase));
-        Expression<Func<Blog, object>> include = a => a.BlogsCategories;
+                        && (blogFilterDto.SearchContent == null || a.Title.ToLower().Contains(blogFilterDto.SearchContent.ToLower()));
+                        
+        Expression<Func<Blog, object>> includeCategories = a => a.BlogsCategories.Where(x => !x.IsDeleted);
+        Expression<Func<Blog, object>> includeCreatedBy = a => a.CreatedByUser;
+        Expression<Func<Blog, object>> includeUpdatedBy = a => a.UpdatedByUser;
         Expression<Func<Blog, object>> orderBy = a => a.Id;
 
         PaginationFromRepository<Blog> paginationFromRepository
-                                        = GetByCriteriaAndPagination(skip, 9, [include], where, orderBy);
+                                = GetByCriteriaAndPagination(skip, 9, [includeCategories, includeCreatedBy, includeUpdatedBy], where, orderBy);
 
         List<BlogResponseDto> blogResponseDtos = [];
         foreach (Blog blog in paginationFromRepository.Entities ?? [])
@@ -60,7 +66,7 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
     public async Task<bool> CreateBlog(CreateBlogRequestDto createBlogRequestDto, int userId)
     {
         List<BlogsCategory>? blogsCategories = [];
-        foreach (var categoryId in createBlogRequestDto.BlogsCategories ?? [])
+        foreach (var categoryId in createBlogRequestDto.BlogCategories ?? [])
         {
             blogsCategories.Add(categoryId.ToBlogCategory(userId));
         };
@@ -122,6 +128,8 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
         }
 
         blog = updateBlogRequestDto.ToUpdateBlog(userId, blog);
+        if(updateBlogRequestDto.Status == BlogStatus.Approved)
+            blog.PublishDate = DateTime.UtcNow;
         Update(blog);
         return await SaveAsync() ? true : throw new Exception("");
     }

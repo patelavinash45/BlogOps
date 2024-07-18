@@ -53,11 +53,11 @@ public partial class User
     [Column("created_by")]
     public int CreatedBy { get; set; }
 
-    [InverseProperty("CreatedByNavigation")]
-    public virtual ICollection<Blog> BlogCreatedByNavigations { get; set; } = new List<Blog>();
+    [InverseProperty("CreatedByUser")]
+    public virtual ICollection<Blog> BlogCreatedByBlogs { get; set; } = new List<Blog>();
 
-    [InverseProperty("UpdatedByNavigation")]
-    public virtual ICollection<Blog> BlogUpdatedByNavigations { get; set; } = new List<Blog>();
+    [InverseProperty("UpdatedByUser")]
+    public virtual ICollection<Blog> BlogUpdatedByBlogs { get; set; } = new List<Blog>();
 
     [InverseProperty("CreatedByNavigation")]
     public virtual ICollection<BlogsCategory> BlogsCategoryCreatedByNavigations { get; set; } = new List<BlogsCategory>();

@@ -13,5 +13,5 @@ public record CreateBlogRequestDto
     public bool IsDraft { get; set; } = true;
 
     [IntListValidation(ErrorMessage = "CategoryId is not Valid.")]
-    public List<int>? BlogsCategories { get; set; }
+    public List<int>? BlogCategories { get; set; }
 }

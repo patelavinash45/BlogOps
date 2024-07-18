@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CreateBlogRequestDto } from '../../../shared/interfaces/create-blog-request-dto';
-import { UpdateBlogRequestDto } from '../../../shared/interfaces/update-blog-request-dto';
-import { baseUrl } from '../../../shared/constants/constant';
+import { baseUrl } from '../../shared/constants/constant';
+import { CreateBlogRequestDto } from '../../shared/interfaces/create-blog-request-dto';
+import { UpdateBlogRequestDto } from '../../shared/interfaces/update-blog-request-dto';
+
 
 
 @Injectable({

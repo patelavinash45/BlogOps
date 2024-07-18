@@ -18,6 +18,8 @@ public static class BlogMapper
             Status = blog.Status,
             CreatedDate = blog.CreatedDate,
             BlogCategories = blog.BlogsCategories.Select(blogCategory => blogCategory.CategoryId).ToList(),
+            CreatedBy = $"{blog.CreatedByUser.FirstName} {blog.CreatedByUser.LastName}",
+            UpdatedBy = $"{blog.UpdatedByUser.FirstName} {blog.UpdatedByUser.LastName}",
         };
     }
 

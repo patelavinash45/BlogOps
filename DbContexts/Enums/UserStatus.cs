@@ -7,7 +7,7 @@ namespace DbContexts.Enums
         [PgName("Active")]
         Active,
 
-        [PgName("DeActive")]
+        [PgName("Deactive")]
         DeActive,
 
         [PgName("Deleted")]

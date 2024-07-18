@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using DbContexts.DataModels;
 using Dtos.Mappers;
 using Dtos.RequestDtos;
@@ -51,12 +52,19 @@ public class CategoryService(IGenericRepository<Category> genericRepository) : G
 
     public async Task<bool> DeleteCategory(int id, int userId)
     {
-        Category? category = GetById(id) ?? throw new Exception("Category Not Found");
+        Expression<Func<Category, bool>> where = a => a.Id == id;
+        Expression<Func<Category, object>> includeBlogCategories = a => a.BlogsCategories;
+        IEnumerable<Category> categories = GetByCriteria(includes: [includeBlogCategories], where) ?? throw new Exception("Category Not Found");
 
-        category.IsDeleted = true;
-        category.UpdatedBy = userId;
-        category.UpdatedDate = DateTime.UtcNow;
-        Update(category);
+        foreach (BlogsCategory blogsCategory in categories.First().BlogsCategories ?? [])
+        {
+            if (!blogsCategory.IsDeleted)
+                throw new Exception("Can Not Delete Category.");
+        }
+        categories.First().IsDeleted = true;
+        categories.First().UpdatedBy = userId;
+        categories.First().UpdatedDate = DateTime.UtcNow;
+        Update(categories.First());
         return await SaveAsync() ? true : throw new Exception("");
     }
 

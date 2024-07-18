@@ -16,9 +16,10 @@ public class UserController(IUserService userService, UserInfo userInfo) : Contr
 
     [Authentication(RoleEnum.Admin)]
     [HttpGet]
-    public IActionResult GetUsers()
+    [Route("{role}")]
+    public IActionResult GetUsers(string role)
     {
-        var response = _userService.GetUsers();
+        var response = _userService.GetUsers(role);
         return Ok(response);
     }
 

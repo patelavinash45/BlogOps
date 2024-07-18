@@ -7,6 +7,7 @@ import { LogInResponseDto } from '../../../../shared/interfaces/log-in-response-
 import { LogInRequestDto } from '../../../../shared/interfaces/log-in-request-dto';
 import { ManageToastrService } from '../../../../core/service/manage-toastr.service';
 import { LogInSuccessMessage } from '../../../../shared/constants/constant';
+import { RoleEnum } from '../../../../shared/enums/role-enum';
 
 @Component({
   selector: 'app-log-in',
@@ -37,9 +38,16 @@ export class LogInComponent {
     if (this.loginForm.valid) {
       const logInRequestDto: LogInRequestDto = this.loginForm.value;
       this.logInService.LogIn(logInRequestDto).subscribe((response: LogInResponseDto) => {
-        this.toastr.showSuccess(LogInSuccessMessage)
+        this.toastr.showSuccess(LogInSuccessMessage);
         this.logInService.SetCookies(response, logInRequestDto.keepMeSignIn);
-        this.router.navigate(['/author/dashboard']);
+        if(response.roleType == RoleEnum.Author)
+        {
+          this.router.navigate(['/author/dashboard']);
+        }
+        else
+        {
+          this.router.navigate(['/admin/dashboard']);
+        }
       })
     }else{
       this.loginForm.markAllAsTouched();

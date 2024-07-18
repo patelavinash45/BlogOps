@@ -1,29 +1,30 @@
 import { Component } from '@angular/core';
-import { BlogCardComponent } from '../../../../components/base/blog-card/blog-card.component';
-import { DashboardService } from '../../service/dashboard.service';
 import { RouterLink } from '@angular/router';
 import { PaginationDto } from '../../../../shared/interfaces/pagination-dto';
+import { DashboardService } from '../../service/dashboard.service';
 import { BlogFilterDto } from '../../../../shared/interfaces/blog-filter-dto';
 import { BlogStatus } from '../../../../shared/enums/blog-status';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { EnumIntToValuePipe } from '../../../../core/pipe/enum-int-to-value.pipe';
+import { UserDto } from '../../../../shared/interfaces/user-dto';
 import { CommonModule } from '@angular/common';
+import { Blog } from '../../../../shared/interfaces/blog';
 import { HeaderComponent } from "../../../../components/base/header/header.component";
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, BlogCardComponent, RouterLink, NgxSkeletonLoaderModule, HeaderComponent],
+  imports: [CommonModule, RouterLink, EnumIntToValuePipe, HeaderComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
   response!: PaginationDto;
-  loopArray: number[] = Array.from({ length: 9 });
   pageNo: number = 1;
+  users: UserDto[] = [];
   blogFilterDto: BlogFilterDto = {
     status: BlogStatus.All,
     searchContent: null,
-    isAdmin: false,
+    isAdmin: true,
     userId: 0
   };
 
@@ -31,14 +32,16 @@ export class DashboardComponent {
 
   getData() {
     this.dashboardService.GetBlogs(this.blogFilterDto, this.pageNo).subscribe((response: PaginationDto) => {
-      console.log(response);
       this.response = response;
     });
   }
 
   ngOnInit(): void {
     this.getData();
-  };
+    this.dashboardService.GetUsers().subscribe((response: UserDto[]) => {
+      this.users = response;
+    });
+  }
 
   onSearchInputChange(event: any) {
     this.blogFilterDto.searchContent = event.target.value;
@@ -50,14 +53,25 @@ export class DashboardComponent {
     this.getData();
   }
 
+  onUserChange(event: any) {
+    this.blogFilterDto.userId = event.target.value;
+    this.getData();
+  }
+
   onNextPageButtonClick() {
     this.pageNo++;
     this.getData();
   }
 
-  onPreviousPageButtonClick(){
+  onPreviousPageButtonClick() {
     this.pageNo--;
     this.getData();
   }
 
+  onBlogStatusChange(blog: Blog, isApprove: boolean) {
+    blog.status = isApprove ? BlogStatus.Approved : BlogStatus.Rejected;
+    this.dashboardService.UpdateBlog(blog).subscribe((response)=>{
+      this.getData();
+    });
+  }
 }

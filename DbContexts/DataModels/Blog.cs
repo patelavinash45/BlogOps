@@ -47,10 +47,10 @@ public partial class Blog
     public virtual ICollection<BlogsCategory> BlogsCategories { get; set; } = new List<BlogsCategory>();
 
     [ForeignKey("CreatedBy")]
-    [InverseProperty("BlogCreatedByNavigations")]
-    public virtual User CreatedByNavigation { get; set; } = null!;
+    [InverseProperty("BlogCreatedByBlogs")]
+    public virtual User CreatedByUser { get; set; } = null!;
 
     [ForeignKey("UpdatedBy")]
-    [InverseProperty("BlogUpdatedByNavigations")]
-    public virtual User UpdatedByNavigation { get; set; } = null!;
+    [InverseProperty("BlogUpdatedByBlogs")]
+    public virtual User UpdatedByUser { get; set; } = null!;
 }

@@ -8,6 +8,8 @@ export const BlogSaveMessage = "Blog Created SuccessFully.";
 
 export const BlogUpdateMessage = "Blog Updated SuccessFully.";
 
+export const statusWiseClasses: string[] = ['bg-primary text-white border-white', 'bg-success text-white border-white', 'bg-danger text-white border-white', 'bg-secondary text-white border-white', 'bg-warning text-black border-black'];
+
 export const editorConfig: AngularEditorConfig =  {
     editable: true,
     spellcheck: true,

@@ -47,9 +47,15 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         throw new AuthenticationException(ConstantValue.InvalidCredentials);
     }
 
-    public List<UserDto> GetUsers()
+    public List<UserDto> GetUsers(string role)
     {
-        IEnumerable<User>? users = GetByCriteria();
+        if (!Enum.TryParse(role, out RoleEnum roleType))
+            throw new Exception("Role Is Invalid.");
+
+        Expression<Func<User, bool>> where = a => roleType == RoleEnum.All
+                                                || (roleType == RoleEnum.Admin && a.RoleId == 1)
+                                                || (roleType == RoleEnum.Author && a.RoleId == 2);
+        IEnumerable<User>? users = GetByCriteria(where: where);
         List<UserDto> userDtos = [];
         foreach (User user in users ?? [])
         {

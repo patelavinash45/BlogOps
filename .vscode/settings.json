@@ -1,20 +1,13 @@
 {
     "cSpell.words": [
-        "abshdasdbadbagb",
-        "blogops",
-        "calibri",
-        "devkit",
+        "Deactive",
         "Dtos",
+        "fkey",
         "Hmac",
         "kolkov",
         "Navigations",
         "Newtonsoft",
         "Npgsql",
-        "prerender",
-        "primeng",
-        "SAJDN",
-        "Scrutor",
-        "toastr",
-        "Tuser"
-    ],
+        "toastr"
+    ]
 }

@@ -1,20 +1,21 @@
 import { Component } from '@angular/core';
-import { HeaderComponent } from '../../../../components/base/header/header.component';
 import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
-import { NewBlogService } from '../../service/new-blog.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CategoryResponseDto } from '../../../../shared/interfaces/category-response-dto';
+import { CategoryResponseDto } from '../../shared/interfaces/category-response-dto';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { ManageToastrService } from '../../../../core/service/manage-toastr.service';
-import { Blog } from '../../../../shared/interfaces/blog';
-import { CreateBlogRequestDto } from '../../../../shared/interfaces/create-blog-request-dto';
-import { UpdateBlogRequestDto } from '../../../../shared/interfaces/update-blog-request-dto';
-import { BlogSaveMessage, BlogUpdateMessage, editorConfig } from '../../../../shared/constants/constant';
+import { ManageToastrService } from '../../core/service/manage-toastr.service';
+import { Blog } from '../../shared/interfaces/blog';
+import { CreateBlogRequestDto } from '../../shared/interfaces/create-blog-request-dto';
+import { UpdateBlogRequestDto } from '../../shared/interfaces/update-blog-request-dto';
+import { BlogSaveMessage, BlogUpdateMessage, editorConfig } from '../../shared/constants/constant';
+import { NewBlogService } from '../../core/service/new-blog.service';
+import { Location } from '@angular/common';
+import { HeaderComponent } from "../base/header/header.component";
 
 @Component({
   selector: 'app-add-edit-blog',
   standalone: true,
-  imports: [HeaderComponent, AngularEditorModule, ReactiveFormsModule, RouterLink],
+  imports: [AngularEditorModule, ReactiveFormsModule, HeaderComponent],
   templateUrl: './add-edit-blog.component.html',
   styleUrl: './add-edit-blog.component.css'
 })
@@ -31,7 +32,8 @@ export class AddEditBlogComponent {
     private newBlogService: NewBlogService,
     private manageToastrService: ManageToastrService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {
     this.blogId = this.route.snapshot.params['blogId'];
     if (this.blogId != undefined) {
@@ -76,7 +78,6 @@ export class AddEditBlogComponent {
   }
 
   onFormSubmit() {
-    console.log(this.blogForm.value);
     if (this.blogForm.valid) {
       if (this.blogId == undefined) {
         this.newBlogService.CreateNewBlog(this.blogForm.value).subscribe((response) => {
@@ -114,5 +115,9 @@ export class AddEditBlogComponent {
       this.blogForm.controls['blogCategories'].setValidators([Validators.required]);
     }
     this.blogForm.controls['blogCategories'].updateValueAndValidity();
+  }
+
+  onBackButtonClick(){
+    this.location.back();
   }
 }

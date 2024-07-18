@@ -6,7 +6,6 @@ import { ManageCookieService } from '../service/manage-cookie.service';
 export const httpRequestInterceptor: HttpInterceptorFn = (req, next) => {
   const cookiesService = inject(ManageCookieService);
   const jwtToken = cookiesService.GetJwtToken();
-  console.log(jwtToken);
   const newRequest = req.clone({
     setHeaders: {
       'Content-Type': 'application/json',

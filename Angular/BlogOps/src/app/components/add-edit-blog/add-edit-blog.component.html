@@ -10,11 +10,9 @@
                     New Blog
                 }
             </div>
-            <div>
-                <a class="btn text-white" [routerLink]="['/author/dashboard']">
-                    Back
-                </a>
-            </div>
+            <button class="btn text-white" (click)="onBackButtonClick()">
+                Back
+            </button>
         </div>
     </div>
     @defer (when categories.length > 0) {

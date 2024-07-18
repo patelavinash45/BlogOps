@@ -11,7 +11,6 @@ export class ManageCookieService {
   constructor(private cookieService: CookieService, private router:Router) { }
 
   public SetCookies(logInResponseDto: LogInResponseDto, keepMeSignIn: boolean) {
-    console.log(logInResponseDto);
     var date = new Date();
     keepMeSignIn
       ? date.setMinutes(date.getMinutes() + 60)

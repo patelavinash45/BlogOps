@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Blog } from '../../../shared/interfaces/blog';
 import { EnumIntToValuePipe } from '../../../core/pipe/enum-int-to-value.pipe';
 import { RouterLink } from '@angular/router';
+import { statusWiseClasses } from '../../../shared/constants/constant';
 
 @Component({
   selector: 'app-blog-card',
@@ -13,5 +14,5 @@ import { RouterLink } from '@angular/router';
 })
 export class BlogCardComponent {
   @Input() blogs: Blog[] = [];
-  borderColors: string[] = ['bg-primary text-white border-white', 'bg-primary text-white border-white', 'bg-success text-white border-white', 'bg-secondary text-white border-white', 'bg-warning text-black border-black']
+  statusWiseClasses: string[] = statusWiseClasses;
 }
