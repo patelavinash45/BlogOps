@@ -9,8 +9,9 @@ namespace Services.BlogService;
 public interface IBlogService : IGenericService<Blog>
 {
     BlogResponseDto GetBlog(int id);
-    PaginationDto<BlogResponseDto> GetAllBlogs(BlogFilterDto blogFilterDto, int userId, int pageNo);
-    Task<bool> CreateBlog(CreateBlogRequestDto createBlogRequestDto, int userId);
-    Task<bool> UpdateBlog(UpdateBlogRequestDto updateBlogRequestDto, int userId);
-    Task<bool> DeleteBlog(int id, int userId);
+    PaginationDto<BlogResponseDto> GetAllBlogs(BlogFilterDto blogFilterDto, int pageNo);
+    Task<bool> CreateBlog(CreateBlogRequestDto createBlogRequestDto);
+    Task<bool> UpdateBlog(UpdateBlogRequestDto updateBlogRequestDto);
+    Task<bool> DeleteBlog(int id);
+    Task<bool> ChangeBlogStatus(int id, bool isApproved);
 }

@@ -6,15 +6,11 @@ namespace Dtos.Mappers;
 
 public static class CategoryMapper
 {
-    public static Category ToCategory(this CreateCategoryRequestDto createCategoryRequestDto, int userId)
+    public static Category ToCategory(this CreateCategoryRequestDto createCategoryRequestDto)
     {
         return new Category
         {
             Name = createCategoryRequestDto.Name,
-            CreatedBy = userId,
-            CreatedDate = DateTime.UtcNow,
-            UpdatedBy = userId,
-            UpdatedDate = DateTime.UtcNow,
         };
     }
 

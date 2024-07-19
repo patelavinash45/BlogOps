@@ -1,10 +1,11 @@
 using System.Linq.Expressions;
+using DbContexts.DataModels;
 using Dtos.PaginationDto;
 using Repositories.GenericRepository;
 
 namespace Services.GenericService;
 
-public class GenericService<T>(IGenericRepository<T> genericRepository) : IGenericService<T> where T : class
+public class GenericService<T>(IGenericRepository<T> genericRepository) : IGenericService<T> where T : BaseEntity
 {
     private readonly IGenericRepository<T> _repository = genericRepository;
 
@@ -25,7 +26,7 @@ public class GenericService<T>(IGenericRepository<T> genericRepository) : IGener
     public IEnumerable<T> GetByCriteria(
         Expression<Func<T, object>>[]? includes = null,
         Expression<Func<T, bool>>? where = null,
-        Expression<Func<T, Object>>? orderBy = null
+        Expression<Func<T, object>>? orderBy = null
     ) => _repository.GetByCriteria(includes, where, orderBy);
 
     public PaginationFromRepository<T> GetByCriteriaAndPagination(
@@ -33,6 +34,6 @@ public class GenericService<T>(IGenericRepository<T> genericRepository) : IGener
         int pageSize,
         Expression<Func<T, object>>[]? includes = null,
         Expression<Func<T, bool>>? where = null,
-        Expression<Func<T, Object>>? orderBy = null
+        Expression<Func<T, object>>? orderBy = null
     ) => _repository.GetByCriteriaAndPagination(skip, pageSize, includes, where, orderBy);
 }

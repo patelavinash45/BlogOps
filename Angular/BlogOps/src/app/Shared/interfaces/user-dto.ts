@@ -1,4 +1,4 @@
-import { UserEnum } from "../enums/user-enum";
+import { UserStatus } from "../enums/user-status";
 
 export interface UserDto {
     id: number,
@@ -6,5 +6,6 @@ export interface UserDto {
     lastName: string,
     profileName: string | null,
     email: string,
-    status: UserEnum
+    status: UserStatus,
+    password: string | null,
 }

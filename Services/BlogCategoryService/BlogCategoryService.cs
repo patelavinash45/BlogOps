@@ -8,9 +8,9 @@ namespace Services.BlogCategoryService;
 
 public class BlogCategoryService(IGenericRepository<BlogsCategory> genericRepository) : GenericService<BlogsCategory>(genericRepository), IBlogCategoryService
 {
-    public void CreateBlogCategories(int categoryId, int blogId, int userId)
+    public void CreateBlogCategories(int categoryId, int blogId)
     {
-        BlogsCategory blogsCategory = categoryId.ToBlogCategory(userId);
+        BlogsCategory blogsCategory = categoryId.ToBlogCategory(blogId);
         Add(blogsCategory);
     }
 

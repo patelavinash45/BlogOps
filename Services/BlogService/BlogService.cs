@@ -1,10 +1,12 @@
 using System.Linq.Expressions;
 using DbContexts.DataModels;
 using DbContexts.Enums;
+using DbContexts.HelperClass;
 using Dtos.Mappers;
 using Dtos.PaginationDto;
 using Dtos.RequestDtos;
 using Dtos.ResponseDtos;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using Repositories.GenericRepository;
 using Services.BlogCategoryService;
@@ -28,8 +30,9 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
         return blogs.First().ToResponseDto();
     }
 
-    public PaginationDto<BlogResponseDto> GetAllBlogs(BlogFilterDto blogFilterDto, int userId, int pageNo)
+    public PaginationDto<BlogResponseDto> GetAllBlogs(BlogFilterDto blogFilterDto, int pageNo)
     {
+        int userId = UserInfo.UserId;
         int skip = (pageNo - 1) * 9;
         Expression<Func<Blog, bool>> where = a =>
                         ((blogFilterDto.IsAdmin && (blogFilterDto.UserId == 0 || a.CreatedBy == blogFilterDto.UserId)) || a.CreatedBy == userId)
@@ -37,7 +40,7 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
                         && a.Status != BlogStatus.Deleted
                         && (blogFilterDto.Status == BlogStatus.All || a.Status == blogFilterDto.Status)
                         && (blogFilterDto.SearchContent == null || a.Title.ToLower().Contains(blogFilterDto.SearchContent.ToLower()));
-                        
+
         Expression<Func<Blog, object>> includeCategories = a => a.BlogsCategories.Where(x => !x.IsDeleted);
         Expression<Func<Blog, object>> includeCreatedBy = a => a.CreatedByUser;
         Expression<Func<Blog, object>> includeUpdatedBy = a => a.UpdatedByUser;
@@ -63,20 +66,20 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
         };
     }
 
-    public async Task<bool> CreateBlog(CreateBlogRequestDto createBlogRequestDto, int userId)
+    public async Task<bool> CreateBlog(CreateBlogRequestDto createBlogRequestDto)
     {
         List<BlogsCategory>? blogsCategories = [];
         foreach (var categoryId in createBlogRequestDto.BlogCategories ?? [])
         {
-            blogsCategories.Add(categoryId.ToBlogCategory(userId));
+            blogsCategories.Add(categoryId.ToBlogCategory());
         };
-        Blog blog = createBlogRequestDto.ToBlog(userId);
+        Blog blog = createBlogRequestDto.ToBlog();
         blog.BlogsCategories = blogsCategories;
         Add(blog);
         return await SaveAsync() ? true : throw new Exception();
     }
 
-    public async Task<bool> UpdateBlog(UpdateBlogRequestDto updateBlogRequestDto, int userId)
+    public async Task<bool> UpdateBlog(UpdateBlogRequestDto updateBlogRequestDto)
     {
         Blog? blog = GetById(updateBlogRequestDto.Id) ?? throw new Exception("Blog Not Found");
 
@@ -84,22 +87,18 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
                                    .GetBlogsCategoriesBlogWise(updateBlogRequestDto.Id)?.ToList()
                                    ?? [];
 
-        List<BlogsCategory>? categoriesToRemove = new();
+        List<BlogsCategory>? categoriesToRemove = [];
         foreach (var blogsCategory in blogsCategories)
         {
             if (!updateBlogRequestDto.BlogCategories!.Contains(blogsCategory.CategoryId))
             {
                 blogsCategory.IsDeleted = true;
-                blogsCategory.UpdatedBy = userId;
-                blogsCategory.UpdatedDate = DateTime.UtcNow;
                 _blogCategoryService.Update(blogsCategory);
                 categoriesToRemove.Add(blogsCategory);
             }
             else if (blogsCategory.IsDeleted)
             {
                 blogsCategory.IsDeleted = false;
-                blogsCategory.UpdatedBy = userId;
-                blogsCategory.UpdatedDate = DateTime.UtcNow;
                 _blogCategoryService.Update(blogsCategory);
             }
         }
@@ -115,7 +114,7 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
             {
                 if (!blogsCategories.Any(a => a.CategoryId == categoryId))
                 {
-                    _blogCategoryService.CreateBlogCategories(categoryId, updateBlogRequestDto.Id, userId);
+                    _blogCategoryService.CreateBlogCategories(categoryId, updateBlogRequestDto.Id);
                 }
             }
         }
@@ -123,18 +122,16 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
         {
             foreach (var categoryId in updateBlogRequestDto.BlogCategories ?? [])
             {
-                _blogCategoryService.CreateBlogCategories(categoryId, updateBlogRequestDto.Id, userId);
+                _blogCategoryService.CreateBlogCategories(categoryId, updateBlogRequestDto.Id);
             }
         }
 
-        blog = updateBlogRequestDto.ToUpdateBlog(userId, blog);
-        if(updateBlogRequestDto.Status == BlogStatus.Approved)
-            blog.PublishDate = DateTime.UtcNow;
+        blog = updateBlogRequestDto.ToUpdateBlog(blog);
         Update(blog);
         return await SaveAsync() ? true : throw new Exception("");
     }
 
-    public async Task<bool> DeleteBlog(int id, int userId)
+    public async Task<bool> DeleteBlog(int id)
     {
         Expression<Func<Blog, bool>> func = a => a.Id == id;
         Expression<Func<Blog, object>> include = a => a.BlogsCategories.Where(x => !x.IsDeleted);
@@ -142,13 +139,23 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
                                             ?? throw new Exception("Blog Not Found");
 
         response.First().Status = BlogStatus.Deleted;
-        response.First().UpdatedBy = userId;
-        response.First().UpdatedDate = DateTime.UtcNow;
         foreach (var blogsCategory in response.First().BlogsCategories)
         {
             blogsCategory.IsDeleted = true;
         }
         Update(response.First());
+        return await SaveAsync() ? true : throw new Exception();
+    }
+
+    public async Task<bool> ChangeBlogStatus(int id, bool isApproved)
+    {
+        Blog? blog = GetById(id) ?? throw new Exception("Blog Not Found");
+
+        blog.Status = isApproved ? BlogStatus.Approved : BlogStatus.Rejected;
+        if (isApproved)
+            blog.PublishDate = UserInfo.CurrentTime;
+            
+        Update(blog);
         return await SaveAsync() ? true : throw new Exception();
     }
 }

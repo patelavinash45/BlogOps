@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using DbContexts.DataModels;
+﻿using DbContexts.DataModels;
+using DbContexts.HelperClass;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogOpsDbContext;
@@ -14,6 +13,25 @@ public partial class BlogOpsContext : DbContext
     public BlogOpsContext(DbContextOptions<BlogOpsContext> options)
         : base(options)
     {
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var entityList = ChangeTracker.Entries()
+                   .Where( a => a.Entity is BaseEntity 
+                     && (a.State == EntityState.Added || a.State == EntityState.Modified));
+        
+        foreach(var entity in entityList){
+            BaseEntity? baseEntity = entity.Entity as BaseEntity;
+            int userId = UserInfo.UserId;
+            baseEntity.UpdatedBy = userId;
+            baseEntity.UpdatedDate = UserInfo.CurrentTime;
+            if (entity.State == EntityState.Added){
+                baseEntity.CreatedBy = userId;
+                baseEntity.CreatedDate = UserInfo.CurrentTime;
+            }
+        }
+        return await base.SaveChangesAsync(cancellationToken);
     }
 
     public virtual DbSet<Blog> Blogs { get; set; }
@@ -109,4 +127,5 @@ public partial class BlogOpsContext : DbContext
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
 }

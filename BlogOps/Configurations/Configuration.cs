@@ -1,4 +1,3 @@
-using BlogOps.HelperClass;
 using BlogOpsDbContext;
 using DbContexts.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using Npgsql;
 using Repositories.GenericRepository;
 using Services.GenericService;
+using DbContexts.HelperClass;
 
 namespace BlogOps.Configurations;
 
@@ -79,15 +79,6 @@ public static class Configuration
 
     public static IServiceCollection AddDependenceInjection(this IServiceCollection services)
     {
-        services.AddScoped<UserInfo>();
-        // services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-        // services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
-        // services.AddScoped<IUserService, UserService>();
-        // services.AddScoped<IJwtService, JwtService>();
-        // services.AddScoped<IBlogService, BlogService>();
-        // services.AddScoped<IBlogCategoryService, BlogCategoryService>();
-        // services.AddScoped<IBlogRepository, BlogRepository>();
-        // services.AddScoped<ICategoryService, CategoryService>();
         services.Scan(selector => selector
             .FromAssemblies(
             typeof(IGenericRepository<>).Assembly,

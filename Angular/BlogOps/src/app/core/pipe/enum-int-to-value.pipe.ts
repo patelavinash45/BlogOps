@@ -7,8 +7,8 @@ import { BlogStatus } from '../../shared/enums/blog-status';
 })
 export class EnumIntToValuePipe implements PipeTransform {
 
-  transform(value: number): any {
-    return Object.values(BlogStatus)[value];
+  transform(value: number, enumType: any): any {
+    return Object.values(enumType)[value];
   }
 
 }

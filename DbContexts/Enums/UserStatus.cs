@@ -5,12 +5,14 @@ namespace DbContexts.Enums
     public enum UserStatus
     {
         [PgName("Active")]
-        Active,
+        Active, // 0
 
         [PgName("Deactive")]
-        DeActive,
+        DeActive, // 1
 
         [PgName("Deleted")]
-        Deleted
+        Deleted, // 2
+
+        All, // 3
     }
 }

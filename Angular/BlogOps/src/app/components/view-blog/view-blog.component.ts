@@ -5,6 +5,7 @@ import { CommonModule, Location } from '@angular/common';
 import { EnumIntToValuePipe } from '../../core/pipe/enum-int-to-value.pipe';
 import { ViewBlogService } from '../../core/service/view-blog.service';
 import { HeaderComponent } from "../base/header/header.component";
+import { BlogStatus } from '../../shared/enums/blog-status';
 
 @Component({
   selector: 'app-view-blog',

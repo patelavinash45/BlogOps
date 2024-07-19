@@ -47,14 +47,13 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         throw new AuthenticationException(ConstantValue.InvalidCredentials);
     }
 
-    public List<UserDto> GetUsers(string role)
+    public List<UserDto> GetUsers(UserFilterDto userFilterDto)
     {
-        if (!Enum.TryParse(role, out RoleEnum roleType))
-            throw new Exception("Role Is Invalid.");
-
-        Expression<Func<User, bool>> where = a => roleType == RoleEnum.All
-                                                || (roleType == RoleEnum.Admin && a.RoleId == 1)
-                                                || (roleType == RoleEnum.Author && a.RoleId == 2);
+        Expression<Func<User, bool>> where = a => (userFilterDto.Role == RoleEnum.All
+                                                || (userFilterDto.Role == RoleEnum.Admin && a.RoleId == 1)
+                                                || (userFilterDto.Role == RoleEnum.Author && a.RoleId == 2))
+                                                && (userFilterDto.Status == UserStatus.All || userFilterDto.Status == a.Status)
+                                                && (userFilterDto.SearchContent == null || (a.FirstName + " " + a.LastName).ToLower().Contains(userFilterDto.SearchContent.ToLower()));
         IEnumerable<User>? users = GetByCriteria(where: where);
         List<UserDto> userDtos = [];
         foreach (User user in users ?? [])
@@ -64,20 +63,23 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         return userDtos;
     }
 
-    public async Task<bool> UpdateUser(UserDto userDto, int currentUserId)
+    // public async Task<bool> CreateUser(CreateUserRequestDto createUserRequestDto)
+    // {
+        
+    // }
+
+    public async Task<bool> UpdateUser(UserDto userDto)
     {
         User? user = GetById(userDto.Id) ?? throw new Exception("User Not Found");
-        user = userDto.ToUpdateUser(currentUserId, user);
+        user = userDto.ToUpdateUser(user);
         Update(user);
         return await SaveAsync() ? true : throw new Exception();
     }
 
-    public async Task<bool> DeleteUser(int id, int currentUserId)
+    public async Task<bool> DeleteUser(int id)
     {
         User? user = GetById(id) ?? throw new Exception("User Not Found");
         user.Status = UserStatus.Deleted;
-        user.UpdatedBy = currentUserId;
-        user.UpdatedDate = DateTime.UtcNow;
         Update(user);
         return await SaveAsync() ? true : throw new Exception();
     }
@@ -87,3 +89,4 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         return BCrypt.Net.BCrypt.Verify(enteredPassword, hashPassword);
     }
 }
+

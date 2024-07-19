@@ -8,14 +8,15 @@ namespace BlogOps.Controllers;
 
 [ApiController]
 [Route("api/categories")]
-public class CategoryController(ICategoryService categoryService, UserInfo userInfo) : ControllerBase
+public class CategoryController(ICategoryService categoryService) : ControllerBase
 {
     private readonly ICategoryService _categoryService = categoryService;
-    private readonly UserInfo _userInfo = userInfo;
 
     [Authentication(RoleEnum.Admin)]
     [HttpGet]
-    [Route("category/{id:int}")]
+    [Route("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IActionResult GetCategory(int id)
     {
         var response = _categoryService.GetCategory(id);
@@ -24,6 +25,8 @@ public class CategoryController(ICategoryService categoryService, UserInfo userI
 
     [Authentication(RoleEnum.All)]
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IActionResult GetAllCategories()
     {
         var response = _categoryService.GetAllCategories();
@@ -32,34 +35,41 @@ public class CategoryController(ICategoryService categoryService, UserInfo userI
 
     [Authentication(RoleEnum.Admin)]
     [HttpPost]
-    [Route("category")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequestDto createCategoryRequestDto)
     {
         if (!ModelState.IsValid)
             throw new BadHttpRequestException(nameof(CreateCategoryRequestDto));
 
-        await _categoryService.CreateCategory(createCategoryRequestDto, _userInfo.UserId);
+        await _categoryService.CreateCategory(createCategoryRequestDto);
         return Ok();
     }
 
     [Authentication(RoleEnum.Admin)]
     [HttpPut]
-    [Route("category/{id:int}")]
+    [Route("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateCategory(int id, [FromBody] UpdateCategoryRequestDto updateCategoryRequestDto)
     {
         if (id <= 0 || !ModelState.IsValid)
             throw new BadHttpRequestException(nameof(UpdateCategoryRequestDto));
 
-        await _categoryService.UpdateCategory(updateCategoryRequestDto, _userInfo.UserId);
+        await _categoryService.UpdateCategory(updateCategoryRequestDto);
         return Ok();
     }
 
     [Authentication(RoleEnum.Admin)]
     [HttpDelete]
-    [Route("category/{id:int}")]
+    [Route("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteCategory(int id)
     {
-        await _categoryService.DeleteCategory(id, _userInfo.UserId);
+        await _categoryService.DeleteCategory(id);
         return Ok();
     }
 }

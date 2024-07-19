@@ -23,28 +23,22 @@ public static class BlogMapper
         };
     }
 
-    public static Blog ToBlog(this CreateBlogRequestDto createBlogRequestDto, int userId)
+    public static Blog ToBlog(this CreateBlogRequestDto createBlogRequestDto)
     {
         return new Blog
         {
             Title = createBlogRequestDto.Title,
             Content = createBlogRequestDto.Content,
             Status = createBlogRequestDto.IsDraft ? BlogStatus.Draft : BlogStatus.Pending,
-            CreatedDate = DateTime.UtcNow,
-            UpdatedDate = DateTime.UtcNow,
-            CreatedBy = userId,
-            UpdatedBy = userId,
         };
     }
 
-    public static Blog ToUpdateBlog(this UpdateBlogRequestDto updateBlogRequestDto, int userId, Blog blog)
+    public static Blog ToUpdateBlog(this UpdateBlogRequestDto updateBlogRequestDto, Blog blog)
     {
         blog.Title = updateBlogRequestDto.Title;
         blog.Content = updateBlogRequestDto.Content;
         blog.AdminComment = updateBlogRequestDto.AdminComment;
         blog.Status = updateBlogRequestDto.Status;
-        blog.UpdatedBy = userId;
-        blog.UpdatedDate = DateTime.UtcNow;
         return blog;
     }
 }

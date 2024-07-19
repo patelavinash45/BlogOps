@@ -8,14 +8,15 @@ namespace BlogOps.Controllers;
 
 [ApiController]
 [Route("api/blogs")]
-public class BlogController(IBlogService blogService, UserInfo userInfo) : ControllerBase
+public class BlogController(IBlogService blogService) : ControllerBase
 {
     private readonly IBlogService _blogService = blogService;
-    private readonly UserInfo _userInfo = userInfo;
 
     [Authentication(RoleEnum.All)]
     [HttpGet]
-    [Route("blog/{id:int}")]
+    [Route("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IActionResult GetBlog(int id)
     {
         var response = _blogService.GetBlog(id);
@@ -25,42 +26,73 @@ public class BlogController(IBlogService blogService, UserInfo userInfo) : Contr
     [Authentication(RoleEnum.All)]
     [HttpPost]
     [Route("{pageNo:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IActionResult GetBlogs(int pageNo, [FromBody] BlogFilterDto blogFilterDto)
     {
-        var response = _blogService.GetAllBlogs(blogFilterDto, _userInfo.UserId, pageNo);
+        var response = _blogService.GetAllBlogs(blogFilterDto, pageNo);
         return Ok(response);
     }
 
     [Authentication(RoleEnum.All)]
     [HttpPost]
-    [Route("blog")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateBlog(CreateBlogRequestDto createBlogRequestDto)
     {
         if (!ModelState.IsValid)
             throw new BadHttpRequestException(nameof(CreateBlogRequestDto));
 
-        await _blogService.CreateBlog(createBlogRequestDto, _userInfo.UserId);
+        await _blogService.CreateBlog(createBlogRequestDto);
         return Ok();
     }
 
     [Authentication(RoleEnum.All)]
     [HttpPut]
-    [Route("blog/{id:int}")]
+    [Route("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateBlog(int id, [FromBody] UpdateBlogRequestDto updateBlogRequestDto)
     {
         if (id <= 0 || !ModelState.IsValid)
             throw new BadHttpRequestException(nameof(LogInRequestDto));
 
-        await _blogService.UpdateBlog(updateBlogRequestDto, _userInfo.UserId);
+        await _blogService.UpdateBlog(updateBlogRequestDto);
+        return Ok();
+    }
+
+    [Authentication(RoleEnum.All)]
+    [HttpPut]
+    [Route("approve/{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> ApprovedBlog(int id)
+    {
+        await _blogService.ChangeBlogStatus(id, true);
+        return Ok();
+    }
+
+    [Authentication(RoleEnum.All)]
+    [HttpPut]
+    [Route("reject/{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> RejectBlog(int id)
+    {
+        await _blogService.ChangeBlogStatus(id, false);
         return Ok();
     }
 
     [Authentication(RoleEnum.Author)]
     [HttpDelete]
-    [Route("blog/{id:int}")]
+    [Route("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteBlog(int id)
     {
-        await _blogService.DeleteBlog(id, _userInfo.UserId);
+        await _blogService.DeleteBlog(id);
         return Ok();
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using DbContexts.Enums;
 using Microsoft.EntityFrameworkCore;
@@ -9,12 +7,8 @@ namespace DbContexts.DataModels;
 
 [Table("users")]
 [Index("Email", Name = "users_email_key", IsUnique = true)]
-public partial class User
+public partial class User : BaseEntity
 {
-    [Key]
-    [Column("id")]
-    public int Id { get; set; }
-
     [Column("role_id")]
     public int RoleId { get; set; }
 
@@ -40,18 +34,6 @@ public partial class User
 
     [Column("status")]
     public UserStatus Status { get; set; }
-
-    [Column("updated_date")]
-    public DateTime UpdatedDate { get; set; }
-
-    [Column("updated_by")]
-    public int UpdatedBy { get; set; }
-
-    [Column("created_date")]
-    public DateTime CreatedDate { get; set; }
-
-    [Column("created_by")]
-    public int CreatedBy { get; set; }
 
     [InverseProperty("CreatedByUser")]
     public virtual ICollection<Blog> BlogCreatedByBlogs { get; set; } = new List<Blog>();

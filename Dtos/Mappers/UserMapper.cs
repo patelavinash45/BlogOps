@@ -1,11 +1,12 @@
 using DbContexts.DataModels;
 using Dtos.CommonDtos;
+using Dtos.RequestDtos;
 
 namespace Dtos.Mappers;
 
 public static class UserMapper
 {
-    public static User ToUpdateUser(this UserDto userDto, int currentUserId, User user)
+    public static User ToUpdateUser(this UserDto userDto, User user)
     {
         user.FirstName = userDto.FirstName;
         user.LastName = userDto.LastName;
@@ -13,8 +14,6 @@ public static class UserMapper
         user.Email = userDto.Email;
         user.Password = userDto.Password != null ? HashPassword(userDto.Password!) : user.Password;
         user.Status = userDto.Status;
-        user.UpdatedBy = currentUserId;
-        user.UpdatedDate = DateTime.UtcNow;
         return user;
     }
 
@@ -31,10 +30,21 @@ public static class UserMapper
         };
     }
 
+    public static User ToUser(this CreateUserRequestDto createUserRequestDto)
+    {
+        return new User
+        {
+            FirstName = createUserRequestDto.FirstName,
+            LastName = createUserRequestDto.LastName,
+            ProfileName = createUserRequestDto.ProfileName,
+            Email = createUserRequestDto.Email,
+            Password = HashPassword(createUserRequestDto.Password),
+        };
+    }
+
     private static string HashPassword(string password)
     {
         string salt = BCrypt.Net.BCrypt.GenerateSalt();
         return BCrypt.Net.BCrypt.HashPassword(password, salt);
     }
-
 }

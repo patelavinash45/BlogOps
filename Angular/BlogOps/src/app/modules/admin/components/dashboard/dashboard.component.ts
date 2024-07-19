@@ -20,7 +20,7 @@ import { HeaderComponent } from "../../../../components/base/header/header.compo
 export class DashboardComponent {
   response!: PaginationDto;
   pageNo: number = 1;
-  users: UserDto[] = [];
+  authors: UserDto[] = [];
   blogFilterDto: BlogFilterDto = {
     status: BlogStatus.All,
     searchContent: null,
@@ -38,8 +38,8 @@ export class DashboardComponent {
 
   ngOnInit(): void {
     this.getData();
-    this.dashboardService.GetUsers().subscribe((response: UserDto[]) => {
-      this.users = response;
+    this.dashboardService.GetAllAuthors().subscribe((response: UserDto[]) => {
+      this.authors = response;
     });
   }
 

@@ -5,6 +5,6 @@ namespace Services.BlogCategoryService;
 
 public interface IBlogCategoryService : IGenericService<BlogsCategory>
 {
-    void CreateBlogCategories(int categoryId, int blogId, int userId);
+    void CreateBlogCategories(int categoryId, int blogId);
     IEnumerable<BlogsCategory>? GetBlogsCategoriesBlogWise(int blogId);
 }

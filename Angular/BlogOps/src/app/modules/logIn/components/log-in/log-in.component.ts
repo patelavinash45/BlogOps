@@ -7,7 +7,7 @@ import { LogInResponseDto } from '../../../../shared/interfaces/log-in-response-
 import { LogInRequestDto } from '../../../../shared/interfaces/log-in-request-dto';
 import { ManageToastrService } from '../../../../core/service/manage-toastr.service';
 import { LogInSuccessMessage } from '../../../../shared/constants/constant';
-import { RoleEnum } from '../../../../shared/enums/role-enum';
+import { RoleType } from '../../../../shared/enums/role-type';
 
 @Component({
   selector: 'app-log-in',
@@ -40,7 +40,7 @@ export class LogInComponent {
       this.logInService.LogIn(logInRequestDto).subscribe((response: LogInResponseDto) => {
         this.toastr.showSuccess(LogInSuccessMessage);
         this.logInService.SetCookies(response, logInRequestDto.keepMeSignIn);
-        if(response.roleType == RoleEnum.Author)
+        if(response.roleType == RoleType.Author)
         {
           this.router.navigate(['/author/dashboard']);
         }

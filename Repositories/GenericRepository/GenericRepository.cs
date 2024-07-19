@@ -2,10 +2,11 @@ using System.Linq.Expressions;
 using BlogOpsDbContext;
 using Microsoft.EntityFrameworkCore;
 using Dtos.PaginationDto;
+using DbContexts.DataModels;
 
 namespace Repositories.GenericRepository;
 
-public class GenericRepository<T>(BlogOpsContext context) : IGenericRepository<T> where T : class
+public class GenericRepository<T>(BlogOpsContext context) : IGenericRepository<T> where T : BaseEntity
 {
     private readonly BlogOpsContext _dbContext = context;
     private readonly DbSet<T> _dbSet = context.Set<T>();
@@ -51,7 +52,7 @@ public class GenericRepository<T>(BlogOpsContext context) : IGenericRepository<T
         _dbSet.Update(objModel);
     }
 
-    public IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, Object>>? orderBy = null)
+    public IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, object>>? orderBy = null)
     {
         IQueryable<T> query = _dbSet;
         if (where != null)
@@ -72,7 +73,7 @@ public class GenericRepository<T>(BlogOpsContext context) : IGenericRepository<T
         return query.AsEnumerable<T>();
     }
 
-    public PaginationFromRepository<T> GetByCriteriaAndPagination(int skip, int pageSize, Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, Object>>? orderBy = null)
+    public PaginationFromRepository<T> GetByCriteriaAndPagination(int skip, int pageSize, Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, object>>? orderBy = null)
     {
         IQueryable<T> query = _dbSet;
         if (where != null)

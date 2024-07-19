@@ -9,7 +9,7 @@ public interface ICategoryService : IGenericRepository<Category>
 {
     CategoryResponseDto GetCategory(int id);
     List<CategoryResponseDto> GetAllCategories();
-    Task<bool> CreateCategory(CreateCategoryRequestDto createCategoryRequestDto, int userId);
-    Task<bool> UpdateCategory(UpdateCategoryRequestDto updateCategoryRequestDto, int userId);
-    Task<bool> DeleteCategory(int id, int userId);
+    Task<bool> CreateCategory(CreateCategoryRequestDto createCategoryRequestDto);
+    Task<bool> UpdateCategory(UpdateCategoryRequestDto updateCategoryRequestDto);
+    Task<bool> DeleteCategory(int id);
 }

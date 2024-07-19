@@ -9,23 +9,22 @@ namespace BlogOps.Controllers;
 
 [ApiController]
 [Route("api/users")]
-public class UserController(IUserService userService, UserInfo userInfo) : ControllerBase
+public class UserController(IUserService userService) : ControllerBase
 {
     private readonly IUserService _userService = userService;
-    private readonly UserInfo _userInfo = userInfo;
 
     [Authentication(RoleEnum.Admin)]
-    [HttpGet]
-    [Route("{role}")]
-    public IActionResult GetUsers(string role)
+    [HttpPost]
+    public IActionResult GetUsers([FromBody] UserFilterDto userFilterDto)
     {
-        var response = _userService.GetUsers(role);
+        var response = _userService.GetUsers(userFilterDto);
         return Ok(response);
     }
 
     [HttpPost]
     [Route("login")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult LogIn([FromBody] LogInRequestDto model)
     {
@@ -38,22 +37,26 @@ public class UserController(IUserService userService, UserInfo userInfo) : Contr
 
     [Authentication(RoleEnum.Admin)]
     [HttpPut]
-    [Route("user")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateUser([FromBody] UserDto userDto)
     {
         if (!ModelState.IsValid)
             throw new BadHttpRequestException(nameof(userDto));
 
-        await _userService.UpdateUser(userDto, _userInfo.UserId);
+        await _userService.UpdateUser(userDto);
         return Ok();
     }
 
     [Authentication(RoleEnum.Admin)]
     [HttpDelete]
-    [Route("user/{id:int}")]
+    [Route("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteUser(int id)
     {
-        await _userService.DeleteUser(id, _userInfo.UserId);
+        await _userService.DeleteUser(id);
         return Ok();
     }
 }

@@ -31,26 +31,24 @@ public class CategoryService(IGenericRepository<Category> genericRepository) : G
         return categoryResponseDtos;
     }
 
-    public async Task<bool> CreateCategory(CreateCategoryRequestDto createCategoryRequestDto, int userId)
+    public async Task<bool> CreateCategory(CreateCategoryRequestDto createCategoryRequestDto)
     {
-        Category category = createCategoryRequestDto.ToCategory(userId);
+        Category category = createCategoryRequestDto.ToCategory();
         Add(category);
         return await SaveAsync() ? true : throw new Exception("");
     }
 
-    public async Task<bool> UpdateCategory(UpdateCategoryRequestDto updateCategoryRequestDto, int userId)
+    public async Task<bool> UpdateCategory(UpdateCategoryRequestDto updateCategoryRequestDto)
     {
         Category? category = GetById(updateCategoryRequestDto.Id)
                                     ?? throw new Exception("Category Not Found");
 
         category.Name = updateCategoryRequestDto.Name;
-        category.UpdatedBy = userId;
-        category.UpdatedDate = DateTime.UtcNow;
         Update(category);
         return await SaveAsync() ? true : throw new Exception("");
     }
 
-    public async Task<bool> DeleteCategory(int id, int userId)
+    public async Task<bool> DeleteCategory(int id)
     {
         Expression<Func<Category, bool>> where = a => a.Id == id;
         Expression<Func<Category, object>> includeBlogCategories = a => a.BlogsCategories;
@@ -62,8 +60,6 @@ public class CategoryService(IGenericRepository<Category> genericRepository) : G
                 throw new Exception("Can Not Delete Category.");
         }
         categories.First().IsDeleted = true;
-        categories.First().UpdatedBy = userId;
-        categories.First().UpdatedDate = DateTime.UtcNow;
         Update(categories.First());
         return await SaveAsync() ? true : throw new Exception("");
     }

@@ -19,14 +19,14 @@ export class NewBlogService {
   }
 
   public CreateNewBlog(createBlogRequestDto: CreateBlogRequestDto): Observable<any> {
-    return this.httpClient.post(`${baseUrl}/blogs/blog`, createBlogRequestDto);
+    return this.httpClient.post(`${baseUrl}/blogs`, createBlogRequestDto);
   }
 
   public GetBlogDetails(blogId: number): Observable<any> {
-    return this.httpClient.get(`${baseUrl}/blogs/blog/${blogId}`);
+    return this.httpClient.get(`${baseUrl}/blogs/${blogId}`);
   }
 
   public UpdateBlog(updateBlogRequestDto : UpdateBlogRequestDto){
-    return this.httpClient.put(`${baseUrl}/blogs/blog/${updateBlogRequestDto.id}`, updateBlogRequestDto);
+    return this.httpClient.put(`${baseUrl}/blogs/${updateBlogRequestDto.id}`, updateBlogRequestDto);
   }
 }

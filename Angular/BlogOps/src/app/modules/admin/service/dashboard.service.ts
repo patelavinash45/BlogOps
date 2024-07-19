@@ -5,7 +5,9 @@ import { Observable } from 'rxjs';
 import { baseUrl } from '../../../shared/constants/constant';
 import { Blog } from '../../../shared/interfaces/blog';
 import { UpdateBlogRequestDto } from '../../../shared/interfaces/update-blog-request-dto';
-import { BlogCardComponent } from '../../../components/base/blog-card/blog-card.component';
+import { UserFilterDto } from '../../../shared/interfaces/user-filter-dto';
+import { UserStatus } from '../../../shared/enums/user-status';
+import { RoleType } from '../../../shared/enums/role-type';
 
 @Injectable({
   providedIn: 'root'
@@ -14,23 +16,20 @@ export class DashboardService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public GetBlogs(blogFilterDto: BlogFilterDto, pageNo: number) : Observable<any> {
+  public GetBlogs(blogFilterDto: BlogFilterDto, pageNo: number): Observable<any> {
     return this.httpClient.post(`${baseUrl}/blogs/${pageNo}`, blogFilterDto);
   }
 
-  public GetUsers() : Observable<any>{
-    return this.httpClient.get(`${baseUrl}/users/Author`);
+  public GetAllAuthors(): Observable<any> {
+    const userFilterDto: UserFilterDto = {
+      status: UserStatus.All,
+      searchContent: null,
+      role: RoleType.Author
+    }
+    return this.httpClient.post(`${baseUrl}/users`, userFilterDto);
   }
 
-  public UpdateBlog(blog:Blog) : Observable<any> {
-    const updateBlogRequestDto : UpdateBlogRequestDto ={
-      id : blog.id,
-      title: blog.title,
-      content: blog.content,
-      status: blog.status,
-      adminComment: blog.adminComment,
-      blogCategories: blog.blogCategories,
-    }
-    return this.httpClient.put(`${baseUrl}/blogs/blog/${blog.id}`, updateBlogRequestDto);
+  public ChangeStatus(blogId: number, isApproved: boolean): Observable<any> {
+    return this.httpClient.put(`${baseUrl}/blogs/${blogId}`, null);
   }
 }
