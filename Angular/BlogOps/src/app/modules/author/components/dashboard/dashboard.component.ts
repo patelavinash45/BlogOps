@@ -8,11 +8,12 @@ import { BlogStatus } from '../../../../shared/enums/blog-status';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from "../../../../components/base/header/header.component";
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, BlogCardComponent, RouterLink, NgxSkeletonLoaderModule, HeaderComponent],
+  imports: [CommonModule, BlogCardComponent, RouterLink, NgxSkeletonLoaderModule, HeaderComponent, MatButtonModule ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })

@@ -1,0 +1,36 @@
+<div class="modal" tabindex="-1" id="reject-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <form class="modal-content" [formGroup]="rejectForm"
+            (submit)="onFormSubmit()">
+            <div class="modal-body">
+                <div class="fs-5 fw-bolder mb-2 mx-1">Additional Comment</div>
+                <div class="form-floating">
+                    <textarea
+                        formControlName="adminComment"
+                        class="form-control"
+                        placeholder="Comment"
+                        id="comment"
+                        length="150px">
+                    </textarea>
+                    <label for="comment">Comment</label>
+                </div>
+                @if(rejectForm.controls['adminComment'].invalid &&
+                (rejectForm.controls['adminComment'].touched ||
+                rejectForm.controls['adminComment'].dirty))
+                {
+                <span class="text-danger mt-1 mx-1">
+                    @if(rejectForm.controls['adminComment'].errors?.['maxlength'])
+                    {
+                    Length Is Only 256 Characters.
+                    }
+                </span>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary">Reject</button>
+            </div>
+        </form>
+    </div>
+</div>

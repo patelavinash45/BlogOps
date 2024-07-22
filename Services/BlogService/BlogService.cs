@@ -6,7 +6,6 @@ using Dtos.Mappers;
 using Dtos.PaginationDto;
 using Dtos.RequestDtos;
 using Dtos.ResponseDtos;
-using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using Repositories.GenericRepository;
 using Services.BlogCategoryService;
@@ -14,9 +13,10 @@ using Services.GenericService;
 
 namespace Services.BlogService;
 
-public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCategoryService blogCategoryService) : GenericService<Blog>(genericRepository), IBlogService
+public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCategoryService blogCategoryService, UserInfo userInfo) : GenericService<Blog>(genericRepository), IBlogService
 {
     private readonly IBlogCategoryService _blogCategoryService = blogCategoryService;
+    private readonly UserInfo _userInfo = userInfo;
 
     public BlogResponseDto GetBlog(int id)
     {
@@ -32,7 +32,7 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
 
     public PaginationDto<BlogResponseDto> GetAllBlogs(BlogFilterDto blogFilterDto, int pageNo)
     {
-        int userId = UserInfo.UserId;
+        int userId = _userInfo.UserId;
         int skip = (pageNo - 1) * 9;
         Expression<Func<Blog, bool>> where = a =>
                         ((blogFilterDto.IsAdmin && (blogFilterDto.UserId == 0 || a.CreatedBy == blogFilterDto.UserId)) || a.CreatedBy == userId)
@@ -147,14 +147,20 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
         return await SaveAsync() ? true : throw new Exception();
     }
 
-    public async Task<bool> ChangeBlogStatus(int id, bool isApproved)
+    public async Task<bool> ChangeBlogStatus(int id, ChangeBlogStatusRequestDto changeBlogStatusRequestDto)
     {
         Blog? blog = GetById(id) ?? throw new Exception("Blog Not Found");
 
-        blog.Status = isApproved ? BlogStatus.Approved : BlogStatus.Rejected;
-        if (isApproved)
+        blog.Status = changeBlogStatusRequestDto.IsApproved ? BlogStatus.Approved : BlogStatus.Rejected;
+        if (changeBlogStatusRequestDto.IsApproved)
+        {
             blog.PublishDate = UserInfo.CurrentTime;
-            
+        }
+        else
+        {
+            blog.AdminComment = changeBlogStatusRequestDto.AdminComment ?? null;
+        }
+
         Update(blog);
         return await SaveAsync() ? true : throw new Exception();
     }

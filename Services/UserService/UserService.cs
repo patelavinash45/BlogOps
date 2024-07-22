@@ -29,12 +29,12 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         {
             _httpContextAccessor.HttpContext!.Session.SetInt32("userId", response.First().Id);
             string jwtToken = _jwtService.CreateJwtToken(response.First(), logInRequestDto.KeepMeSignIn ? 60 : 20);
-            _httpContextAccessor.HttpContext!.Response.Cookies.Append("JwtToken", jwtToken, new CookieOptions
-            {
-                Expires = DateTime.UtcNow.AddMinutes(logInRequestDto.KeepMeSignIn ? 60 : 20),
-                HttpOnly = true,
-                IsEssential = true
-            });
+            // _httpContextAccessor.HttpContext!.Response.Cookies.Append("JwtToken", jwtToken, new CookieOptions
+            // {
+            //     Expires = DateTime.UtcNow.AddMinutes(logInRequestDto.KeepMeSignIn ? 60 : 20),
+            //     HttpOnly = true,
+            //     IsEssential = true
+            // });
             return new LogInResponseDto
             {
                 Email = logInRequestDto.Email,

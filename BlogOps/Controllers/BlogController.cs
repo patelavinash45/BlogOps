@@ -57,31 +57,23 @@ public class BlogController(IBlogService blogService) : ControllerBase
     public async Task<IActionResult> UpdateBlog(int id, [FromBody] UpdateBlogRequestDto updateBlogRequestDto)
     {
         if (id <= 0 || !ModelState.IsValid)
-            throw new BadHttpRequestException(nameof(LogInRequestDto));
+            throw new BadHttpRequestException(nameof(UpdateBlogRequestDto));
 
         await _blogService.UpdateBlog(updateBlogRequestDto);
         return Ok();
     }
 
-    [Authentication(RoleEnum.All)]
+    [Authentication(RoleEnum.Admin)]
     [HttpPut]
-    [Route("approve/{id:int}")]
+    [Route("change-status/{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> ApprovedBlog(int id)
+    public async Task<IActionResult> ChangeBlogStatus(int id, [FromBody] ChangeBlogStatusRequestDto changeBlogStatusRequestDto)
     {
-        await _blogService.ChangeBlogStatus(id, true);
-        return Ok();
-    }
+        if (id <= 0 || !ModelState.IsValid)
+            throw new BadHttpRequestException(nameof(ChangeBlogStatusRequestDto));
 
-    [Authentication(RoleEnum.All)]
-    [HttpPut]
-    [Route("reject/{id:int}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> RejectBlog(int id)
-    {
-        await _blogService.ChangeBlogStatus(id, false);
+        await _blogService.ChangeBlogStatus(id, changeBlogStatusRequestDto);
         return Ok();
     }
 

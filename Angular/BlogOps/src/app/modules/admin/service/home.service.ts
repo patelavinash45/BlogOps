@@ -3,16 +3,15 @@ import { Injectable } from '@angular/core';
 import { BlogFilterDto } from '../../../shared/interfaces/blog-filter-dto';
 import { Observable } from 'rxjs';
 import { baseUrl } from '../../../shared/constants/constant';
-import { Blog } from '../../../shared/interfaces/blog';
-import { UpdateBlogRequestDto } from '../../../shared/interfaces/update-blog-request-dto';
 import { UserFilterDto } from '../../../shared/interfaces/user-filter-dto';
 import { UserStatus } from '../../../shared/enums/user-status';
 import { RoleType } from '../../../shared/enums/role-type';
+import { ChangeBlogStatusRequestDto } from '../../../shared/interfaces/change-blog-status-request-dto';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DashboardService {
+export class HomeService {
 
   constructor(private httpClient: HttpClient) { }
 
@@ -29,7 +28,11 @@ export class DashboardService {
     return this.httpClient.post(`${baseUrl}/users`, userFilterDto);
   }
 
-  public ChangeStatus(blogId: number, isApproved: boolean): Observable<any> {
-    return this.httpClient.put(`${baseUrl}/blogs/${blogId}`, null);
+  public ChangeStatus(blogId: number, isApproved: boolean, adminComment: string | null): Observable<any> {
+    const changeBlogStatusRequestDto: ChangeBlogStatusRequestDto = {
+      isApproved: isApproved,
+      adminComment: adminComment,
+    }
+    return this.httpClient.put(`${baseUrl}/blogs/change-status/${blogId}`, changeBlogStatusRequestDto);
   }
 }

@@ -2,20 +2,16 @@ using Microsoft.AspNetCore.Http;
 
 namespace DbContexts.HelperClass;
 
-public static class UserInfo
+public class UserInfo(IHttpContextAccessor httpContextAccessor)
 {
-    private static HttpContext? _httpContext;
+    private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
-     public static void Initialize(HttpContext httpContent)
-    {
-        _httpContext = httpContent;
-    }
 
-    public static int UserId
+    public int UserId
     {
         get
         {
-            return _httpContext!.Session.TryGetValue("userId", out var userId)
+            return _httpContextAccessor.HttpContext!.Session.TryGetValue("userId", out var userId)
                         ? userId[3]
                         : throw new UnauthorizedAccessException("Unauthorized Access.");
         }
@@ -23,7 +19,8 @@ public static class UserInfo
 
     public static DateTime CurrentTime
     {
-        get{
+        get
+        {
             return DateTime.UtcNow;
         }
     }

@@ -23,4 +23,12 @@ public record UpdateBlogRequestDto
     public List<int>? BlogCategories { get; set; }
 }
 
+public record ChangeBlogStatusRequestDto
+{
+    public bool IsApproved { get; set; }
+
+    [StringLength(256)]
+    public string? AdminComment { get; set; }
+}
+
 

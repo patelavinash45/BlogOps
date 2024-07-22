@@ -1,31 +1,43 @@
-<header class="p-3 bg-main">
-    <div
-        class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start text-white">
-        <div class="fs-4 fw-bold text me-2">BlogOps</div>
-        <ul
-            class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="#" class="nav-link px-2 text-white">Home</a></li>
-            <li><a href="#" class="nav-link px-2">Categories</a></li>
-        </ul>
-        <div class="d-flex align-items-center fw-bolder">
-            Welcome
-            <div class="dropdown">
-                <button
-                    class="btn dropdown-toggle border-0 text-white"
-                    type="button"
-                    data-bs-toggle="dropdown">
-                    {{firstName}} {{lastName}}
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#" class="dropdown-item">Profile</a></li>
-                    <li>
-                        <button type="button" class="dropdown-item"
-                            (click)="onLogOutButtonClick()">
-                            Log Out
-                        </button>
-                    </li>
-                </ul>
-            </div>
+<mat-toolbar color="primary d-flex justify-content-between">
+    <div class="d-flex align-items-center">
+        <button
+            type="button"
+            aria-label="Toggle sidenav"
+            mat-icon-button
+            (click)="drawer.toggle()">
+            <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        </button>
+        <span>BlogOps</span>
+    </div>
+    <div class="d-flex align-items-center fw-bolder">
+        Welcome
+        <div class="dropdown">
+            <button
+                class="btn dropdown-toggle border-0 text-white"
+                type="button"
+                data-bs-toggle="dropdown">
+                {{firstName}} {{lastName}}
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#" class="dropdown-item">Profile</a></li>
+                <li>
+                    <button type="button" class="dropdown-item">
+                        Log Out
+                    </button>
+                </li>
+            </ul>
         </div>
     </div>
-</header>
+</mat-toolbar>
+<mat-sidenav-container>
+    <mat-sidenav #drawer class="sidenav" fixedInViewport
+        [attr.role]="(isHandSet$ | async) ? 'dialog' : 'navigation'"
+        [mode]="(isHandSet$ | async) ? 'over' : 'side'">
+        <mat-nav-list>
+            <a mat-list-item href="#">Link 1</a>
+            <a mat-list-item href="#">Link 2</a>
+            <a mat-list-item href="#">Link 3</a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <router-outlet></router-outlet>
+</mat-sidenav-container>

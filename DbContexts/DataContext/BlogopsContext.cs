@@ -6,27 +6,32 @@ namespace BlogOpsDbContext;
 
 public partial class BlogOpsContext : DbContext
 {
-    public BlogOpsContext()
+    private readonly UserInfo _userInfo;
+    public BlogOpsContext(UserInfo userInfo)
     {
+        _userInfo = userInfo;
     }
 
-    public BlogOpsContext(DbContextOptions<BlogOpsContext> options)
+    public BlogOpsContext(DbContextOptions<BlogOpsContext> options, UserInfo userInfo)
         : base(options)
     {
+        _userInfo = userInfo;
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var entityList = ChangeTracker.Entries()
-                   .Where( a => a.Entity is BaseEntity 
+                   .Where(a => a.Entity is BaseEntity
                      && (a.State == EntityState.Added || a.State == EntityState.Modified));
-        
-        foreach(var entity in entityList){
+
+        foreach (var entity in entityList)
+        {
             BaseEntity? baseEntity = entity.Entity as BaseEntity;
-            int userId = UserInfo.UserId;
+            int userId = _userInfo.UserId;
             baseEntity.UpdatedBy = userId;
             baseEntity.UpdatedDate = UserInfo.CurrentTime;
-            if (entity.State == EntityState.Added){
+            if (entity.State == EntityState.Added)
+            {
                 baseEntity.CreatedBy = userId;
                 baseEntity.CreatedDate = UserInfo.CurrentTime;
             }
@@ -58,7 +63,7 @@ public partial class BlogOpsContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("blogs_created_by_fkey");
 
-            entity.HasOne(d => d.UpdatedByUser).WithMany(p => p.BlogUpdatedByBlogs )
+            entity.HasOne(d => d.UpdatedByUser).WithMany(p => p.BlogUpdatedByBlogs)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("blogs_updated_by_fkey");
         });

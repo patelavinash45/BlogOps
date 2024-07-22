@@ -1,4 +1,4 @@
-<app-header />
+<!-- <app-header /> -->
 <div class="container p-2">
     <div class="card shadow-sm p-3">
         <div class="d-flex justify-content-between my-1">
@@ -97,12 +97,14 @@
                     <td class="fs-4">
                         @if(blog.status == 0){
                         <button class="bg-transparent border-0"
-                            (click)="onBlogStatusChange(blog,true)">
+                            (click)="onBlogStatusChange(blog.id,true)">
                             <i class="bi bi-check2-circle"></i>
                         </button>
                         |
                         <button class="bg-transparent border-0"
-                            (click)="onBlogStatusChange(blog,false)">
+                            data-bs-toggle="modal"
+                            data-bs-target="#reject-modal"
+                            (click)="onBlogStatusChange(blog.id,false)">
                             <i class="bi bi-ban fs-5"></i>
                         </button>
                         }
@@ -143,3 +145,4 @@
         }
     </div>
 </div>
+<app-reject-modal />

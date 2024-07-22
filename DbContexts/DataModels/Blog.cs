@@ -23,7 +23,7 @@ public partial class Blog : BaseEntity
     [Column("status")]
     public BlogStatus Status { get; set; }
 
-    [Column("publish_date", TypeName = "timestamp without time zone")]
+    [Column("publish_date", TypeName = "timestamp with time zone")]
     public DateTime? PublishDate { get; set; }
 
     [InverseProperty("Blog")]
