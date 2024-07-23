@@ -7,13 +7,12 @@ import { BlogFilterDto } from '../../../../shared/interfaces/blog-filter-dto';
 import { BlogStatus } from '../../../../shared/enums/blog-status';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from "../../../../components/base/header/header.component";
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, BlogCardComponent, RouterLink, NgxSkeletonLoaderModule, HeaderComponent, MatButtonModule ],
+  imports: [CommonModule, BlogCardComponent, RouterLink, NgxSkeletonLoaderModule, MatButtonModule ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })

@@ -1,19 +1,27 @@
 import { Component, ViewChild, viewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterModule } from '@angular/router';
 import { PaginationDto } from '../../../../../shared/interfaces/pagination-dto';
 import { BlogFilterDto } from '../../../../../shared/interfaces/blog-filter-dto';
 import { BlogStatus } from '../../../../../shared/enums/blog-status';
 import { EnumIntToValuePipe } from '../../../../../core/pipe/enum-int-to-value.pipe';
 import { UserDto } from '../../../../../shared/interfaces/user-dto';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from "../../../../../components/base/header/header.component";
 import { HomeService } from '../../../service/home.service';
 import { RejectModalComponent } from "../reject-modal/reject-modal.component";
+import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, EnumIntToValuePipe, HeaderComponent, RejectModalComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    EnumIntToValuePipe,
+    RejectModalComponent,
+    MatButtonModule,
+    MatExpansionModule,
+  ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -21,13 +29,14 @@ export class DashboardComponent {
   response!: PaginationDto;
   pageNo: number = 1;
   authors: UserDto[] = [];
+  isFilterOptionsExpended: boolean = false;
   blogFilterDto: BlogFilterDto = {
     status: BlogStatus.All,
     searchContent: null,
     isAdmin: true,
     userId: 0
   };
-  @ViewChild(RejectModalComponent) rejectModal! : RejectModalComponent; 
+  @ViewChild(RejectModalComponent) rejectModal!: RejectModalComponent;
 
   constructor(private homeService: HomeService) { }
 
@@ -70,13 +79,17 @@ export class DashboardComponent {
   }
 
   onBlogStatusChange(id: number, isApprove: boolean) {
-    if(isApprove){
-      this.homeService.ChangeStatus(id,true,null).subscribe((response)=>{
+    if (isApprove) {
+      this.homeService.ChangeStatus(id, true, null).subscribe((response) => {
         this.getData();
       });
     }
-    else{
+    else {
       this.rejectModal.blogId = id;
     }
+  }
+
+  onFilterButtonClick(){
+    this.isFilterOptionsExpended = !this.isFilterOptionsExpended;
   }
 }

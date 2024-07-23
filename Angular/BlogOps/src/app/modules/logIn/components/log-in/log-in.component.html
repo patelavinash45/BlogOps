@@ -1,46 +1,45 @@
 <div class="background">
   <div class="container d-flex justify-content-center align-items-center h-100">
     <div class="card logInCard p-3">
-      <div class="text-center card-title fs-3 fw-bold">BlogOps</div>
+      <div class="text-center card-title fs-3 fw-bold mb-3">BlogOps</div>
       <form [formGroup]="loginForm" (submit)="onFormSubmit()">
         <div class="input-group">
           <div class="form-floating">
             <input
               type="email"
-              formControlName = "email"
+              formControlName="email"
               class="form-control"
               id="floatingInput"
-              placeholder="name@example.com"
-            />
+              placeholder="name@example.com" />
             <label for="floatingInput">Email address</label>
           </div>
           <span class="input-group-text" id="basic-addon1">
             <i class="bi bi-envelope btn"></i>
           </span>
         </div>
-        @if(loginForm.controls['email'].invalid && 
-                    (loginForm.controls['email'].touched || loginForm.controls['email'].dirty))
+        @if(loginForm.controls['email'].invalid &&
+        (loginForm.controls['email'].touched ||
+        loginForm.controls['email'].dirty))
         {
-          <span class="text-danger mt-1 mx-1">
+        <span class="text-danger mt-1 mx-1">
           @if(loginForm.controls['email'].errors?.['required'])
           {
-              Email Is Required.
+          Email Is Required.
           }
           @else if(loginForm.controls['email'].errors?.['email'])
           {
-              Email Is Invalid.
+          Email Is Invalid.
           }
-          </span>
+        </span>
         }
         <div class="input-group mt-3">
           <div class="form-floating">
             <input
               [type]="isShowPassword ? 'text' : 'password'"
-              formControlName = "password"
+              formControlName="password"
               class="form-control"
               id="floatingPassword"
-              placeholder="Password"
-            />
+              placeholder="Password" />
             <label for="floatingPassword">Password</label>
           </div>
           <span class="input-group-text" id="basic-addon2">
@@ -50,33 +49,33 @@
                 [ngClass]="{
                   'bi-eye': !isShowPassword,
                   'bi-eye-slash': isShowPassword
-                }"
-              ></i>
+                }"></i>
             </button>
           </span>
         </div>
-        @if(loginForm.controls['password'].invalid && 
-                    (loginForm.controls['password'].touched || loginForm.controls['password'].dirty))
+        @if(loginForm.controls['password'].invalid &&
+        (loginForm.controls['password'].touched ||
+        loginForm.controls['password'].dirty))
         {
-          <span class="text-danger mt-1 mx-1">
+        <span class="text-danger mt-1 mx-1">
           @if(loginForm.controls['password'].errors?.['required'])
           {
-              Password Is Required.
+          Password Is Required.
           }
           @else if(loginForm.controls['password'].errors?.['minlength'])
           {
-              Password Is Invalid.
+          Password Is Invalid.
           }
-          </span>
+        </span>
         }
         <div class="d-flex justify-content-start align-items-center mt-2 mx-2">
-            <input type="checkbox" class="me-2" formControlName="keepMeSignIn"/>
-            <span>
-                Keep me signed in
-            </span>
+          <input type="checkbox" class="me-2" formControlName="keepMeSignIn" />
+          <span>
+            Keep me signed in
+          </span>
         </div>
-        <button class="btn btn-primary w-100 mt-3">
-            Log In
+        <button mat-flat-button color="primary" class="w-100 mt-3">
+          Log In
         </button>
       </form>
     </div>

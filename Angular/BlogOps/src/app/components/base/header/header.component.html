@@ -1,4 +1,4 @@
-<mat-toolbar color="primary d-flex justify-content-between">
+<mat-toolbar color="primary d-flex justify-content-between mat-elevation-z3">
     <div class="d-flex align-items-center">
         <button
             type="button"
@@ -9,34 +9,38 @@
         </button>
         <span>BlogOps</span>
     </div>
-    <div class="d-flex align-items-center fw-bolder">
-        Welcome
+    <div class="d-flex align-items-center">
+        @if(!(isHandSet$ | async)){
+            Welcome
+        }
         <div class="dropdown">
             <button
-                class="btn dropdown-toggle border-0 text-white"
+                mat-button
                 type="button"
-                data-bs-toggle="dropdown">
-                {{firstName}} {{lastName}}
+                class="fs-5"
+                [matMenuTriggerFor]="menu">
+                {{profileName}}
             </button>
-            <ul class="dropdown-menu">
-                <li><a href="#" class="dropdown-item">Profile</a></li>
-                <li>
-                    <button type="button" class="dropdown-item">
-                        Log Out
-                    </button>
-                </li>
-            </ul>
+            <mat-menu #menu="matMenu" class="text-center fw-bolder">
+                <button type="button" class="dropdown-item" (click)="onLogOutButtonClick()">
+                    Log Out
+                </button>
+            </mat-menu>
         </div>
     </div>
 </mat-toolbar>
-<mat-sidenav-container>
-    <mat-sidenav #drawer class="sidenav" fixedInViewport
+<mat-sidenav-container class="mainBody">
+    <mat-sidenav #drawer class="sidenav bg-body-secondary" fixedInViewport
         [attr.role]="(isHandSet$ | async) ? 'dialog' : 'navigation'"
-        [mode]="(isHandSet$ | async) ? 'over' : 'side'">
-        <mat-nav-list>
-            <a mat-list-item href="#">Link 1</a>
-            <a mat-list-item href="#">Link 2</a>
-            <a mat-list-item href="#">Link 3</a>
+        [mode]="(isHandSet$ | async) ? 'over' : 'side'"
+        [opened]="!(isHandSet$ | async)">
+        <mat-nav-list class="text-center">
+            @for(sideBarItem of sideNavItems; track sideBarItem){
+            <a mat-list-item [routerLink]="[sideBarItem[1]]"
+                routerLinkActive="active">
+                {{sideBarItem[0]}}
+            </a>
+            }
         </mat-nav-list>
     </mat-sidenav>
     <router-outlet></router-outlet>

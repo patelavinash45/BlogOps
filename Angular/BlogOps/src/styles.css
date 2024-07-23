@@ -21,3 +21,41 @@ body{
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.mat-typography h1,
+.mat-typography h2,
+.mat-typography h3,
+.mat-typography h4,
+.mat-typography h5,
+.mat-typography h6 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--bs-heading-color);
+}
+
+.mat-typography h1 {
+    font-size: calc(1.375rem + 1.5vw);
+}
+
+.mat-typography h2 {
+    font-size: calc(1.325rem + .9vw);
+}
+
+.mat-typography h3 {
+    font-size: calc(1.3rem + .6vw);
+}
+
+.mat-typography h4 {
+    font-size: calc(1.275rem + .3vw);
+}
+
+.mat-typography h5 {
+    font-size: 1.25rem;
+}
+
+.mat-typography h6 {
+    font-size: 1rem; 
+}

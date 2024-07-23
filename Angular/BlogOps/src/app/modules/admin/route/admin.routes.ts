@@ -5,25 +5,35 @@ import { AddEditBlogComponent } from '../../../components/add-edit-blog/add-edit
 import { UserComponent } from '../components/user/dashboard/user.component';
 import { AddEditUserComponent } from '../components/user/add-edit-user/add-edit-user.component';
 
-export const AdminRoutes : Routes = [
+export const AdminRoutes: Routes = [
     {
         path: 'dashboard',
         component: DashboardComponent
     },
     {
-        path: 'view-blog:blogId',
-        component: ViewBlogComponent
+        path: 'blog',
+        children: [
+            {
+                path: 'view/:blogId',
+                component: ViewBlogComponent
+            },
+            {
+                path: 'new',
+                component: AddEditBlogComponent
+            },
+        ]
     },
     {
-        path: 'new-blog',
-        component: AddEditBlogComponent
-    },
-    {
-        path: 'manage-user',
-        component: UserComponent
-    },
-    {
-        path: 'manage-user/view/:userId',
-        component: AddEditUserComponent
+        path: 'user',
+        children: [
+            {
+                path: '',
+                component: UserComponent
+            },
+            {
+                path: 'view/:userId',
+                component: AddEditUserComponent
+            },
+        ]
     },
 ]

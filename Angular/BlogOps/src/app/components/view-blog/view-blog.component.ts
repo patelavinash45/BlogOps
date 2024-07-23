@@ -4,13 +4,12 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { EnumIntToValuePipe } from '../../core/pipe/enum-int-to-value.pipe';
 import { ViewBlogService } from '../../core/service/view-blog.service';
-import { HeaderComponent } from "../base/header/header.component";
-import { BlogStatus } from '../../shared/enums/blog-status';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-view-blog',
   standalone: true,
-  imports: [CommonModule, RouterLink, EnumIntToValuePipe, HeaderComponent],
+  imports: [CommonModule, RouterLink, EnumIntToValuePipe, MatButtonModule],
   templateUrl: './view-blog.component.html',
   styleUrl: './view-blog.component.css'
 })

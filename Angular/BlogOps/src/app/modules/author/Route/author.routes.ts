@@ -2,7 +2,6 @@ import { Routes } from "@angular/router"
 import { DashboardComponent } from "../components/dashboard/dashboard.component"
 import { AddEditBlogComponent } from "../../../components/add-edit-blog/add-edit-blog.component"
 import { ViewBlogComponent } from "../../../components/view-blog/view-blog.component"
-import { HeaderComponent } from "../../../components/base/header/header.component"
 
 export const AuthorRoutes: Routes = [
     {
@@ -11,15 +10,20 @@ export const AuthorRoutes: Routes = [
         component: DashboardComponent
     },
     {
-        path: 'new-blog',
-        component: AddEditBlogComponent
+        path: 'blog',
+        children: [
+            {
+                path: 'new',
+                component: AddEditBlogComponent
+            },
+            {
+                path: 'edit/:blogId',
+                component: AddEditBlogComponent,
+            },
+            {
+                path: 'view/:blogId',
+                component: ViewBlogComponent,
+            }
+        ]
     },
-    {
-        path: 'edit-blog/:blogId',
-        component: AddEditBlogComponent,
-    },
-    {
-        path: 'view-blog/:blogId',
-        component: ViewBlogComponent,
-    }
 ]

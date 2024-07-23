@@ -5,5 +5,6 @@ export interface LogInResponseDto {
     jwtToken: string,
     firstName: string,
     lastName: string,
+    profileName: string | null,
     roleType: RoleType
 }

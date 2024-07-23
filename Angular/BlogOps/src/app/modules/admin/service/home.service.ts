@@ -7,6 +7,9 @@ import { UserFilterDto } from '../../../shared/interfaces/user-filter-dto';
 import { UserStatus } from '../../../shared/enums/user-status';
 import { RoleType } from '../../../shared/enums/role-type';
 import { ChangeBlogStatusRequestDto } from '../../../shared/interfaces/change-blog-status-request-dto';
+import { UserDto } from '../../../shared/interfaces/user-dto';
+import { Blog } from '../../../shared/interfaces/blog';
+import { PaginationDto } from '../../../shared/interfaces/pagination-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -15,24 +18,24 @@ export class HomeService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public GetBlogs(blogFilterDto: BlogFilterDto, pageNo: number): Observable<any> {
-    return this.httpClient.post(`${baseUrl}/blogs/${pageNo}`, blogFilterDto);
+  public GetBlogs(blogFilterDto: BlogFilterDto, pageNo: number): Observable<PaginationDto> {
+    return this.httpClient.post<PaginationDto>(`${baseUrl}/blogs/${pageNo}`, blogFilterDto);
   }
 
-  public GetAllAuthors(): Observable<any> {
+  public GetAllAuthors(): Observable<UserDto[]> {
     const userFilterDto: UserFilterDto = {
       status: UserStatus.All,
       searchContent: null,
       role: RoleType.Author
     }
-    return this.httpClient.post(`${baseUrl}/users`, userFilterDto);
+    return this.httpClient.post<UserDto[]>(`${baseUrl}/users`, userFilterDto);
   }
 
-  public ChangeStatus(blogId: number, isApproved: boolean, adminComment: string | null): Observable<any> {
+  public ChangeStatus(blogId: number, isApproved: boolean, adminComment: string | null): Observable<void> {
     const changeBlogStatusRequestDto: ChangeBlogStatusRequestDto = {
       isApproved: isApproved,
       adminComment: adminComment,
     }
-    return this.httpClient.put(`${baseUrl}/blogs/change-status/${blogId}`, changeBlogStatusRequestDto);
+    return this.httpClient.put<void>(`${baseUrl}/blogs/change-status/${blogId}`, changeBlogStatusRequestDto);
   }
 }

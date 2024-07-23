@@ -8,11 +8,12 @@ import { LogInRequestDto } from '../../../../shared/interfaces/log-in-request-dt
 import { ManageToastrService } from '../../../../core/service/manage-toastr.service';
 import { LogInSuccessMessage } from '../../../../shared/constants/constant';
 import { RoleType } from '../../../../shared/enums/role-type';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-log-in',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatButtonModule],
   templateUrl: './log-in.component.html',
   styleUrl: './log-in.component.css'
 })
@@ -38,7 +39,7 @@ export class LogInComponent {
     if (this.loginForm.valid) {
       const logInRequestDto: LogInRequestDto = this.loginForm.value;
       this.logInService.LogIn(logInRequestDto).subscribe((response: LogInResponseDto) => {
-        this.toastr.showSuccess(LogInSuccessMessage);
+        this.toastr.ShowSuccess(LogInSuccessMessage);
         this.logInService.SetCookies(response, logInRequestDto.keepMeSignIn);
         if(response.roleType == RoleType.Author)
         {

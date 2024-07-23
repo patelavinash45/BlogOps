@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategoryResponseDto } from '../../shared/interfaces/category-response-dto';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router} from '@angular/router';
 import { ManageToastrService } from '../../core/service/manage-toastr.service';
 import { Blog } from '../../shared/interfaces/blog';
 import { CreateBlogRequestDto } from '../../shared/interfaces/create-blog-request-dto';
@@ -10,12 +10,12 @@ import { UpdateBlogRequestDto } from '../../shared/interfaces/update-blog-reques
 import { BlogSaveMessage, BlogUpdateMessage, editorConfig } from '../../shared/constants/constant';
 import { NewBlogService } from '../../core/service/new-blog.service';
 import { Location } from '@angular/common';
-import { HeaderComponent } from "../base/header/header.component";
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-add-edit-blog',
   standalone: true,
-  imports: [AngularEditorModule, ReactiveFormsModule, HeaderComponent],
+  imports: [AngularEditorModule, ReactiveFormsModule, MatButtonModule],
   templateUrl: './add-edit-blog.component.html',
   styleUrl: './add-edit-blog.component.css'
 })
@@ -81,7 +81,7 @@ export class AddEditBlogComponent {
     if (this.blogForm.valid) {
       if (this.blogId == undefined) {
         this.newBlogService.CreateNewBlog(this.blogForm.value).subscribe((response) => {
-          this.manageToastrService.showSuccess(BlogSaveMessage);
+          this.manageToastrService.ShowSuccess(BlogSaveMessage);
           this.router.navigate(['/author/dashboard']);
         });
       }
@@ -95,7 +95,7 @@ export class AddEditBlogComponent {
           status: this.blogForm.controls['isDraft'].value ? 4 : 0,
         };
         this.newBlogService.UpdateBlog(updateBlogRequestDto).subscribe((response) => {
-          this.manageToastrService.showSuccess(BlogUpdateMessage);
+          this.manageToastrService.ShowSuccess(BlogUpdateMessage);
           this.router.navigate(['/author/dashboard']);
         });
       }

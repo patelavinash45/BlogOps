@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { ManageCookieService } from '../../../core/service/manage-cookie.service';
 import { Router } from '@angular/router';
-import { HeaderComponent } from "../header/header.component";
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-access-denied',
   standalone: true,
-  imports: [HeaderComponent],
+  imports: [MatButtonModule],
   templateUrl: './access-denied.component.html',
   styleUrl: './access-denied.component.css'
 })

@@ -15,10 +15,27 @@ public class UserController(IUserService userService) : ControllerBase
 
     [Authentication(RoleEnum.Admin)]
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IActionResult GetUsers([FromBody] UserFilterDto userFilterDto)
     {
         var response = _userService.GetUsers(userFilterDto);
         return Ok(response);
+    }
+
+    [Authentication(RoleEnum.Admin)]
+    [HttpPost]
+    [Route("user")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDto createUserRequestDto)
+    {
+        if (!ModelState.IsValid)
+            throw new BadHttpRequestException(nameof(CreateUserRequestDto));
+
+        await _userService.CreateUser(createUserRequestDto);
+        return Ok();
     }
 
     [HttpPost]

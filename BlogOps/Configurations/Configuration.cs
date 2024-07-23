@@ -79,6 +79,7 @@ public static class Configuration
 
     public static IServiceCollection AddDependenceInjection(this IServiceCollection services)
     {
+        services.AddScoped<UserInfo>();
         services.Scan(selector => selector
             .FromAssemblies(
             typeof(IGenericRepository<>).Assembly,

@@ -19,6 +19,7 @@ public record CreateUserRequestDto
     [StringLength(48)]
     public required string LastName { get; set; }
 
+    [StringLength(48)]
     public string? ProfileName { get; set; }
 
     public RoleEnum Role { get; set; }

@@ -29,18 +29,13 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         {
             _httpContextAccessor.HttpContext!.Session.SetInt32("userId", response.First().Id);
             string jwtToken = _jwtService.CreateJwtToken(response.First(), logInRequestDto.KeepMeSignIn ? 60 : 20);
-            // _httpContextAccessor.HttpContext!.Response.Cookies.Append("JwtToken", jwtToken, new CookieOptions
-            // {
-            //     Expires = DateTime.UtcNow.AddMinutes(logInRequestDto.KeepMeSignIn ? 60 : 20),
-            //     HttpOnly = true,
-            //     IsEssential = true
-            // });
             return new LogInResponseDto
             {
                 Email = logInRequestDto.Email,
                 JwtToken = jwtToken,
                 FirstName = response.First().FirstName,
                 LastName = response.First().LastName,
+                ProfileName = response.First().ProfileName,
                 RoleType = response.First().RoleId == 1 ? RoleEnum.Admin : RoleEnum.Author,
             };
         }
@@ -63,10 +58,12 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         return userDtos;
     }
 
-    // public async Task<bool> CreateUser(CreateUserRequestDto createUserRequestDto)
-    // {
-        
-    // }
+    public async Task<bool> CreateUser(CreateUserRequestDto createUserRequestDto)
+    {
+        User user = createUserRequestDto.ToUser();
+        Add(user);
+        return await SaveAsync() ? true : throw new Exception();
+    }
 
     public async Task<bool> UpdateUser(UserDto userDto)
     {

@@ -8,7 +8,11 @@ export class ManageToastrService {
 
   constructor(private toasterService: ToastrService) { }
 
-  showSuccess(toastMessage:string) {
+  ShowSuccess(toastMessage:string) {
     this.toasterService.success(toastMessage);
+  }
+
+  ShowError(toastMessage:string) {
+    this.toasterService.error(toastMessage);
   }
 }

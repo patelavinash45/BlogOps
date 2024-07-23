@@ -15,6 +15,6 @@ export const authorGuard: CanActivateFn = (route, state,) => {
     return true;
   }
   const router = inject(Router);
-  router.navigate(["/access-denied"]);
+  router.navigate(["/access/denied"]);
   return false;
 };

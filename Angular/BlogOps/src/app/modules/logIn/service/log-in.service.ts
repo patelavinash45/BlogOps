@@ -13,8 +13,8 @@ export class LogInService {
 
   constructor(private httpClient: HttpClient, private manageCookieService: ManageCookieService) { }
 
-  public LogIn(logInRequestDto: LogInRequestDto): Observable<any> {
-    return this.httpClient.post(`${baseUrl}/users/login`, logInRequestDto);
+  public LogIn(logInRequestDto: LogInRequestDto): Observable<LogInResponseDto> {
+    return this.httpClient.post<LogInResponseDto>(`${baseUrl}/users/login`, logInRequestDto);
   }
 
   public SetCookies(logInResponseDto: LogInResponseDto, keepMeSignIn: boolean) {

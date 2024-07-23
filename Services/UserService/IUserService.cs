@@ -10,7 +10,7 @@ public interface IUserService : IGenericService<User>
 {
     LogInResponseDto ValidateUser(LogInRequestDto logInRequestDto);
     List<UserDto> GetUsers(UserFilterDto userFilterDto);
-    //Task<bool> CreateUser(CreateUserRequestDto createUserRequestDto);
+    Task<bool> CreateUser(CreateUserRequestDto createUserRequestDto);
     Task<bool> UpdateUser(UserDto userDto);
     Task<bool> DeleteUser(int id);
 }

@@ -12,5 +12,7 @@ public record LogInResponseDto
 
     public required string LastName { get; set; }
 
+    public string? ProfileName { get; set; }
+
     public required RoleEnum RoleType { get; set; }
 }

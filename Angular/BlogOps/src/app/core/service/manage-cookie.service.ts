@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { LogInResponseDto } from '../../shared/interfaces/log-in-response-dto';
 import { Router } from '@angular/router';
-import * as cryptoJS from 'crypto-js';
+import cryptoJS from 'crypto-js';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,9 @@ export class ManageCookieService {
     this.cookieService.set('FirstName', this.encryptData(logInResponseDto.firstName), date, '/');
     this.cookieService.set('LastName', this.encryptData(logInResponseDto.lastName), date, '/');
     this.cookieService.set('Role', this.encryptData(logInResponseDto.roleType.toString()), date, '/');
+    if (logInResponseDto.profileName != null) {
+      this.cookieService.set('ProfileName', this.encryptData(logInResponseDto.profileName), date, '/');
+    }
   }
 
   public GetJwtToken() {
@@ -35,6 +38,16 @@ export class ManageCookieService {
   public GetLastName() {
     const lastName = this.cookieService.get('LastName');
     return this.decryptData(lastName);
+  }
+
+  public GetProfileName() {
+    const profileName = this.cookieService.get('ProfileName');
+    console.log("profileName");
+    console.log(profileName);
+    if (profileName.length > 0) {
+      return this.decryptData(profileName);
+    }
+    return `${this.GetFirstName()} ${this.GetLastName()}`
   }
 
   public GetRoleType() {
