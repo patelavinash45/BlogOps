@@ -63,22 +63,12 @@
   </div>
   @defer (when response!= null) {
   <app-blog-card [blogs]="response.dtoList" />
-  <nav>
-    <ul class="pagination justify-content-end">
-      <li class="page-item" [ngClass]="{'disabled': !response.isPrevious}">
-        <button class="page-link" tabindex="-1"
-          (click)="onPreviousPageButtonClick()">Previous</button>
-      </li>
-      <li class="page-item active">
-        <button class="page-link" [disabled]="true">{{response.pageNo}} <span
-            class="sr-only">(current)</span></button>
-      </li>
-      <li class="page-item" [ngClass]="{'disabled': !response.isNext}">
-        <button class="page-link"
-          (click)="onNextPageButtonClick()">Next</button>
-      </li>
-    </ul>
-  </nav>
+  <mat-paginator
+      [length]="response.totalCount"
+      [pageSizeOptions]="[]"
+      [pageSize]="12"
+      aria-label="Select page"
+    ></mat-paginator>
   }@placeholder(minimum 2000ms) {
   <div class="row">
     @for(i of loopArray; track i){

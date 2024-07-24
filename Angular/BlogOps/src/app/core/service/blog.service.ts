@@ -10,7 +10,7 @@ import { Blog } from '../../shared/interfaces/blog';
 @Injectable({
   providedIn: 'root'
 })
-export class NewBlogService {
+export class BlogService {
 
   constructor(private httpClient: HttpClient) { }
 

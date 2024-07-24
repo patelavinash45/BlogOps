@@ -1,6 +1,6 @@
 <div class="container p-2">
     <div class="card shadow-sm p-3">
-        <div class="d-flex justify-content-between my-1">
+        <div class="d-flex justify-content-between align-items-center my-1">
             <span class="fs-3 fw-bolder">
                 User
             </span>
@@ -10,8 +10,8 @@
                     (click)="onFilterButtonClick()">
                     <i class="bi bi-funnel"></i>
                 </button>
-                <a mat-flat-button color="primary">
-                    <!-- [routerLink]="['/admin/blog/new']"> -->
+                <a mat-flat-button color="primary"
+                    [routerLink]="['/admin/user/new']">
                     Add New
                 </a>
             </div>
@@ -62,7 +62,7 @@
     <div class="mt-3 card shadow-sm p-3">
         @defer (when users!= null) {
         <table
-            class="table table-responsive text-center table-bordered rounded-2">
+            class="table table-responsive text-center table-bordered rounded-2 fs-5">
             <thead>
                 <tr class="align-middle">
                     <th class="col-4">
@@ -89,12 +89,14 @@
                         {{user.firstName}} {{user.lastName}}
                     </td>
                     <td>
-                        {{user.status | enumIntToValue: 'UserEnum'}}
+                        <span class="badge rounded-pill fw-normal px-3 py-2" [ngClass]="statusWiseClasses[user.status]">
+                            {{user.status | userStatusIntToValue}}
+                        </span>
                     </td>
                     <td class="fs-5">
-                        <button class="bg-transparent border-0">
-                            Edit
-                        </button>
+                        <a mat-mini-fab color="primary" [routerLink]="['/admin/user/edit',user.id]">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
                     </td>
                 </tr>
                 }

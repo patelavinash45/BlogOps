@@ -1,4 +1,4 @@
-<div class="modal" tabindex="-1" id="reject-modal">
+<div class="modal" id="reject-modal">
     <div class="modal-dialog modal-dialog-centered">
         <form class="modal-content" [formGroup]="rejectForm"
             (submit)="onFormSubmit()">
@@ -14,17 +14,8 @@
                     </textarea>
                     <label for="comment">Comment</label>
                 </div>
-                @if(rejectForm.controls['adminComment'].invalid &&
-                (rejectForm.controls['adminComment'].touched ||
-                rejectForm.controls['adminComment'].dirty))
-                {
-                <span class="text-danger mt-1 mx-1">
-                    @if(rejectForm.controls['adminComment'].errors?.['maxlength'])
-                    {
-                    Length Is Only 256 Characters.
-                    }
-                </span>
-                }
+                <app-validation-message
+                    [control]="rejectForm.controls['adminComment']" />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary"

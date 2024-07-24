@@ -9,11 +9,12 @@ import { ManageToastrService } from '../../../../core/service/manage-toastr.serv
 import { LogInSuccessMessage } from '../../../../shared/constants/constant';
 import { RoleType } from '../../../../shared/enums/role-type';
 import { MatButtonModule } from '@angular/material/button';
+import { ValidationMessageComponent } from "../../../../components/base/validation-message/validation-message.component";
 
 @Component({
   selector: 'app-log-in',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatButtonModule],
+  imports: [CommonModule, ReactiveFormsModule, MatButtonModule, ValidationMessageComponent],
   templateUrl: './log-in.component.html',
   styleUrl: './log-in.component.css'
 })
@@ -47,7 +48,7 @@ export class LogInComponent {
         }
         else
         {
-          this.router.navigate(['/admin/dashboard']);
+          this.router.navigate(['/admin/blog']);
         }
       })
     }else{

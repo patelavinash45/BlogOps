@@ -1,25 +1,25 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from '../components/home/dashboard/dashboard.component';
 import { ViewBlogComponent } from '../../../components/view-blog/view-blog.component';
 import { AddEditBlogComponent } from '../../../components/add-edit-blog/add-edit-blog.component';
-import { UserComponent } from '../components/user/dashboard/user.component';
+import { UserComponent } from '../components/user/user/user.component';
 import { AddEditUserComponent } from '../components/user/add-edit-user/add-edit-user.component';
+import { BlogComponent } from '../components/blog/blog/blog.component';
 
 export const AdminRoutes: Routes = [
-    {
-        path: 'dashboard',
-        component: DashboardComponent
-    },
     {
         path: 'blog',
         children: [
             {
+                path: '',
+                component: BlogComponent,
+            },
+            {
                 path: 'view/:blogId',
-                component: ViewBlogComponent
+                component: ViewBlogComponent,
             },
             {
                 path: 'new',
-                component: AddEditBlogComponent
+                component: AddEditBlogComponent,
             },
         ]
     },
@@ -28,11 +28,19 @@ export const AdminRoutes: Routes = [
         children: [
             {
                 path: '',
-                component: UserComponent
+                component: UserComponent,
+            },
+            {
+                path: 'new',
+                component: AddEditUserComponent,
             },
             {
                 path: 'view/:userId',
-                component: AddEditUserComponent
+                component: AddEditUserComponent,
+            },
+            {
+                path: 'edit/:userId',
+                component: AddEditUserComponent,
             },
         ]
     },

@@ -1,4 +1,5 @@
 using BlogOps.HelperClass;
+using Dtos.CommonDtos;
 using Dtos.Enums;
 using Dtos.RequestDtos;
 using Microsoft.AspNetCore.Mvc;
@@ -53,12 +54,12 @@ public class CategoryController(ICategoryService categoryService) : ControllerBa
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UpdateCategory(int id, [FromBody] UpdateCategoryRequestDto updateCategoryRequestDto)
+    public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryDto categoryDto)
     {
         if (id <= 0 || !ModelState.IsValid)
-            throw new BadHttpRequestException(nameof(UpdateCategoryRequestDto));
+            throw new BadHttpRequestException(nameof(CategoryDto));
 
-        await _categoryService.UpdateCategory(updateCategoryRequestDto);
+        await _categoryService.UpdateCategory(categoryDto);
         return Ok();
     }
 

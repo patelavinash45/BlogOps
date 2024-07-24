@@ -2,21 +2,25 @@ import { Component } from '@angular/core';
 import { UserService } from '../../../service/user.service';
 import { UserDto } from '../../../../../shared/interfaces/user-dto';
 import { UserFilterDto } from '../../../../../shared/interfaces/user-filter-dto';
-import { EnumIntToValuePipe } from '../../../../../core/pipe/enum-int-to-value.pipe';
 import { UserStatus } from '../../../../../shared/enums/user-status';
 import { RoleType } from '../../../../../shared/enums/role-type';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { RouterLink } from '@angular/router';
+import { UserStatusIntToValuePipe } from '../../../../../core/pipe/user-status-int-to-value.pipe';
+import { UserStatusWiseClasses } from '../../../../../shared/constants/constant';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [EnumIntToValuePipe, MatButtonModule, MatExpansionModule],
+  imports: [UserStatusIntToValuePipe, MatButtonModule, MatExpansionModule, RouterLink, CommonModule],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
 export class UserComponent {
   users: UserDto[] = [];
+  statusWiseClasses: string[] = UserStatusWiseClasses;
   isFilterOptionsExpended: boolean = false;
   userFilterDto: UserFilterDto = {
     status: UserStatus.All,

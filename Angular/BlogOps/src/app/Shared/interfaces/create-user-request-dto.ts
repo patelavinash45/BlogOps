@@ -1,13 +1,12 @@
 import { RoleType } from "../enums/role-type";
 import { UserStatus } from "../enums/user-status";
 
-export interface UserDto {
-    id: number,
+export interface CreateUserRequestDto {
+    email: string,
+    password: string,
     firstName: string,
     lastName: string,
-    profileName: string | null,
-    email: string,
-    status: UserStatus,
+    profileName: string,
     role: RoleType,
-    password: string | null,
+    status: UserStatus,
 }

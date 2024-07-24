@@ -17,6 +17,7 @@ public record UpdateBlogRequestDto
     [StringLength(256)]
     public string? AdminComment { get; set; }
 
+    [UserRoleValidation(ErrorMessage = "Status is not Valid.")]
     public BlogStatus Status { get; set; }
 
     [IntListValidation(ErrorMessage = "CategoryId is not Valid.")]

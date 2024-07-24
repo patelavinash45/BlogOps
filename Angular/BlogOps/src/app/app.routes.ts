@@ -7,7 +7,6 @@ import { AccessDeniedComponent } from './components/base/access-denied/access-de
 import { adminGuard } from './core/guard/admin.guard';
 import { authorGuard } from './core/guard/author.guard';
 import { HeaderComponent } from './components/base/header/header.component';
-import { Component } from '@angular/core';
 
 export const routes: Routes = [
     {
@@ -40,6 +39,6 @@ export const routes: Routes = [
                 path: 'denied',
                 component: AccessDeniedComponent,
             }
-        ]
+        ],
     }
 ];

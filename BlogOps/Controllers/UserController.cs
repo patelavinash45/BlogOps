@@ -14,6 +14,17 @@ public class UserController(IUserService userService) : ControllerBase
     private readonly IUserService _userService = userService;
 
     [Authentication(RoleEnum.Admin)]
+    [HttpGet]
+    [Route("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IActionResult GetUser(int id)
+    {
+        var response = _userService.GetUser(id);
+        return Ok(response);
+    }
+
+    [Authentication(RoleEnum.Admin)]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -54,12 +65,13 @@ public class UserController(IUserService userService) : ControllerBase
 
     [Authentication(RoleEnum.Admin)]
     [HttpPut]
+    [Route("{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UpdateUser([FromBody] UserDto userDto)
+    public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDto userDto)
     {
-        if (!ModelState.IsValid)
+        if (id <= 0 || !ModelState.IsValid)
             throw new BadHttpRequestException(nameof(userDto));
 
         await _userService.UpdateUser(userDto);

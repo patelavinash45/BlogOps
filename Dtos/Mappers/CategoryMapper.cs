@@ -1,6 +1,6 @@
 using DbContexts.DataModels;
+using Dtos.CommonDtos;
 using Dtos.RequestDtos;
-using Dtos.ResponseDtos;
 
 namespace Dtos.Mappers;
 
@@ -14,9 +14,9 @@ public static class CategoryMapper
         };
     }
 
-    public static CategoryResponseDto ToCategoryResponseDto(this Category category)
+    public static CategoryDto ToCategoryResponseDto(this Category category)
     {
-        return new CategoryResponseDto
+        return new CategoryDto
         {
             Id = category.Id,
             Name = category.Name,

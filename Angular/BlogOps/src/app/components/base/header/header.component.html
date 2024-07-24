@@ -11,7 +11,7 @@
     </div>
     <div class="d-flex align-items-center">
         @if(!(isHandSet$ | async)){
-            Welcome
+        Welcome
         }
         <div class="dropdown">
             <button
@@ -22,7 +22,8 @@
                 {{profileName}}
             </button>
             <mat-menu #menu="matMenu" class="text-center fw-bolder">
-                <button type="button" class="dropdown-item" (click)="onLogOutButtonClick()">
+                <button type="button" class="dropdown-item"
+                    (click)="onLogOutButtonClick()">
                     Log Out
                 </button>
             </mat-menu>

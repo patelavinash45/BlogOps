@@ -8,6 +8,7 @@ namespace Services.UserService;
 
 public interface IUserService : IGenericService<User>
 {
+    UserDto GetUser(int id);
     LogInResponseDto ValidateUser(LogInRequestDto logInRequestDto);
     List<UserDto> GetUsers(UserFilterDto userFilterDto);
     Task<bool> CreateUser(CreateUserRequestDto createUserRequestDto);

@@ -6,7 +6,6 @@ import { ViewBlogComponent } from "../../../components/view-blog/view-blog.compo
 export const AuthorRoutes: Routes = [
     {
         path: 'dashboard',
-        pathMatch: 'full',
         component: DashboardComponent
     },
     {

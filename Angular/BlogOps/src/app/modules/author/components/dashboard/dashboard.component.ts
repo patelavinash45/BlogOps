@@ -8,11 +8,12 @@ import { BlogStatus } from '../../../../shared/enums/blog-status';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, BlogCardComponent, RouterLink, NgxSkeletonLoaderModule, MatButtonModule ],
+  imports: [CommonModule, BlogCardComponent, RouterLink, NgxSkeletonLoaderModule, MatButtonModule, MatPaginator ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })

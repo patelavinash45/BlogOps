@@ -20,6 +20,12 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
     private readonly IJwtService _jwtService = jwtService;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
+    public UserDto GetUser(int id)
+    {
+        User? user = GetById(id) ?? throw new Exception("User Not Found");
+        return user.ToUserDto();
+    }
+
     public LogInResponseDto ValidateUser(LogInRequestDto logInRequestDto)
     {
         Expression<Func<User, bool>> func = a => a.Email == logInRequestDto.Email;
@@ -49,7 +55,8 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
                                                 || (userFilterDto.Role == RoleEnum.Author && a.RoleId == 2))
                                                 && (userFilterDto.Status == UserStatus.All || userFilterDto.Status == a.Status)
                                                 && (userFilterDto.SearchContent == null || (a.FirstName + " " + a.LastName).ToLower().Contains(userFilterDto.SearchContent.ToLower()));
-        IEnumerable<User>? users = GetByCriteria(where: where);
+        Expression<Func<User, object>> orderBy = a => a.Id;
+        IEnumerable<User>? users = GetByCriteria(where: where,orderBy: orderBy);
         List<UserDto> userDtos = [];
         foreach (User user in users ?? [])
         {

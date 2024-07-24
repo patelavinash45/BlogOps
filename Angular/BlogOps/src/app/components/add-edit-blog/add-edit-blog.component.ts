@@ -2,20 +2,21 @@ import { Component } from '@angular/core';
 import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategoryResponseDto } from '../../shared/interfaces/category-response-dto';
-import { ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ManageToastrService } from '../../core/service/manage-toastr.service';
 import { Blog } from '../../shared/interfaces/blog';
 import { CreateBlogRequestDto } from '../../shared/interfaces/create-blog-request-dto';
 import { UpdateBlogRequestDto } from '../../shared/interfaces/update-blog-request-dto';
 import { BlogSaveMessage, BlogUpdateMessage, editorConfig } from '../../shared/constants/constant';
-import { NewBlogService } from '../../core/service/new-blog.service';
 import { Location } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { BlogService } from '../../core/service/blog.service';
+import { ValidationMessageComponent } from "../base/validation-message/validation-message.component";
 
 @Component({
   selector: 'app-add-edit-blog',
   standalone: true,
-  imports: [AngularEditorModule, ReactiveFormsModule, MatButtonModule],
+  imports: [AngularEditorModule, ReactiveFormsModule, MatButtonModule, ValidationMessageComponent],
   templateUrl: './add-edit-blog.component.html',
   styleUrl: './add-edit-blog.component.css'
 })
@@ -29,7 +30,7 @@ export class AddEditBlogComponent {
   selectedCategories: number[] = [];
 
   constructor(
-    private newBlogService: NewBlogService,
+    private blogService: BlogService,
     private manageToastrService: ManageToastrService,
     private router: Router,
     private route: ActivatedRoute,
@@ -48,7 +49,7 @@ export class AddEditBlogComponent {
   }
 
   getBlogDetails() {
-    this.newBlogService.GetBlogDetails(this.blogId).subscribe((response: Blog) => {
+    this.blogService.GetBlogDetails(this.blogId).subscribe((response: Blog) => {
       this.isDraft = response.status == 4;
       this.blogForm.setValue({
         title: response.title,
@@ -61,7 +62,7 @@ export class AddEditBlogComponent {
   }
 
   ngOnInit(): void {
-    this.newBlogService.GetCategories().subscribe((response: CategoryResponseDto[]) => {
+    this.blogService.GetCategories().subscribe((response: CategoryResponseDto[]) => {
       this.categories = response;
     });
   }
@@ -80,7 +81,7 @@ export class AddEditBlogComponent {
   onFormSubmit() {
     if (this.blogForm.valid) {
       if (this.blogId == undefined) {
-        this.newBlogService.CreateNewBlog(this.blogForm.value).subscribe((response) => {
+        this.blogService.CreateNewBlog(this.blogForm.value).subscribe((response) => {
           this.manageToastrService.ShowSuccess(BlogSaveMessage);
           this.router.navigate(['/author/dashboard']);
         });
@@ -94,7 +95,7 @@ export class AddEditBlogComponent {
           blogCategories: this.blogForm.controls['blogCategories'].value,
           status: this.blogForm.controls['isDraft'].value ? 4 : 0,
         };
-        this.newBlogService.UpdateBlog(updateBlogRequestDto).subscribe((response) => {
+        this.blogService.UpdateBlog(updateBlogRequestDto).subscribe((response) => {
           this.manageToastrService.ShowSuccess(BlogUpdateMessage);
           this.router.navigate(['/author/dashboard']);
         });
@@ -117,7 +118,7 @@ export class AddEditBlogComponent {
     this.blogForm.controls['blogCategories'].updateValueAndValidity();
   }
 
-  onBackButtonClick(){
+  onBackButtonClick() {
     this.location.back();
   }
 }

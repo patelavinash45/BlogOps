@@ -1,32 +1,36 @@
 import { Component, ViewChild, viewChild } from '@angular/core';
-import { RouterLink, RouterModule } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { PaginationDto } from '../../../../../shared/interfaces/pagination-dto';
 import { BlogFilterDto } from '../../../../../shared/interfaces/blog-filter-dto';
 import { BlogStatus } from '../../../../../shared/enums/blog-status';
-import { EnumIntToValuePipe } from '../../../../../core/pipe/enum-int-to-value.pipe';
 import { UserDto } from '../../../../../shared/interfaces/user-dto';
 import { CommonModule } from '@angular/common';
 import { HomeService } from '../../../service/home.service';
 import { RejectModalComponent } from "../reject-modal/reject-modal.component";
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { BlogStatusIntToValuePipe } from '../../../../../core/pipe/blog-status-int-to-value.pipe';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { StatusWiseClasses } from '../../../../../shared/constants/constant';
 
 @Component({
-  selector: 'app-dashboard',
+  selector: 'app-blog',
   standalone: true,
   imports: [
     CommonModule,
     RouterLink,
-    EnumIntToValuePipe,
     RejectModalComponent,
     MatButtonModule,
     MatExpansionModule,
+    BlogStatusIntToValuePipe,
+    MatPaginatorModule
   ],
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  templateUrl: './blog.component.html',
+  styleUrl: './blog.component.css'
 })
-export class DashboardComponent {
+export class BlogComponent {
   response!: PaginationDto;
+  statusWiseClasses: string[] = StatusWiseClasses;
   pageNo: number = 1;
   authors: UserDto[] = [];
   isFilterOptionsExpended: boolean = false;
@@ -43,6 +47,7 @@ export class DashboardComponent {
   getData() {
     this.homeService.GetBlogs(this.blogFilterDto, this.pageNo).subscribe((response: PaginationDto) => {
       this.response = response;
+      console.log(this.response)
     });
   }
 
@@ -89,7 +94,7 @@ export class DashboardComponent {
     }
   }
 
-  onFilterButtonClick(){
+  onFilterButtonClick() {
     this.isFilterOptionsExpended = !this.isFilterOptionsExpended;
   }
 }

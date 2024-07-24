@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Dtos.RequestDtos;
+namespace Dtos.CommonDtos;
 
-public record UpdateCategoryRequestDto
+public record CategoryDto
 {
     [Range(1, int.MaxValue)]
     public int Id { get; set; }

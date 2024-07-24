@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using DbContexts.Enums;
+using Dtos.CustomValidation;
+using Dtos.Enums;
 
 namespace Dtos.CommonDtos;
 
@@ -23,5 +25,9 @@ public record UserDto
     [StringLength(256)]
     public string? Password { get; set; }
 
+    [UserStatusValidation(ErrorMessage = "Status is not Valid.")]
     public UserStatus Status { get; set; }
+
+    [UserRoleValidation(ErrorMessage = "Role is not Valid.")]
+    public RoleEnum Role { get; set; }
 }

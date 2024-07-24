@@ -17,21 +17,7 @@
             <i class="bi bi-envelope btn"></i>
           </span>
         </div>
-        @if(loginForm.controls['email'].invalid &&
-        (loginForm.controls['email'].touched ||
-        loginForm.controls['email'].dirty))
-        {
-        <span class="text-danger mt-1 mx-1">
-          @if(loginForm.controls['email'].errors?.['required'])
-          {
-          Email Is Required.
-          }
-          @else if(loginForm.controls['email'].errors?.['email'])
-          {
-          Email Is Invalid.
-          }
-        </span>
-        }
+        <app-validation-message [control]="loginForm.controls['email']" />
         <div class="input-group mt-3">
           <div class="form-floating">
             <input
@@ -53,26 +39,10 @@
             </button>
           </span>
         </div>
-        @if(loginForm.controls['password'].invalid &&
-        (loginForm.controls['password'].touched ||
-        loginForm.controls['password'].dirty))
-        {
-        <span class="text-danger mt-1 mx-1">
-          @if(loginForm.controls['password'].errors?.['required'])
-          {
-          Password Is Required.
-          }
-          @else if(loginForm.controls['password'].errors?.['minlength'])
-          {
-          Password Is Invalid.
-          }
-        </span>
-        }
+        <app-validation-message [control]="loginForm.controls['password']" />
         <div class="d-flex justify-content-start align-items-center mt-2 mx-2">
           <input type="checkbox" class="me-2" formControlName="keepMeSignIn" />
-          <span>
-            Keep me signed in
-          </span>
+          <span> Keep me signed in </span>
         </div>
         <button mat-flat-button color="primary" class="w-100 mt-3">
           Log In

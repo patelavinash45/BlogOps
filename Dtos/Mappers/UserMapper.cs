@@ -14,6 +14,7 @@ public static class UserMapper
         user.Email = userDto.Email;
         user.Password = userDto.Password != null ? HashPassword(userDto.Password!) : user.Password;
         user.Status = userDto.Status;
+        user.RoleId = (int)userDto.Role;
         return user;
     }
 
@@ -27,6 +28,7 @@ public static class UserMapper
             ProfileName = user.ProfileName,
             Email = user.Email,
             Status = user.Status,
+            Role = (Enums.RoleEnum)user.RoleId,
         };
     }
 
@@ -34,11 +36,13 @@ public static class UserMapper
     {
         return new User
         {
+            RoleId = (int)createUserRequestDto.Role,
             FirstName = createUserRequestDto.FirstName,
             LastName = createUserRequestDto.LastName,
             ProfileName = createUserRequestDto.ProfileName,
             Email = createUserRequestDto.Email,
             Password = HashPassword(createUserRequestDto.Password),
+            Status = createUserRequestDto.Status,
         };
     }
 

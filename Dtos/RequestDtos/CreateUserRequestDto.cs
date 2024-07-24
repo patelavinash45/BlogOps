@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using DbContexts.Enums;
+using Dtos.CustomValidation;
 using Dtos.Enums;
 
 namespace Dtos.RequestDtos;
@@ -22,6 +24,10 @@ public record CreateUserRequestDto
     [StringLength(48)]
     public string? ProfileName { get; set; }
 
+    [UserRoleValidation(ErrorMessage = "Role Is Not Valid.")]
     public RoleEnum Role { get; set; }
+
+    [UserStatusValidation(ErrorMessage = "Status Is Not Valid.")]
+    public UserStatus Status { get; set; }
 
 }

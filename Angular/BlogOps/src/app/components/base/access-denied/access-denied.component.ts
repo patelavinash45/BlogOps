@@ -16,7 +16,7 @@ export class AccessDeniedComponent {
   onHomeButtonClick(){
     const roleType = this.cookieService.GetRoleType();
     if(roleType == '1'){
-      this.route.navigate(['/admin/dashboard']);
+      this.route.navigate(['/admin/blog']);
     }
     else{
       this.route.navigate(['/author/dashboard']);

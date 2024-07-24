@@ -1,4 +1,5 @@
 import { AngularEditorConfig } from "@kolkov/angular-editor";
+import { RoutePathConstant } from "./route-path.constant";
 
 export const baseUrl = 'http://localhost:5014/api';
 
@@ -8,7 +9,9 @@ export const BlogSaveMessage = "Blog Created SuccessFully.";
 
 export const BlogUpdateMessage = "Blog Updated SuccessFully.";
 
-export const statusWiseClasses: string[] = ['bg-primary text-white border-white', 'bg-success text-white border-white', 'bg-danger text-white border-white', 'bg-secondary text-white border-white', 'bg-warning text-black border-black'];
+export const StatusWiseClasses: string[] = ['bg-primary text-white border-white', 'bg-success text-white border-white', 'bg-danger text-white border-white', 'bg-secondary text-white border-white', 'bg-warning text-black border-black'];
+
+export const UserStatusWiseClasses: string[] = ['bg-success text-white border-white', 'bg-warning text-black border-black', 'bg-danger text-white border-white'];
 
 export const editorConfig: AngularEditorConfig = {
   editable: true,
@@ -24,13 +27,14 @@ export const editorConfig: AngularEditorConfig = {
 };
 
 export const adminSideBarItems: string[][] = [
-  ['Dashboard', '/admin/dashboard'],
-  ['User', '/admin/user/'],
+  ['Dashboard', RoutePathConstant.AdminDashboardPath],
+  ['Blog', RoutePathConstant.AdminBlogPath],
+  ['User', RoutePathConstant.AdminUserPath],
   ['Categories', '/admin/category'],
 ];
 
 export const authorSideBarItems: string[][] = [
-  ['Dashboard', '/author/dashboard'],
+  ['Dashboard', RoutePathConstant.AuthorDashboardPath],
   ['Profile', '/author/manage-user'],
 ];
 

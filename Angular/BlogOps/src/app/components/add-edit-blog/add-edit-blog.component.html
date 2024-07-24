@@ -1,106 +1,74 @@
 <div class="container">
-    <div class="shadow-sm card main-div p-3 mt-2">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="text-center fw-bold fs-3">
-                @if (this.blogId != undefined) {
-                    Edit Blog
-                }
-                @else {
-                    New Blog
-                }
-            </div>
-            <button mat-flat-button color="primary" (click)="onBackButtonClick()">
-                Back
-            </button>
-        </div>
+  <div class="shadow-sm card main-div p-3 mt-2">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="text-center fw-bold fs-3">
+        @if (this.blogId != undefined) { Edit Blog } @else { New Blog }
+      </div>
+      <button mat-flat-button color="primary" (click)="onBackButtonClick()">
+        Back
+      </button>
     </div>
-    @defer (when categories.length > 0) {
-    <form class="p-3 shadow-sm card main-div my-3" [formGroup]="blogForm"
-        (submit)="onFormSubmit()">
-        <div class="fs-5 fw-bolder mb-2 mx-1">Blog Title</div>
-        <div class="form-floating">
-            <textarea
-                formControlName="title"
-                class="form-control title"
-                placeholder="Title"
-                id="title"
-                length="70px"></textarea>
-            <label for="title">Title</label>
+  </div>
+  @defer (when categories.length > 0) {
+  <form
+    class="p-3 shadow-sm card main-div my-3"
+    [formGroup]="blogForm"
+    (submit)="onFormSubmit()"
+  >
+    <div class="fs-5 fw-bolder mb-2 mx-1">Blog Title</div>
+    <div class="form-floating">
+      <textarea
+        formControlName="title"
+        class="form-control title"
+        placeholder="Title"
+        id="title"
+        length="70px"
+      ></textarea>
+      <label for="title">Title</label>
+    </div>
+    <app-validation-message [control]="blogForm.controls['title']" />
+    <div class="fs-5 fw-bolder mb-2 mt-3 mx-1">Blog Content</div>
+    <angular-editor
+      [config]="editConfig"
+      formControlName="content"
+      form
+      class="content"
+      placeholder="Content"
+    />
+    <app-validation-message [control]="blogForm.controls['content']" />
+    <div class="d-flex align-items-baseline">
+      <div class="fs-5 fw-bolder mb-2 mt-3 mx-1">Blog Categories :</div>
+      <div class="mx-2">
+        @for(category of categories; track category.id;let i = $index){
+        <div class="form-check form-check-inline">
+          <input
+            (change)="onCategoryChange($event)"
+            class="form-check-input"
+            type="checkbox"
+            id="{{ category.name }}"
+            value="{{ category.id }}"
+            [checked]="selectedCategories.includes(category.id)"
+          />
+          <label class="form-check-label" for="{{ category.name }}">{{
+            category.name
+          }}</label>
         </div>
-        @if(blogForm.controls['title'].invalid &&
-        (blogForm.controls['title'].touched ||
-        blogForm.controls['title'].dirty))
-        {
-        <span class="text-danger mt-1 mx-1">
-            @if(blogForm.controls['title'].errors?.['required'])
-            {
-            Title Is Required.
-            }
-            @else if(blogForm.controls['title'].errors?.['maxlength'])
-            {
-            Length Is Only 128 Characters.
-            }
-        </span>
         }
-        <div class="fs-5 fw-bolder mb-2 mt-3 mx-1">Blog Content</div>
-        <angular-editor
-            [config]="editConfig"
-            formControlName="content"
-            form
-            class="content"
-            placeholder="Content" />
-        @if(blogForm.controls['content'].invalid &&
-        (blogForm.controls['content'].touched ||
-        blogForm.controls['content'].dirty))
-        {
-        <span class="text-danger mt-1 mx-1">
-            @if(blogForm.controls['content'].errors?.['required'])
-            {
-            Content Is Required.
-            }
-        </span>
-        }
-        <div class="d-flex align-items-baseline">
-            <div class="fs-5 fw-bolder mb-2 mt-3 mx-1">Blog Categories :</div>
-            <div class="mx-2">
-                @for(category of categories; track category.id;let i = $index){
-                <div class="form-check form-check-inline">
-                    <input
-                        (change)="onCategoryChange($event)"
-                        class="form-check-input"
-                        type="checkbox"
-                        id="{{ category.name }}"
-                        value="{{ category.id }}"
-                        [checked]="selectedCategories.includes(category.id)" />
-                    <label class="form-check-label"
-                        for="{{ category.name }}">{{category.name}}</label>
-                </div>
-                }
-            </div>
-        </div>
-        @if(blogForm.controls['blogCategories'].invalid &&
-        (blogForm.controls['blogCategories'].touched ||
-        blogForm.controls['blogCategories'].dirty))
-        {
-        <span class="text-danger mt-1 mx-1">
-            @if(blogForm.controls['blogCategories'].errors?.['required'])
-            {
-            Any One Category Is Required.
-            }
-        </span>
-        }
-        <hr />
-        <div class="input-group d-flex justify-content-end me-2 mb-2">
-            <select (change)="onBlogTypeChange($event)">
-                <option value=0 [selected]="isDraft">Draft</option>
-                <option value=1 [selected]="!isDraft">Post</option>
-            </select>
-            <div class="input-group-append">
-                <button class="send-button" mat-flat-button color="primary">
-                    <i class="bi bi-send text-white"></i>
-                </button>
-            </div>
-        </div>
-    </form>
-    } @loading {}
+      </div>
+    </div>
+    <app-validation-message [control]="blogForm.controls['blogCategories']" />
+    <hr />
+    <div class="input-group d-flex justify-content-end me-2 mb-2">
+      <select (change)="onBlogTypeChange($event)">
+        <option value="0" [selected]="isDraft">Draft</option>
+        <option value="1" [selected]="!isDraft">Post</option>
+      </select>
+      <div class="input-group-append">
+        <button class="send-button" mat-flat-button color="primary">
+          <i class="bi bi-send text-white"></i>
+        </button>
+      </div>
+    </div>
+  </form>
+  } @loading {}
 </div>

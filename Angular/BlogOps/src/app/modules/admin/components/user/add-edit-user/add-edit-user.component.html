@@ -1,25 +1,118 @@
-<div class="container">
-    <div class="shadow-sm card main-div p-2 mt-2">
+<div class="container p-2">
+    <div class="shadow-sm card p-3 mt-2">
         <div class="d-flex justify-content-between align-items-center">
             <div class="text-center fw-bold fs-3">
-                New User
+                @if (this.userId != undefined) { Edit User } @else { New User }
             </div>
-            <button class="btn text-white">
+            <a mat-flat-button color="primary" [routerLink]="['/admin/user']">
                 Back
-            </button>
+            </a>
         </div>
     </div>
-    <div class="shadow-sm card main-div">
-        <div class="form-floating">
-            <input
-              type="email"
-              formControlName = "email"
-              class="form-control"
-              id="floatingInput"
-              placeholder="name@example.com"
-            />
-            <label for="floatingInput">Email address</label>
-          </div>
-          
+    <div class="shadow-sm card mt-3 p-3">
+        <form class="row" [formGroup]="createUserForm"
+            (submit)="onFormSubmit()">
+            <div class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3">
+                <div class="form-floating">
+                    <input
+                        formControlName="firstName"
+                        class="form-control"
+                        id="first-name"
+                        placeholder="FirstName" />
+                    <label for="first-name">First Name</label>
+                </div>
+                <app-validation-message
+                    [control]="createUserForm.controls['firstName']" />
+            </div>
+            <div class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3">
+                <div class="form-floating">
+                    <input
+                        formControlName="lastName"
+                        class="form-control"
+                        id="last-name"
+                        placeholder="LastName" />
+                    <label for="last-name">Last Name</label>
+                </div>
+                <app-validation-message
+                    [control]="createUserForm.controls['lastName']" />
+            </div>
+            <div class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3">
+                <div class="form-floating">
+                    <input
+                        formControlName="profileName"
+                        class="form-control"
+                        id="user-name"
+                        placeholder="UserName" />
+                    <label for="last-name">User Name</label>
+                </div>
+                <app-validation-message
+                    [control]="createUserForm.controls['profileName']" />
+            </div>
+            <div class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3">
+                <div class="form-floating">
+                    <input
+                        type="email"
+                        formControlName="email"
+                        class="form-control"
+                        id="email"
+                        placeholder="name@example.com" />
+                    <label for="email">Email</label>
+                </div>
+                <app-validation-message
+                    [control]="createUserForm.controls['email']" />
+            </div>
+            <div class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3">
+                <div class="input-group">
+                    <div class="form-floating">
+                        <input
+                            [type]="isShowPassword ? 'text' : 'password'"
+                            formControlName="password"
+                            class="form-control"
+                            id="floatingPassword"
+                            placeholder="Password" />
+                        <label for="floatingPassword">Password</label>
+                    </div>
+                    <span class="input-group-text" id="basic-addon2">
+                        <button class="btn" type="button"
+                            (click)="onPasswordButtonClick()">
+                            <i class="bi"
+                                [ngClass]="{'bi-eye': !isShowPassword,'bi-eye-slash': isShowPassword }"></i>
+                        </button>
+                    </span>
+                </div>
+                <app-validation-message
+                    [control]="createUserForm.controls['password']" />
+            </div>
+            <div class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3">
+                <div class="form-floating">
+                    <select class="form-select" id="status"
+                        formControlName="status">
+                        <option value="0">Active</option>
+                        <option value="1">DeActive</option>
+                        <option value="2">Deleted</option>
+                    </select>
+                    <label for="status">Status</label>
+                </div>
+                <app-validation-message
+                    [control]="createUserForm.controls['status']" />
+            </div>
+            <div class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3">
+                <div class="form-floating">
+                    <select class="form-select" id="type"
+                        formControlName="role">
+                        <option value="1">Admin</option>
+                        <option value="2">Author</option>
+                    </select>
+                    <label for="type">Account Type</label>
+                </div>
+                <app-validation-message
+                    [control]="createUserForm.controls['role']" />
+            </div>
+            <div class="d-flex justify-content-end mt-2">
+                <button mat-flat-button color="primary">
+                    @if (this.userId != undefined) { Update } @else { Add }
+                </button>
+            </div>
+        </form>
     </div>
 </div>

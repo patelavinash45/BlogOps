@@ -6,7 +6,7 @@
             : {{ blog.createdDate | date }}
             |
             <i class="bi bi-award"></i>
-            : {{blog.status | enumIntToValue: 'BlogStatus'}}
+            : {{blog.status | blogStatusIntToValue}}
         </div>
         <button mat-flat-button color="primary" (click)="onBackButtonClick()">
             Back
