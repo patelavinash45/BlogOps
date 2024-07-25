@@ -9,6 +9,8 @@ export const BlogSaveMessage = "Blog Created SuccessFully.";
 
 export const BlogUpdateMessage = "Blog Updated SuccessFully.";
 
+export const SessionExpired = "Session is Expired."
+
 export const StatusWiseClasses: string[] = ['bg-primary text-white border-white', 'bg-success text-white border-white', 'bg-danger text-white border-white', 'bg-secondary text-white border-white', 'bg-warning text-black border-black'];
 
 export const UserStatusWiseClasses: string[] = ['bg-success text-white border-white', 'bg-warning text-black border-black', 'bg-danger text-white border-white'];

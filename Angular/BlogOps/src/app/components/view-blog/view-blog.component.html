@@ -1,27 +1,42 @@
 <div class="container my-3">
     @defer(when blog != null){
-    <div class="d-flex justify-content-between mx-1">
-        <div class="text-center fw-semibold fs-5">
-            <i class="bi bi-calendar-check"></i>
-            : {{ blog.createdDate | date }}
-            |
-            <i class="bi bi-award"></i>
-            : {{blog.status | blogStatusIntToValue}}
+    <div class="shadow-sm card p-3">
+        <div class="d-flex justify-content-between mx-1 align-items-center">
+            <div class="fs-5 top-options">
+                <span>
+                    <i class="bi bi-calendar-check"></i>
+                    : {{ blog.createdDate | date }}
+                </span>
+                <span class="divider mx-2">
+                    |
+                </span>
+                <span>
+                    <i class="bi bi-award"></i>
+                    : {{blog.status | blogStatusIntToValue}}
+                </span>
+            </div>
+            <button mat-flat-button color="primary"
+                (click)="onBackButtonClick()">
+                Back
+            </button>
         </div>
-        <button mat-flat-button color="primary" (click)="onBackButtonClick()">
-            Back
-        </button>
     </div>
-    <div class="container shadow-sm card p-2 mt-2">
+    <div class="shadow-sm card p-3 mt-3">
         <div class="card-header bg-white">
             <h3 class="card-title bg-white">
                 {{ blog.title }}
             </h3>
+            @if(userType == 'admin'){
+            <div class="d-flex justify-content-end fs-5">
+                <i class="bi bi-pencil-square me-1"></i>
+                : {{blog.createdBy }}
+            </div>
+            }
         </div>
         <div class="card-body" [innerHTML]="blog.content"></div>
         @if(blog.status==4){
         <div class="card-footer d-flex justify-content-end">
-            <a class="btn text-white"
+            <a mat-flat-button class="bg-secondary text-white"
                 [routerLink]="['/author/blog/edit', blogId]">
                 Edit Blog
             </a>

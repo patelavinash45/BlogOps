@@ -109,9 +109,13 @@
                     [control]="createUserForm.controls['role']" />
             </div>
             <div class="d-flex justify-content-end mt-2">
+                @if(isButtonClick){
+                <mat-spinner></mat-spinner>
+                }@else {
                 <button mat-flat-button color="primary">
                     @if (this.userId != undefined) { Update } @else { Add }
                 </button>
+                }
             </div>
         </form>
     </div>

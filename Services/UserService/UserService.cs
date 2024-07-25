@@ -31,7 +31,8 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         Expression<Func<User, bool>> func = a => a.Email == logInRequestDto.Email;
         Expression<Func<User, object>> include = a => a.Role;
         IEnumerable<User> response = GetByCriteria([include], func);
-        if (response.Any() && VerifyPassword(response.First().Password, logInRequestDto.Password))
+        if (response.Any() && response.First().Status == UserStatus.Active
+                       && VerifyPassword(response.First().Password, logInRequestDto.Password))
         {
             _httpContextAccessor.HttpContext!.Session.SetInt32("userId", response.First().Id);
             string jwtToken = _jwtService.CreateJwtToken(response.First(), logInRequestDto.KeepMeSignIn ? 60 : 20);
@@ -51,12 +52,12 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
     public List<UserDto> GetUsers(UserFilterDto userFilterDto)
     {
         Expression<Func<User, bool>> where = a => (userFilterDto.Role == RoleEnum.All
-                                                || (userFilterDto.Role == RoleEnum.Admin && a.RoleId == 1)
-                                                || (userFilterDto.Role == RoleEnum.Author && a.RoleId == 2))
-                                                && (userFilterDto.Status == UserStatus.All || userFilterDto.Status == a.Status)
-                                                && (userFilterDto.SearchContent == null || (a.FirstName + " " + a.LastName).ToLower().Contains(userFilterDto.SearchContent.ToLower()));
+                                        || (userFilterDto.Role == RoleEnum.Admin && a.RoleId == 1)
+                                        || (userFilterDto.Role == RoleEnum.Author && a.RoleId == 2))
+                                        && (userFilterDto.Status == UserStatus.All || userFilterDto.Status == a.Status)
+                                        && (userFilterDto.SearchContent == null || (a.FirstName + " " + a.LastName).ToLower().Contains(userFilterDto.SearchContent.ToLower()));
         Expression<Func<User, object>> orderBy = a => a.Id;
-        IEnumerable<User>? users = GetByCriteria(where: where,orderBy: orderBy);
+        IEnumerable<User>? users = GetByCriteria(where: where, orderBy: orderBy);
         List<UserDto> userDtos = [];
         foreach (User user in users ?? [])
         {

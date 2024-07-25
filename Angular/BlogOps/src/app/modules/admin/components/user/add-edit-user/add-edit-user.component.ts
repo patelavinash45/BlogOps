@@ -6,11 +6,19 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../service/user.service';
 import { UserDto } from '../../../../../shared/interfaces/user-dto';
 import { ValidationMessageComponent } from "../../../../../components/base/validation-message/validation-message.component";
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-add-edit-user',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, ReactiveFormsModule, ValidationMessageComponent, RouterLink],
+  imports: [
+    CommonModule, 
+    MatButtonModule, 
+    ReactiveFormsModule, 
+    ValidationMessageComponent, 
+    RouterLink,
+    MatProgressSpinnerModule
+  ],
   templateUrl: './add-edit-user.component.html',
   styleUrl: './add-edit-user.component.css'
 })
@@ -18,6 +26,7 @@ export class AddEditUserComponent {
   isShowPassword: boolean = false;
   createUserForm!: FormGroup;
   userId!: number;
+  isButtonClick: boolean = false;
 
   constructor(private router: Router, private route: ActivatedRoute, private userService: UserService) {
     this.userId = this.route.snapshot.params['userId'];
@@ -55,24 +64,25 @@ export class AddEditUserComponent {
     this.isShowPassword = !this.isShowPassword;
   }
 
-  onFormSubmit(){
-    if(this.createUserForm.valid){
-      if(this.userId == undefined){
-        this.userService.CreateUser(this.createUserForm.value).subscribe((response) =>{
+  onFormSubmit() {
+    if (this.createUserForm.valid) {
+      this.isButtonClick = true;
+      console.log(this.isButtonClick)
+      if (this.userId == undefined) {
+        this.userService.CreateUser(this.createUserForm.value).subscribe((response) => {
           this.router.navigate(['/admin/user']);
         });
       }
-      else{
-        const userDto : UserDto = this.createUserForm.value;
+      else {
+        const userDto: UserDto = this.createUserForm.value;
         userDto.id = this.userId;
-        this.userService.UpdateUser(this.createUserForm.value).subscribe((response) =>{
+        this.userService.UpdateUser(this.createUserForm.value).subscribe((response) => {
           this.router.navigate(['/admin/user']);
         });
       }
-    }else{
+      this.isButtonClick = false;
+    } else {
       this.createUserForm.markAllAsTouched();
     }
   }
-
-
 }

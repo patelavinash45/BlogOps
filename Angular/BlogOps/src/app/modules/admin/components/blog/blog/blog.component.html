@@ -1,152 +1,148 @@
 <div class="container p-2">
-  <div class="card shadow-sm p-3">
-    <div class="d-flex justify-content-between my-1 align-items-center">
-      <span class="fs-3 fw-bolder"> Blog </span>
-      <div>
-        <button
-          mat-mini-fab
-          color="addon-wrapping"
-          class="me-2"
-          type="button"
-          (click)="onFilterButtonClick()"
-        >
-          <i class="bi bi-funnel"></i>
-        </button>
-        <a mat-flat-button color="primary">
-          <!-- [routerLink]="['/admin/blog/new']"> -->
-          Add New
-        </a>
-      </div>
+    <div class="card shadow-sm p-3">
+        <div class="d-flex justify-content-between my-1 align-items-center">
+            <span class="fs-3 fw-bolder"> Blog </span>
+            <div>
+                <button
+                    mat-mini-fab
+                    color="addon-wrapping"
+                    class="me-2 shadow-none border-1 border"
+                    type="button"
+                    (click)="onFilterButtonClick()">
+                    <i class="bi bi-funnel"></i>
+                </button>
+                <a mat-flat-button color="primary">
+                    <!-- [routerLink]="['/admin/blog/new']"> -->
+                    Add New
+                </a>
+            </div>
+        </div>
+        <mat-expansion-panel [expanded]="isFilterOptionsExpended"
+            class="shadow-none">
+            <hr class="m-0 my-2" />
+            <div class="d-flex filter-options">
+                <div class="input-group flex-nowrap filter-div me-2">
+                    <span class="input-group-text" id="addon-wrapping">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input
+                        (input)="onSearchInputChange($event)"
+                        type="search"
+                        class="form-control"
+                        placeholder="Search"
+                        aria-label="Search"
+                        aria-describedby="addon-wrapping" />
+                </div>
+                <div class="form-floating filter-div me-2">
+                    <select
+                        (change)="onStatusChange($event)"
+                        class="form-select"
+                        id="floatingSelect"
+                        aria-label="status">
+                        <option value="5" selected>All</option>
+                        <option value="0">Pending</option>
+                        <option value="1">Approved</option>
+                        <option value="2">Rejected</option>
+                    </select>
+                    <label for="floatingSelect">Status</label>
+                </div>
+                <div class="form-floating filter-div">
+                    <select
+                        (change)="onUserChange($event)"
+                        class="form-select"
+                        id="floatingSelect"
+                        aria-label="User">
+                        <option [value]="0" selected>All</option>
+                        @for(author of authors;track author.id){
+                        <option [value]="author.id">
+                            {{ author.firstName }} {{ author.lastName }}
+                        </option>
+                        }
+                    </select>
+                    <label for="floatingSelect">User</label>
+                </div>
+            </div>
+        </mat-expansion-panel>
     </div>
-    <mat-expansion-panel [expanded]="isFilterOptionsExpended">
-      <hr class="m-0 my-2" />
-      <div class="d-flex filter-options">
-        <div class="input-group flex-nowrap filter-div me-2">
-          <span class="input-group-text" id="addon-wrapping">
-            <i class="bi bi-search"></i>
-          </span>
-          <input
-            (input)="onSearchInputChange($event)"
-            type="search"
-            class="form-control"
-            placeholder="Search"
-            aria-label="Search"
-            aria-describedby="addon-wrapping"
-          />
-        </div>
-        <div class="form-floating filter-div me-2">
-          <select
-            (change)="onStatusChange($event)"
-            class="form-select"
-            id="floatingSelect"
-            aria-label="status"
-          >
-            <option value="5" selected>All</option>
-            <option value="0">Pending</option>
-            <option value="1">Approved</option>
-            <option value="2">Rejected</option>
-          </select>
-          <label for="floatingSelect">Status</label>
-        </div>
-        <div class="form-floating filter-div">
-          <select
-            (change)="onUserChange($event)"
-            class="form-select"
-            id="floatingSelect"
-            aria-label="User"
-          >
-            <option [value]="0" selected>All</option>
-            @for(author of authors;track author.id){
-            <option [value]="author.id">
-              {{ author.firstName }} {{ author.lastName }}
-            </option>
-            }
-          </select>
-          <label for="floatingSelect">User</label>
-        </div>
-      </div>
-    </mat-expansion-panel>
-  </div>
-  <div class="mt-3 card shadow-sm p-3">
     @defer (when response!= null) {
-    <table
-      class="table table-responsive text-center table-bordered rounded-2 fs-6"
-    >
-      <thead colo>
-        <tr class="align-middle">
-          <th class="col-4">Title</th>
-          <th class="col-1">Created By</th>
-          <th class="col-1">Updated By</th>
-          <th class="col-1">Status</th>
-          <th class="col-1">Approved/ Rejected</th>
-          <th class="col-2">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for(blog of response.dtoList; track blog.id){
-        <tr class="align-middle">
-          <td class="mat-primary">
-            {{ blog.title }}
-          </td>
-          <td>
-            {{ blog.createdBy }}
-          </td>
-          <td>
-            {{ blog.updatedBy }}
-          </td>
-          <td>
-            <span
-              class="badge rounded-pill fw-normal px-3 py-2"
-              [ngClass]="statusWiseClasses[blog.status]"
-            >
-              {{ blog.status | blogStatusIntToValue }}
-            </span>
-          </td>
-          <td class="fs-4">
-            @if(blog.status == 0){
-            <button
-              mat-mini-fab
-              color="primary"
-              (click)="onBlogStatusChange(blog.id, true)"
-            >
-              <i class="bi bi-check2-circle"></i>
-            </button>
-            |
-            <button
-              mat-mini-fab
-              color="primary"
-              data-bs-toggle="modal"
-              data-bs-target="#reject-modal"
-              (click)="onBlogStatusChange(blog.id, false)"
-            >
-              <i class="bi bi-ban fs-5"></i>
-            </button>
-            }
-          </td>
-          <td class="fs-5">
-            <button mat-mini-fab color="primary">
-              <i class="bi bi-pencil-square"></i>
-            </button>
-            |
-            <a
-              mat-mini-fab
-              color="primary"
-              [routerLink]="['/admin/blog/view', blog.id]"
-            >
-              <i class="bi bi-journal-album"></i>
-            </a>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
-    <mat-paginator
-      [length]="response.totalCount"
-      [pageSizeOptions]="[]"
-      [pageSize]="12"
-      aria-label="Select page"
-    ></mat-paginator>
+    <div class="mt-3 card shadow-sm p-3 table-responsive">
+        <table class="table text-center table-bordered rounded-2 fs-6">
+            <thead colo>
+                <tr class="align-middle">
+                    <th class="col-4">Title</th>
+                    <th class="col-1">Created By</th>
+                    <th class="col-1">Updated By</th>
+                    <th class="col-1">Status</th>
+                    <th class="col-1">Approved/ Rejected</th>
+                    <th class="col-2">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(blog of response.dtoList; track blog.id){
+                <tr class="align-middle">
+                    <td class="mat-primary">
+                        {{ blog.title }}
+                    </td>
+                    <td>
+                        {{ blog.createdBy }}
+                    </td>
+                    <td>
+                        {{ blog.updatedBy }}
+                    </td>
+                    <td>
+                        <span
+                            class="badge rounded-pill fw-normal px-3 py-2"
+                            [ngClass]="statusWiseClasses[blog.status]">
+                            {{ blog.status | blogStatusIntToValue }}
+                        </span>
+                    </td>
+                    <td class="fs-4">
+                        @if(blog.status == 0){
+                        <button
+                            mat-mini-fab
+                            (click)="onBlogStatusChange(blog.id, true)"
+                            title="Approve"
+                            class="bg-success shadow-none">
+                            <i class="bi bi-check2-circle"></i>
+                        </button>
+                        |
+                        <button
+                            mat-mini-fab
+                            class="bg-danger shadow-none"
+                            data-bs-toggle="modal"
+                            data-bs-target="#reject-modal"
+                            title="Reject"
+                            (click)="onBlogStatusChange(blog.id, false)">
+                            <i class="bi bi-ban fs-5"></i>
+                        </button>
+                        }
+                    </td>
+                    <td class="fs-5">
+                        <button mat-mini-fab class="bg-secondary shadow-none"
+                            title="Edit Blog">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        |
+                        <a
+                            title="View Blog"
+                            mat-mini-fab
+                            color="primary"
+                            [routerLink]="['/admin/blog/view', blog.id]">
+                            <i class="bi bi-journal-album"></i>
+                        </a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <mat-paginator
+            [length]="response.totalCount"
+            [pageSizeOptions]="[]"
+            [pageSize]="12"
+            aria-label="Select page"></mat-paginator>
+        </div>
+    }@placeholder(minimum 1000ms) {
+        <mat-progress-bar mode="indeterminate" class="rounded-4"></mat-progress-bar>
     }
-  </div>
 </div>
 <app-reject-modal />

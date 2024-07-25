@@ -52,7 +52,8 @@ public class CategoryService(IGenericRepository<Category> genericRepository) : G
     {
         Expression<Func<Category, bool>> where = a => a.Id == id;
         Expression<Func<Category, object>> includeBlogCategories = a => a.BlogsCategories;
-        IEnumerable<Category> categories = GetByCriteria(includes: [includeBlogCategories], where) ?? throw new Exception("Category Not Found");
+        IEnumerable<Category> categories = GetByCriteria(includes: [includeBlogCategories], where) 
+                                                              ?? throw new Exception("Category Not Found");
 
         foreach (BlogsCategory blogsCategory in categories.First().BlogsCategories ?? [])
         {

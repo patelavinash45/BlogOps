@@ -16,17 +16,19 @@ import { BlogStatusIntToValuePipe } from '../../core/pipe/blog-status-int-to-val
 export class ViewBlogComponent {
   blog!: Blog;
   blogId!: number;
+  userType!: string | null;
 
-  constructor(private blogService:BlogService,private route: ActivatedRoute,private location:Location){}
+  constructor(private blogService: BlogService, private route: ActivatedRoute, private location: Location) { }
 
   ngOnInit(): void {
+    this.userType = this.route.snapshot.data['role'];
     this.blogId = this.route.snapshot.params['blogId'];
     this.blogService.GetBlogDetails(this.blogId).subscribe((response: Blog) => {
       this.blog = response;
     })
   }
 
-  onBackButtonClick(){
+  onBackButtonClick() {
     this.location.back();
   }
 }

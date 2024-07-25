@@ -10,11 +10,19 @@ import { RouterLink } from '@angular/router';
 import { UserStatusIntToValuePipe } from '../../../../../core/pipe/user-status-int-to-value.pipe';
 import { UserStatusWiseClasses } from '../../../../../shared/constants/constant';
 import { CommonModule } from '@angular/common';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [UserStatusIntToValuePipe, MatButtonModule, MatExpansionModule, RouterLink, CommonModule],
+  imports: [
+    UserStatusIntToValuePipe, 
+    MatButtonModule, 
+    MatExpansionModule, 
+    RouterLink, 
+    CommonModule,
+    MatProgressBarModule,
+  ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })

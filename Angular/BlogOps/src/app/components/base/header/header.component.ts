@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ManageCookieService } from '../../../core/service/manage-cookie.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map, Observable, shareReplay } from 'rxjs';
@@ -36,7 +36,7 @@ export class HeaderComponent {
   roleType!: string;
   sideNavItems!: string[][];
 
-  constructor(private manageCookieService: ManageCookieService, private breakObserver: BreakpointObserver) { }
+  constructor(private manageCookieService: ManageCookieService, private breakObserver: BreakpointObserver, private router:Router) { }
 
   isHandSet$: Observable<boolean> = this.breakObserver.observe(Breakpoints.Handset).pipe(
     map(result => result.matches),
@@ -56,5 +56,9 @@ export class HeaderComponent {
 
   onLogOutButtonClick() {
     this.manageCookieService.RemoveAllCookie();
+  }
+
+  onLogoImageClick(){
+    
   }
 }

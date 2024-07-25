@@ -22,6 +22,7 @@ export const AuthorRoutes: Routes = [
             {
                 path: 'view/:blogId',
                 component: ViewBlogComponent,
+                data: { role: 'admin' }
             }
         ]
     },

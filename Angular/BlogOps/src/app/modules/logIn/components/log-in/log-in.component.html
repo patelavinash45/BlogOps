@@ -1,7 +1,11 @@
-<div class="background">
+<div class="background ">
   <div class="container d-flex justify-content-center align-items-center h-100">
-    <div class="card logInCard p-3">
-      <div class="text-center card-title fs-3 fw-bold mb-3">BlogOps</div>
+    <div class="logInCard p-4 shadow-lg rounded-4">
+      <div class="text-center card-title fs-3 fw-bold mb-3">
+        <img
+          src="assets/image-removebg-preview (8).png"
+          height="60px" />
+      </div>
       <form [formGroup]="loginForm" (submit)="onFormSubmit()">
         <div class="input-group">
           <div class="form-floating">
@@ -40,11 +44,12 @@
           </span>
         </div>
         <app-validation-message [control]="loginForm.controls['password']" />
-        <div class="d-flex justify-content-start align-items-center mt-2 mx-2">
+        <div class="d-flex justify-content-start align-items-center mt-3 mx-2">
           <input type="checkbox" class="me-2" formControlName="keepMeSignIn" />
           <span> Keep me signed in </span>
         </div>
-        <button mat-flat-button color="primary" class="w-100 mt-3">
+        <button mat-flat-button color="primary"
+          class="w-100 mt-3 login-button fs-4">
           Log In
         </button>
       </form>

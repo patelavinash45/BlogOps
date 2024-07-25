@@ -19,5 +19,6 @@ public record BlogResponseDto
     public List<int>? BlogCategories { get; set; }
 
     public required string CreatedBy { get; set; }
+    
     public required string UpdatedBy { get; set; }
 }

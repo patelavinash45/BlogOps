@@ -16,6 +16,7 @@ export const AdminRoutes: Routes = [
             {
                 path: 'view/:blogId',
                 component: ViewBlogComponent,
+                data: { role: 'admin' }
             },
             {
                 path: 'new',

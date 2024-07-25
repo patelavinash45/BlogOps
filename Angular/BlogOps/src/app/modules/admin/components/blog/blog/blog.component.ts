@@ -12,6 +12,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { BlogStatusIntToValuePipe } from '../../../../../core/pipe/blog-status-int-to-value.pipe';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { StatusWiseClasses } from '../../../../../shared/constants/constant';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 @Component({
   selector: 'app-blog',
@@ -23,7 +24,8 @@ import { StatusWiseClasses } from '../../../../../shared/constants/constant';
     MatButtonModule,
     MatExpansionModule,
     BlogStatusIntToValuePipe,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatProgressBarModule,
   ],
   templateUrl: './blog.component.html',
   styleUrl: './blog.component.css'

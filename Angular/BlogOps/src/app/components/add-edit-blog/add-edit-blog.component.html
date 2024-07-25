@@ -13,8 +13,7 @@
   <form
     class="p-3 shadow-sm card main-div my-3"
     [formGroup]="blogForm"
-    (submit)="onFormSubmit()"
-  >
+    (submit)="onFormSubmit()">
     <div class="fs-5 fw-bolder mb-2 mx-1">Blog Title</div>
     <div class="form-floating">
       <textarea
@@ -22,8 +21,7 @@
         class="form-control title"
         placeholder="Title"
         id="title"
-        length="70px"
-      ></textarea>
+        length="70px"></textarea>
       <label for="title">Title</label>
     </div>
     <app-validation-message [control]="blogForm.controls['title']" />
@@ -33,8 +31,7 @@
       formControlName="content"
       form
       class="content"
-      placeholder="Content"
-    />
+      placeholder="Content" />
     <app-validation-message [control]="blogForm.controls['content']" />
     <div class="d-flex align-items-baseline">
       <div class="fs-5 fw-bolder mb-2 mt-3 mx-1">Blog Categories :</div>
@@ -47,11 +44,10 @@
             type="checkbox"
             id="{{ category.name }}"
             value="{{ category.id }}"
-            [checked]="selectedCategories.includes(category.id)"
-          />
+            [checked]="selectedCategories.includes(category.id)" />
           <label class="form-check-label" for="{{ category.name }}">{{
             category.name
-          }}</label>
+            }}</label>
         </div>
         }
       </div>

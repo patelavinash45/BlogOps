@@ -1,27 +1,39 @@
-<div class="modal" id="reject-modal">
-    <div class="modal-dialog modal-dialog-centered">
-        <form class="modal-content" [formGroup]="rejectForm"
-            (submit)="onFormSubmit()">
-            <div class="modal-body">
-                <div class="fs-5 fw-bolder mb-2 mx-1">Additional Comment</div>
-                <div class="form-floating">
-                    <textarea
-                        formControlName="adminComment"
-                        class="form-control"
-                        placeholder="Comment"
-                        id="comment"
-                        length="150px">
-                    </textarea>
-                    <label for="comment">Comment</label>
-                </div>
-                <app-validation-message
-                    [control]="rejectForm.controls['adminComment']" />
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary"
-                    data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary">Reject</button>
-            </div>
-        </form>
-    </div>
+<div
+  class="modal"
+  id="reject-modal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <form
+      class="modal-content"
+      [formGroup]="rejectForm"
+      (submit)="onFormSubmit()"
+    >
+      <div class="modal-body">
+        <div class="fs-5 fw-bolder mb-2 mx-1">Additional Comment</div>
+        <div class="form-floating">
+          <textarea
+            formControlName="adminComment"
+            class="form-control"
+            placeholder="Comment"
+            id="comment"
+            length="150px"
+          >
+          </textarea>
+          <label for="comment">Comment</label>
+        </div>
+        <app-validation-message
+          [control]="rejectForm.controls['adminComment']"
+        />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary">Reject</button>
+      </div>
+    </form>
+  </div>
 </div>

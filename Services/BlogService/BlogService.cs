@@ -26,7 +26,7 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
         Expression<Func<Blog, object>> includeUpdatedBy = a => a.UpdatedByUser;
 
         IEnumerable<Blog>? blogs = GetByCriteria([includeCategories, includeCreatedBy, includeUpdatedBy], where)
-                                            ?? throw new Exception("Blog Not Found");
+                                                          ?? throw new Exception("Blog Not Found");
         return blogs.First().ToResponseDto();
     }
 

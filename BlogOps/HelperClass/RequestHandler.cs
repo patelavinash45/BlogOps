@@ -29,6 +29,9 @@ public class RequestHandler(RequestDelegate request)
             case BadHttpRequestException : errorMessage = ConstantValue.BadRequestString;
                                            httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                                            break;
+            case UnauthorizedAccessException: errorMessage = ConstantValue.UnauthorizedString;
+                                              httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                                              break;
             default : //errorMessage =  new { error = "Internal Server Error." };
                       errorMessage =  ex;
                       break;
