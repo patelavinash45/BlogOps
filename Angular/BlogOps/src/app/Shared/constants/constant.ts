@@ -18,8 +18,8 @@ export const UserStatusWiseClasses: string[] = ['bg-success text-white border-wh
 export const editorConfig: AngularEditorConfig = {
   editable: true,
   spellcheck: true,
-  height: '15rem',
-  maxHeight: '20rem',
+  height: '23rem',
+  maxHeight: '23rem',
   minHeight: '5rem',
   placeholder: 'Enter text here...',
   translate: 'no',
@@ -32,7 +32,7 @@ export const adminSideBarItems: string[][] = [
   ['Dashboard', RoutePathConstant.AdminDashboardPath],
   ['Blog', RoutePathConstant.AdminBlogPath],
   ['User', RoutePathConstant.AdminUserPath],
-  ['Categories', '/admin/category'],
+  ['Categories', RoutePathConstant.AdminCategoryPath],
 ];
 
 export const authorSideBarItems: string[][] = [

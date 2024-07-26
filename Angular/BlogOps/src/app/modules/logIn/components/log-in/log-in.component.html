@@ -21,7 +21,7 @@
             <i class="bi bi-envelope btn"></i>
           </span>
         </div>
-        <app-validation-message [control]="loginForm.controls['email']" />
+        <app-validation-message [control]="loginForm.controls['email']" controlName="Email" />
         <div class="input-group mt-3">
           <div class="form-floating">
             <input
@@ -43,7 +43,7 @@
             </button>
           </span>
         </div>
-        <app-validation-message [control]="loginForm.controls['password']" />
+        <app-validation-message [control]="loginForm.controls['password']" controlName="Password" />
         <div class="d-flex justify-content-start align-items-center mt-3 mx-2">
           <input type="checkbox" class="me-2" formControlName="keepMeSignIn" />
           <span> Keep me signed in </span>

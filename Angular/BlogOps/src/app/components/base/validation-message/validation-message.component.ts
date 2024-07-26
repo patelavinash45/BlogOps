@@ -10,7 +10,8 @@ import { AbstractControl } from '@angular/forms';
 })
 export class ValidationMessageComponent {
   @Input() control!: AbstractControl;
-
+  @Input() controlName!: string;
+  
   shouldShowErrors(): boolean {
     return this.control && this.control.invalid && (this.control.dirty || this.control.touched);
   }

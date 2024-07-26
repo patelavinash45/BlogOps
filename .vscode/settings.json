@@ -3,9 +3,12 @@
         "Deactive",
         "devkit",
         "Dtos",
+        "fkey",
         "kolkov",
+        "Navigations",
         "Newtonsoft",
         "Npgsql",
+        "pkey",
         "prerender",
         "Toastr"
     ]

@@ -14,7 +14,7 @@ export class UserService {
   constructor(private httpClient: HttpClient) { }
 
   public GetUsers(userFilterDto: UserFilterDto): Observable<UserDto[]> {
-    return this.httpClient.post<UserDto[]>(`${baseUrl}/users`, userFilterDto);
+    return this.httpClient.post<UserDto[]>(`${baseUrl}/users/filter`, userFilterDto);
   }
 
   public GetUser(userId: number): Observable<UserDto> {
@@ -22,7 +22,7 @@ export class UserService {
   }
 
   public CreateUser(createUserRequestDto: CreateUserRequestDto): Observable<void> {
-    return this.httpClient.post<void>(`${baseUrl}/users/user`, createUserRequestDto);
+    return this.httpClient.post<void>(`${baseUrl}/users`, createUserRequestDto);
   }
 
   public UpdateUser(useDto: UserDto): Observable<void> {

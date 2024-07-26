@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using DbContexts.DataModels;
 using Dtos.CommonDtos;
+using Dtos.Enums;
 using Dtos.Mappers;
 using Dtos.RequestDtos;
 using Repositories.GenericRepository;
@@ -13,20 +14,20 @@ public class CategoryService(IGenericRepository<Category> genericRepository) : G
     public CategoryDto GetCategory(int id)
     {
         Category? category = GetById(id) ?? throw new Exception("Category Not Found");
-        return new CategoryDto()
-        {
-            Id = category.Id,
-            Name = category.Name,
-        };
+        return category.ToCategoryDto();
     }
 
-    public List<CategoryDto> GetAllCategories()
+    public List<CategoryDto> GetAllCategories(CategoriesFilterDto categoriesFilterDto)
     {
-        IEnumerable<Category> categories = GetAll();
+        Expression<Func<Category, bool>> where = a => (categoriesFilterDto.SearchContent == null || a.Name.ToLower().Contains(categoriesFilterDto.SearchContent.ToLower()))
+                                                      && (categoriesFilterDto.Status == CategoryStatus.All || (categoriesFilterDto.Status == CategoryStatus.Active && !a.IsDeleted) || a.IsDeleted);
+        Expression<Func<Category, object>> orderby = a => a.Id;
+
+        IEnumerable<Category> categories = GetByCriteria(where: where, orderBy: orderby);
         List<CategoryDto> categoryResponseDtos = [];
         foreach (Category category in categories ?? [])
         {
-            categoryResponseDtos.Add(category.ToCategoryResponseDto());
+            categoryResponseDtos.Add(category.ToCategoryDto());
         };
         return categoryResponseDtos;
     }
@@ -52,8 +53,8 @@ public class CategoryService(IGenericRepository<Category> genericRepository) : G
     {
         Expression<Func<Category, bool>> where = a => a.Id == id;
         Expression<Func<Category, object>> includeBlogCategories = a => a.BlogsCategories;
-        IEnumerable<Category> categories = GetByCriteria(includes: [includeBlogCategories], where) 
-                                                              ?? throw new Exception("Category Not Found");
+        IEnumerable<Category> categories = GetByCriteria(includes: [includeBlogCategories], where)
+                                                            ?? throw new Exception("Category Not Found");
 
         foreach (BlogsCategory blogsCategory in categories.First().BlogsCategories ?? [])
         {

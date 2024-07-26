@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CategoryResponseDto } from '../../shared/interfaces/category-response-dto';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ManageToastrService } from '../../core/service/manage-toastr.service';
 import { Blog } from '../../shared/interfaces/blog';
@@ -12,6 +11,7 @@ import { Location } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { BlogService } from '../../core/service/blog.service';
 import { ValidationMessageComponent } from "../base/validation-message/validation-message.component";
+import { CategoryDto } from '../../shared/interfaces/category-dto';
 
 @Component({
   selector: 'app-add-edit-blog',
@@ -22,7 +22,7 @@ import { ValidationMessageComponent } from "../base/validation-message/validatio
 })
 export class AddEditBlogComponent {
   editConfig: AngularEditorConfig = editorConfig;
-  categories: CategoryResponseDto[] = [];
+  categories: CategoryDto[] = [];
   blogForm!: FormGroup;
   blogId!: number;
   isDraft: boolean = true;
@@ -62,7 +62,7 @@ export class AddEditBlogComponent {
   }
 
   ngOnInit(): void {
-    this.blogService.GetCategories().subscribe((response: CategoryResponseDto[]) => {
+    this.blogService.GetCategories().subscribe((response: CategoryDto[]) => {
       this.categories = response;
     });
   }

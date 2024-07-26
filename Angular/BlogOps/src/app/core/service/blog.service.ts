@@ -1,11 +1,13 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { baseUrl } from '../../shared/constants/constant';
 import { CreateBlogRequestDto } from '../../shared/interfaces/create-blog-request-dto';
 import { UpdateBlogRequestDto } from '../../shared/interfaces/update-blog-request-dto';
-import { CategoryResponseDto } from '../../shared/interfaces/category-response-dto';
 import { Blog } from '../../shared/interfaces/blog';
+import { CategoriesFilterDto } from '../../shared/interfaces/categories-filter-dto';
+import { CategoryStatus } from '../../shared/enums/category-status';
+import { CategoryDto } from '../../shared/interfaces/category-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +16,12 @@ export class BlogService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public GetCategories(): Observable<CategoryResponseDto[]> {
-    return this.httpClient.get<CategoryResponseDto[]>(`${baseUrl}/categories`);
+  public GetCategories(): Observable<CategoryDto[]> {
+    const categoriesFilterDto: CategoriesFilterDto = {
+      searchContent : null,
+      status: CategoryStatus.Active,
+    }
+    return this.httpClient.post<CategoryDto[]>(`${baseUrl}/categories/filter`, categoriesFilterDto);
   }
 
   public CreateNewBlog(createBlogRequestDto: CreateBlogRequestDto): Observable<void> {

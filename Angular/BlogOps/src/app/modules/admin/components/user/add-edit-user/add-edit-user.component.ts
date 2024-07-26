@@ -76,6 +76,7 @@ export class AddEditUserComponent {
       else {
         const userDto: UserDto = this.createUserForm.value;
         userDto.id = this.userId;
+        console.log(userDto);
         this.userService.UpdateUser(this.createUserForm.value).subscribe((response) => {
           this.router.navigate(['/admin/user']);
         });

@@ -2,13 +2,13 @@
 {
 <span class="text-danger mt-3 mx-1">
     @if(hasError('required')){
-    Field Is Required.
+    {{controlName}} Is Required.
     }
     @else if(hasError('email')){
     Email Is Invalid.
     }
     @else if (hasError('minlength') || hasError('maxlength')) {
-    Length is Invalid.
+    {{controlName}} is Invalid.
     }
 </span>
 }

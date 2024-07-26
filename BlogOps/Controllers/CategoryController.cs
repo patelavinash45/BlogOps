@@ -25,12 +25,16 @@ public class CategoryController(ICategoryService categoryService) : ControllerBa
     }
 
     [Authentication(RoleEnum.All)]
-    [HttpGet]
+    [HttpPost]
+    [Route("filter")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public IActionResult GetAllCategories()
+    public IActionResult GetAllCategories(CategoriesFilterDto categoriesFilterDto)
     {
-        var response = _categoryService.GetAllCategories();
+        if (!ModelState.IsValid)
+            throw new BadHttpRequestException(nameof(CategoriesFilterDto));
+
+        var response = _categoryService.GetAllCategories(categoriesFilterDto);
         return Ok(response);
     }
 

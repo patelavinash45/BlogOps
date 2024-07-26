@@ -8,13 +8,12 @@ import { UserStatus } from '../../../shared/enums/user-status';
 import { RoleType } from '../../../shared/enums/role-type';
 import { ChangeBlogStatusRequestDto } from '../../../shared/interfaces/change-blog-status-request-dto';
 import { UserDto } from '../../../shared/interfaces/user-dto';
-import { Blog } from '../../../shared/interfaces/blog';
 import { PaginationDto } from '../../../shared/interfaces/pagination-dto';
 
 @Injectable({
   providedIn: 'root'
 })
-export class HomeService {
+export class BlogService {
 
   constructor(private httpClient: HttpClient) { }
 
@@ -28,7 +27,7 @@ export class HomeService {
       searchContent: null,
       role: RoleType.Author
     }
-    return this.httpClient.post<UserDto[]>(`${baseUrl}/users`, userFilterDto);
+    return this.httpClient.post<UserDto[]>(`${baseUrl}/users/filter`, userFilterDto);
   }
 
   public ChangeStatus(blogId: number, isApproved: boolean, adminComment: string | null): Observable<void> {

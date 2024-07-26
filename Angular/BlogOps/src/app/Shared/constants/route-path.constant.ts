@@ -12,4 +12,5 @@ export class RoutePathConstant{
     public static AdminViewBlogPath = `${this.Admin}/blog/view`;
     public static AdminUserPath = `${this.Admin}/user`;
     public static AdminViewUserPath = `${this.Admin}/user/view`;
+    public static AdminCategoryPath = `${this.Admin}/category`;
 }

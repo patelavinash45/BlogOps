@@ -8,7 +8,7 @@ namespace Services.CategoryService;
 public interface ICategoryService : IGenericRepository<Category>
 {
     CategoryDto GetCategory(int id);
-    List<CategoryDto> GetAllCategories();
+    List<CategoryDto> GetAllCategories(CategoriesFilterDto categoriesFilterDto);
     Task<bool> CreateCategory(CreateCategoryRequestDto createCategoryRequestDto);
     Task<bool> UpdateCategory(CategoryDto categoryDto);
     Task<bool> DeleteCategory(int id);

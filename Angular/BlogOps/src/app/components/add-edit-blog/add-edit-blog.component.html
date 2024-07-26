@@ -24,7 +24,7 @@
         length="70px"></textarea>
       <label for="title">Title</label>
     </div>
-    <app-validation-message [control]="blogForm.controls['title']" />
+    <app-validation-message [control]="blogForm.controls['title']" controlName="Title" />
     <div class="fs-5 fw-bolder mb-2 mt-3 mx-1">Blog Content</div>
     <angular-editor
       [config]="editConfig"
@@ -32,7 +32,7 @@
       form
       class="content"
       placeholder="Content" />
-    <app-validation-message [control]="blogForm.controls['content']" />
+    <app-validation-message [control]="blogForm.controls['content']" controlName="Content" />
     <div class="d-flex align-items-baseline">
       <div class="fs-5 fw-bolder mb-2 mt-3 mx-1">Blog Categories :</div>
       <div class="mx-2">
@@ -52,7 +52,7 @@
         }
       </div>
     </div>
-    <app-validation-message [control]="blogForm.controls['blogCategories']" />
+    <app-validation-message [control]="blogForm.controls['blogCategories']" controlName="BlogCategories" />
     <hr />
     <div class="input-group d-flex justify-content-end me-2 mb-2">
       <select (change)="onBlogTypeChange($event)">

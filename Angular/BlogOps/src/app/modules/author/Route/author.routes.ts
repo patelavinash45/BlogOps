@@ -5,6 +5,11 @@ import { ViewBlogComponent } from "../../../components/view-blog/view-blog.compo
 
 export const AuthorRoutes: Routes = [
     {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'dashboard',
+    },
+    {
         path: 'dashboard',
         component: DashboardComponent
     },

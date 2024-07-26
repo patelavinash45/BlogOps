@@ -1,0 +1,38 @@
+<tr>
+    <td colspan="3">
+        <mat-expansion-panel [expanded]="true">
+            <form class="row" [formGroup]="editCategoryForm">
+                <div
+                    class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3">
+                    <div class="form-floating">
+                        <input
+                            formControlName="name"
+                            class="form-control w-100"
+                            id="name"
+                            placeholder="Name" />
+                        <label for="name">Category Name</label>
+                    </div>
+                    <app-validation-message
+                        [control]="editCategoryForm.controls['name']"
+                        controlName="Name" />
+                </div>
+                <div
+                    class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3">
+                    <div class="form-floating">
+                        <select class="form-select w-100"
+                            id="status"
+                            formControlName="status">
+                            <option value="1">Active</option>
+                            <option value="2">Deleted</option>
+                        </select>
+                        <label for="status">Status</label>
+                    </div>
+                    <app-validation-message
+                        [control]="editCategoryForm.controls['status']"
+                        controlName="Status" />
+                </div>
+            </form>
+        </mat-expansion-panel>
+        <hr />
+    </td>
+</tr>

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Dtos.Enums;
 
 namespace Dtos.CommonDtos;
 
@@ -9,4 +10,6 @@ public record CategoryDto
 
     [StringLength(48)]
     public required string Name { get; set; }
+
+    public CategoryStatus Status { get; set; }
 }

@@ -1,18 +1,17 @@
 using NpgsqlTypes;
 
-namespace DbContexts.Enums
+namespace DbContexts.Enums;
+
+public enum UserStatus
 {
-    public enum UserStatus
-    {
-        [PgName("Active")]
-        Active, // 0
+    [PgName("Active")]
+    Active, // 0
 
-        [PgName("Deactive")]
-        DeActive, // 1
+    [PgName("Deactive")]
+    DeActive, // 1
 
-        [PgName("Deleted")]
-        Deleted, // 2
+    [PgName("Deleted")]
+    Deleted, // 2
 
-        All, // 3
-    }
+    All, // 3
 }

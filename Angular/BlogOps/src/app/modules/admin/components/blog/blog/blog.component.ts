@@ -5,7 +5,6 @@ import { BlogFilterDto } from '../../../../../shared/interfaces/blog-filter-dto'
 import { BlogStatus } from '../../../../../shared/enums/blog-status';
 import { UserDto } from '../../../../../shared/interfaces/user-dto';
 import { CommonModule } from '@angular/common';
-import { HomeService } from '../../../service/home.service';
 import { RejectModalComponent } from "../reject-modal/reject-modal.component";
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -13,6 +12,7 @@ import { BlogStatusIntToValuePipe } from '../../../../../core/pipe/blog-status-i
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { StatusWiseClasses } from '../../../../../shared/constants/constant';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { BlogService } from '../../../service/blog.service';
 
 @Component({
   selector: 'app-blog',
@@ -44,10 +44,10 @@ export class BlogComponent {
   };
   @ViewChild(RejectModalComponent) rejectModal!: RejectModalComponent;
 
-  constructor(private homeService: HomeService) { }
+  constructor(private blogService: BlogService) { }
 
   getData() {
-    this.homeService.GetBlogs(this.blogFilterDto, this.pageNo).subscribe((response: PaginationDto) => {
+    this.blogService.GetBlogs(this.blogFilterDto, this.pageNo).subscribe((response: PaginationDto) => {
       this.response = response;
       console.log(this.response)
     });
@@ -55,7 +55,7 @@ export class BlogComponent {
 
   ngOnInit(): void {
     this.getData();
-    this.homeService.GetAllAuthors().subscribe((response: UserDto[]) => {
+    this.blogService.GetAllAuthors().subscribe((response: UserDto[]) => {
       this.authors = response;
     });
   }
@@ -87,7 +87,7 @@ export class BlogComponent {
 
   onBlogStatusChange(id: number, isApprove: boolean) {
     if (isApprove) {
-      this.homeService.ChangeStatus(id, true, null).subscribe((response) => {
+      this.blogService.ChangeStatus(id, true, null).subscribe((response) => {
         this.getData();
       });
     }

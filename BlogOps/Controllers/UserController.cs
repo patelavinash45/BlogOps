@@ -26,6 +26,7 @@ public class UserController(IUserService userService) : ControllerBase
 
     [Authentication(RoleEnum.Admin)]
     [HttpPost]
+    [Route("filter")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IActionResult GetUsers([FromBody] UserFilterDto userFilterDto)
@@ -36,7 +37,6 @@ public class UserController(IUserService userService) : ControllerBase
 
     [Authentication(RoleEnum.Admin)]
     [HttpPost]
-    [Route("user")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
