@@ -1,7 +1,5 @@
-import { Blog } from "./blog";
-
-export interface PaginationDto {
-    dtoList: Blog[],
+export interface PaginationDto<T> {
+    dtoList: T[],
     pageNo: number,
     totalCount: number,
     isNext: boolean,

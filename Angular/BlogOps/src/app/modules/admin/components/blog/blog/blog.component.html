@@ -46,7 +46,19 @@
                     </select>
                     <label for="floatingSelect">Status</label>
                 </div>
-                <div class="form-floating filter-div">
+                <mat-form-field>
+                    <mat-select  placeholder="User" #singleSelect>
+                      <mat-option>
+                        <ngx-mat-select-search ></ngx-mat-select-search>
+                      </mat-option>
+                      @for(author of authors;track author.id){
+                        <mat-option [value]="author.id">
+                            {{ author.firstName }} {{ author.lastName }}
+                        </mat-option>
+                        }
+                    </mat-select>
+                  </mat-form-field>
+                <!-- <div class="form-floating filter-div">
                     <select
                         (change)="onUserChange($event)"
                         class="form-select"
@@ -60,14 +72,14 @@
                         }
                     </select>
                     <label for="floatingSelect">User</label>
-                </div>
+                </div> -->
             </div>
         </mat-expansion-panel>
     </div>
     @defer (when response!= null) {
     <div class="mt-3 card shadow-sm p-3 table-responsive">
         <table class="table text-center table-bordered rounded-2 fs-6">
-            <thead colo>
+            <thead>
                 <tr class="align-middle">
                     <th class="col-4">Title</th>
                     <th class="col-1">Created By</th>
@@ -136,13 +148,39 @@
             </tbody>
         </table>
         <mat-paginator
+            class="fs-6"
+            (page)="changePage($event)"
             [length]="response.totalCount"
-            [pageSizeOptions]="[]"
-            [pageSize]="12"
-            aria-label="Select page"></mat-paginator>
-        </div>
+            [pageSizeOptions]="[5,10,15,20]"
+            [pageSize]="10"></mat-paginator>
+    </div>
     }@placeholder(minimum 1000ms) {
-        <mat-progress-bar mode="indeterminate" class="rounded-4"></mat-progress-bar>
+    <mat-progress-bar mode="indeterminate" class="rounded-4"></mat-progress-bar>
+    <div class="mt-3 card shadow-sm p-3 table-responsive">
+        <table class="table text-center table-bordered rounded-2 fs-6">
+            <thead>
+                <tr class="align-middle">
+                    <th class="col-4">Title</th>
+                    <th class="col-1">Created By</th>
+                    <th class="col-1">Updated By</th>
+                    <th class="col-1">Status</th>
+                    <th class="col-1">Approved/ Rejected</th>
+                    <th class="col-2">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(i of [].constructor(blogFilterDto.pageSize);track i){
+                <tr>
+                    @for(j of [].constructor(6);track j){
+                    <td>
+                        <ngx-skeleton-loader></ngx-skeleton-loader>
+                    </td>
+                    }
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
     }
 </div>
 <app-reject-modal />

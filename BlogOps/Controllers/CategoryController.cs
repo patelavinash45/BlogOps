@@ -29,12 +29,12 @@ public class CategoryController(ICategoryService categoryService) : ControllerBa
     [Route("filter")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public IActionResult GetAllCategories(CategoriesFilterDto categoriesFilterDto)
+    public IActionResult GetCategories(CategoriesFilterDto categoriesFilterDto)
     {
         if (!ModelState.IsValid)
             throw new BadHttpRequestException(nameof(CategoriesFilterDto));
 
-        var response = _categoryService.GetAllCategories(categoriesFilterDto);
+        var response = _categoryService.GetCategories(categoriesFilterDto);
         return Ok(response);
     }
 

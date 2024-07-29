@@ -5,4 +5,6 @@ export interface UserFilterDto {
     status: UserStatus,
     searchContent: string | null,
     role: RoleType,
+    pageNo: number,
+    pageSize: number,
 }

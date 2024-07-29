@@ -8,7 +8,7 @@ import cryptoJS from 'crypto-js';
   providedIn: 'root'
 })
 export class ManageCookieService {
-  private key: string = 'hbchj@#%^76$#%bdhcbhdb@*(nfdsmk454';
+  private key: string = 'hbchj@#%^76$#%bdhcbhdb@*(nfdsmk454%%^%^%)(7654@#$KJHFCG54654';
 
   constructor(private cookieService: CookieService, private router: Router) { }
 
@@ -60,6 +60,7 @@ export class ManageCookieService {
     this.cookieService.delete('FirstName', '/', 'localhost', false, 'Lax');
     this.cookieService.delete('LastName', '/', 'localhost', false, 'Lax');
     this.cookieService.delete('Role', '/', 'localhost', false, 'Lax');
+    this.cookieService.delete('ProfileName', '/', 'localhost', false, 'Lax');
     this.router.navigate(['/login']);
   }
 

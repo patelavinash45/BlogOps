@@ -13,7 +13,7 @@ export class DashboardService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public GetBlogs(blogFilterDto: BlogFilterDto, pageNo: number) : Observable<PaginationDto> {
-    return this.httpClient.post<PaginationDto>(`${baseUrl}/blogs/${pageNo}`, blogFilterDto);
+  public GetBlogs(blogFilterDto: BlogFilterDto) : Observable<PaginationDto<Blog>> {
+    return this.httpClient.post<PaginationDto<Blog>>(`${baseUrl}/blogs/filter`, blogFilterDto);
   }
 }

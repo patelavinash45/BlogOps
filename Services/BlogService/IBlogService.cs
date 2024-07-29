@@ -9,7 +9,7 @@ namespace Services.BlogService;
 public interface IBlogService : IGenericService<Blog>
 {
     BlogResponseDto GetBlog(int id);
-    PaginationDto<BlogResponseDto> GetAllBlogs(BlogFilterDto blogFilterDto, int pageNo);
+    PaginationDto<BlogResponseDto> GetBlogs(BlogFilterDto blogFilterDto);
     Task<bool> CreateBlog(CreateBlogRequestDto createBlogRequestDto);
     Task<bool> UpdateBlog(UpdateBlogRequestDto updateBlogRequestDto);
     Task<bool> DeleteBlog(int id);

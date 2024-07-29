@@ -12,16 +12,23 @@ import { MatButtonModule } from '@angular/material/button';
 import { BlogService } from '../../core/service/blog.service';
 import { ValidationMessageComponent } from "../base/validation-message/validation-message.component";
 import { CategoryDto } from '../../shared/interfaces/category-dto';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 @Component({
   selector: 'app-add-edit-blog',
   standalone: true,
-  imports: [AngularEditorModule, ReactiveFormsModule, MatButtonModule, ValidationMessageComponent],
+  imports: [
+    AngularEditorModule, 
+    ReactiveFormsModule, 
+    MatButtonModule, 
+    ValidationMessageComponent,
+    EditorModule
+  ],
   templateUrl: './add-edit-blog.component.html',
-  styleUrl: './add-edit-blog.component.css'
+  styleUrl: './add-edit-blog.component.css',
 })
 export class AddEditBlogComponent {
-  editConfig: AngularEditorConfig = editorConfig;
+  editorConfig = editorConfig;
   categories: CategoryDto[] = [];
   blogForm!: FormGroup;
   blogId!: number;

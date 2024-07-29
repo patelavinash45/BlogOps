@@ -9,6 +9,7 @@ import { RoleType } from '../../../shared/enums/role-type';
 import { ChangeBlogStatusRequestDto } from '../../../shared/interfaces/change-blog-status-request-dto';
 import { UserDto } from '../../../shared/interfaces/user-dto';
 import { PaginationDto } from '../../../shared/interfaces/pagination-dto';
+import { Blog } from '../../../shared/interfaces/blog';
 
 @Injectable({
   providedIn: 'root'
@@ -17,16 +18,18 @@ export class BlogService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public GetBlogs(blogFilterDto: BlogFilterDto, pageNo: number): Observable<PaginationDto> {
-    return this.httpClient.post<PaginationDto>(`${baseUrl}/blogs/${pageNo}`, blogFilterDto);
+  public GetBlogs(blogFilterDto: BlogFilterDto): Observable<PaginationDto<Blog>> {
+    return this.httpClient.post<PaginationDto<Blog>>(`${baseUrl}/blogs/filter`, blogFilterDto);
   }
 
   public GetAllAuthors(): Observable<UserDto[]> {
     const userFilterDto: UserFilterDto = {
       status: UserStatus.All,
       searchContent: null,
-      role: RoleType.Author
-    }
+      role: RoleType.Author,
+      pageNo: 1,
+      pageSize: 5,
+    };
     return this.httpClient.post<UserDto[]>(`${baseUrl}/users/filter`, userFilterDto);
   }
 

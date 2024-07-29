@@ -8,7 +8,8 @@ import { BlogStatus } from '../../../../shared/enums/blog-status';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { Blog } from '../../../../shared/interfaces/blog';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,20 +19,20 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrl: './dashboard.component.css'
 })
 export class DashboardComponent {
-  response!: PaginationDto;
-  loopArray: number[] = Array.from({ length: 9 });
-  pageNo: number = 1;
+  response!: PaginationDto<Blog>;
   blogFilterDto: BlogFilterDto = {
     status: BlogStatus.All,
     searchContent: null,
     isAdmin: false,
-    userId: 0
+    userId: 0,
+    pageNo: 1,
+    pageSize: 9,
   };
 
   constructor(private dashboardService: DashboardService) { }
 
   getData() {
-    this.dashboardService.GetBlogs(this.blogFilterDto, this.pageNo).subscribe((response: PaginationDto) => {
+    this.dashboardService.GetBlogs(this.blogFilterDto).subscribe((response: PaginationDto<Blog>) => {
       console.log(response);
       this.response = response;
     });
@@ -51,13 +52,9 @@ export class DashboardComponent {
     this.getData();
   }
 
-  onNextPageButtonClick() {
-    this.pageNo++;
-    this.getData();
-  }
-
-  onPreviousPageButtonClick(){
-    this.pageNo--;
+  changePage(event: PageEvent) {
+    this.blogFilterDto.pageNo = event.pageIndex + 1;
+    this.blogFilterDto.pageSize = event.pageSize;
     this.getData();
   }
 

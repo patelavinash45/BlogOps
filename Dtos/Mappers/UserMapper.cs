@@ -6,7 +6,7 @@ namespace Dtos.Mappers;
 
 public static class UserMapper
 {
-    public static User ToUpdateUser(this UserDto userDto, User user)
+    public static User ToUser(this UserDto userDto, User user)
     {
         user.FirstName = userDto.FirstName;
         user.LastName = userDto.LastName;

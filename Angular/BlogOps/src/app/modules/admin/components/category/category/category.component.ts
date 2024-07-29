@@ -1,4 +1,4 @@
-import { Component, ViewChild, viewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { CommonModule } from '@angular/common';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -12,6 +12,7 @@ import { CategoriesFilterDto } from '../../../../../shared/interfaces/categories
 import { CategoryStatus } from '../../../../../shared/enums/category-status';
 import { CategoryService } from '../../../service/category.service';
 import { AddEditModalComponent } from '../add-edit-modal/add-edit-modal.component';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   selector: 'app-category',
@@ -24,8 +25,9 @@ import { AddEditModalComponent } from '../add-edit-modal/add-edit-modal.componen
     MatButtonModule,
     CategoryStatusIntToValuePipe,
     ValidationMessageComponent,
-    AddEditModalComponent
-],
+    AddEditModalComponent,
+    NgxSkeletonLoaderModule
+  ],
   templateUrl: './category.component.html',
   styleUrl: './category.component.css'
 })
@@ -37,6 +39,7 @@ export class CategoryComponent {
     status: CategoryStatus.All,
   };
   isFilterOptionsExpended: boolean = false;
+  isCreateCategory: boolean = false;
   editCategoryId: number | null = null;
   @ViewChild(AddEditModalComponent) addEditModalComponent!: AddEditModalComponent;
 
@@ -45,7 +48,6 @@ export class CategoryComponent {
   getData() {
     this.categoryService.GetCategories(this.categoriesFilterDto).subscribe((response) => {
       this.categories = response;
-      console.log(this.categories);
     });
   }
 
@@ -64,20 +66,27 @@ export class CategoryComponent {
   }
 
   onFilterButtonClick() {
-    this.isFilterOptionsExpended = !this.isFilterOptionsExpended;
+    if (this.editCategoryId == null) {
+      this.isFilterOptionsExpended = !this.isFilterOptionsExpended;
+    }
   }
 
-  onEditButtonClick(category: CategoryDto) {
-    this.editCategoryId = category.id;
-    this.addEditModalComponent.category = category;
+  openModal(category: CategoryDto | null = null, isCreate: boolean = false) {
+    this.isFilterOptionsExpended = false;
+    this.isCreateCategory = isCreate;
+    this.editCategoryId = category?.id ?? null;
   }
 
-  onEditCancelButtonClick() {
+  closeModal(isReload: boolean = false) {
     this.editCategoryId = null;
-    this.addEditModalComponent.category = null;
+    this.isCreateCategory = false;
+    if (isReload) {
+      this.getData();
+    }
   }
 
   onEditConform() {
-
+    this.editCategoryId = null;
+    this.addEditModalComponent.updateCategory();
   }
 }

@@ -8,15 +8,27 @@
                     color="addon-wrapping"
                     class="me-2 shadow-none border-1 border"
                     type="button"
-                    (click)="onFilterButtonClick()">
+                    [disabled]="editCategoryId != null || isCreateCategory"
+                    (click)="onFilterButtonClick()">    
                     <i class="bi bi-funnel"></i>
                 </button>
-                <a mat-flat-button color="primary">
-                    <!-- [routerLink]="['/admin/blog/new']"> -->
+                @if(isCreateCategory){
+                <button mat-flat-button class="bg-secondary text-white"
+                    (click)="closeModal()">
+                    Cancel
+                </button>
+                }@else {
+                <button mat-flat-button color="primary"
+                    (click)="openModal(null,true)">
                     Add New
-                </a>
+                </button>
+                }
             </div>
         </div>
+        @if(isCreateCategory){
+        <app-add-edit-modal [isCreateCategory]="true"
+            (conformUpdate)="closeModal($event)" />
+        }
         <mat-expansion-panel [expanded]="isFilterOptionsExpended"
             class="shadow-none">
             <hr class="m-0 my-2" />
@@ -80,12 +92,12 @@
                         </button>
                         <button mat-flat-button
                             class="shadow-none bg-secondary text-white"
-                            (click)="onEditCancelButtonClick()">
+                            (click)="closeModal()">
                             Cancel
                         </button>
                         }@else {
                         <button mat-mini-fab class="bg-secondary shadow-none"
-                            (click)="onEditButtonClick(category)"
+                            (click)="openModal(category)"
                             title="Edit Category">
                             <i class="bi bi-pencil-square"></i>
                         </button>
@@ -93,7 +105,12 @@
                     </td>
                 </tr>
                 @if(editCategoryId == category.id){
-                <app-add-edit-modal />
+                <tr>
+                    <td colspan="3">
+                        <app-add-edit-modal [category]="category"
+                            (conformUpdate)="closeModal($event)" />
+                    </td>
+                </tr>
                 }
                 }
             </tbody>
@@ -101,5 +118,27 @@
     </div>
     }@placeholder(minimum 1000ms) {
     <mat-progress-bar mode="indeterminate" class="rounded-4"></mat-progress-bar>
+    <div class="mt-3 card shadow-sm p-3 table-responsive">
+        <table class="table text-center table-bordered rounded-2 fs-6">
+            <thead colo>
+                <tr class="align-middle">
+                    <th class="col-4">Name</th>
+                    <th class="col-1">Status</th>
+                    <th class="col-2">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(i of [].constructor(10);track i){
+                <tr>
+                    @for(j of [].constructor(3);track j){
+                    <td>
+                        <ngx-skeleton-loader></ngx-skeleton-loader>
+                    </td>
+                    }
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
     }
 </div>

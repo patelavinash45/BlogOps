@@ -1,4 +1,4 @@
-import { Component, ViewChild, viewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PaginationDto } from '../../../../../shared/interfaces/pagination-dto';
 import { BlogFilterDto } from '../../../../../shared/interfaces/blog-filter-dto';
@@ -9,10 +9,14 @@ import { RejectModalComponent } from "../reject-modal/reject-modal.component";
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { BlogStatusIntToValuePipe } from '../../../../../core/pipe/blog-status-int-to-value.pipe';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { StatusWiseClasses } from '../../../../../shared/constants/constant';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { BlogService } from '../../../service/blog.service';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { Blog } from '../../../../../shared/interfaces/blog';
+import { MatSelectModule } from '@angular/material/select';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 @Component({
   selector: 'app-blog',
@@ -26,30 +30,33 @@ import { BlogService } from '../../../service/blog.service';
     BlogStatusIntToValuePipe,
     MatPaginatorModule,
     MatProgressBarModule,
+    NgxSkeletonLoaderModule,
+    MatSelectModule,
+    NgxMatSelectSearchModule
   ],
   templateUrl: './blog.component.html',
   styleUrl: './blog.component.css'
 })
 export class BlogComponent {
-  response!: PaginationDto;
+  response!: PaginationDto<Blog>;
   statusWiseClasses: string[] = StatusWiseClasses;
-  pageNo: number = 1;
   authors: UserDto[] = [];
   isFilterOptionsExpended: boolean = false;
   blogFilterDto: BlogFilterDto = {
     status: BlogStatus.All,
     searchContent: null,
     isAdmin: true,
-    userId: 0
+    userId: 0,
+    pageNo: 1,
+    pageSize: 10,
   };
   @ViewChild(RejectModalComponent) rejectModal!: RejectModalComponent;
 
   constructor(private blogService: BlogService) { }
 
   getData() {
-    this.blogService.GetBlogs(this.blogFilterDto, this.pageNo).subscribe((response: PaginationDto) => {
+    this.blogService.GetBlogs(this.blogFilterDto).subscribe((response: PaginationDto<Blog>) => {
       this.response = response;
-      console.log(this.response)
     });
   }
 
@@ -75,16 +82,6 @@ export class BlogComponent {
     this.getData();
   }
 
-  onNextPageButtonClick() {
-    this.pageNo++;
-    this.getData();
-  }
-
-  onPreviousPageButtonClick() {
-    this.pageNo--;
-    this.getData();
-  }
-
   onBlogStatusChange(id: number, isApprove: boolean) {
     if (isApprove) {
       this.blogService.ChangeStatus(id, true, null).subscribe((response) => {
@@ -98,5 +95,11 @@ export class BlogComponent {
 
   onFilterButtonClick() {
     this.isFilterOptionsExpended = !this.isFilterOptionsExpended;
+  }
+
+  changePage(event: PageEvent) {
+    this.blogFilterDto.pageNo = event.pageIndex + 1;
+    this.blogFilterDto.pageSize = event.pageSize;
+    this.getData();
   }
 }

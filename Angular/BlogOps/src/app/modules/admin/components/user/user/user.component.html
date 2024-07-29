@@ -62,7 +62,7 @@
             </div>
         </mat-expansion-panel>
     </div>
-    @defer (when users.length > 0) {
+    @defer (when userResponse != null) {
     <div class="table-responsive mt-3 card shadow-sm p-3">
         <table class="table table-bordered rounded-2 fs-5">
             <thead>
@@ -74,7 +74,7 @@
                 </tr>
             </thead>
             <tbody>
-                @for(user of users; track user.id){
+                @for(user of userResponse.dtoList; track user.id){
                 <tr class="align-middle">
                     <td class="mx-3">
                         {{ user.email }}
@@ -100,8 +100,37 @@
                 }
             </tbody>
         </table>
+        <mat-paginator
+            class="fs-6"
+            (page)="changePage($event)"
+            [length]="userResponse.totalCount"
+            [pageSizeOptions]="[5,10,15,20]"
+            [pageSize]="5"></mat-paginator>
     </div>
     }@placeholder(minimum 1000ms) {
     <mat-progress-bar mode="indeterminate" class="rounded-4"></mat-progress-bar>
+    <div class="table-responsive mt-3 card shadow-sm p-3">
+        <table class="table table-bordered rounded-2 fs-5">
+            <thead>
+                <tr class="align-middle">
+                    <th class="col-4 mx-3">Email</th>
+                    <th class="col-4 mx-3">Full Name</th>
+                    <th class="col-2 text-center">Status</th>
+                    <th class="col-2 text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(i of [].constructor(10);track i){
+                <tr>
+                    @for(j of [].constructor(4);track j){
+                    <td>
+                        <ngx-skeleton-loader></ngx-skeleton-loader>
+                    </td>
+                    }
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
     }
 </div>

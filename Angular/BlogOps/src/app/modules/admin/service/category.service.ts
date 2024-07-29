@@ -22,6 +22,6 @@ export class CategoryService {
   } 
 
   public UpdateCategory(categoryDto: CategoryDto): Observable<void>{
-    return this.httpClient.put<void>(`${baseUrl}/categories`, categoryDto);
+    return this.httpClient.put<void>(`${baseUrl}/categories/${categoryDto.id}`, categoryDto);
   } 
 }

@@ -30,10 +30,10 @@ public class GenericService<T>(IGenericRepository<T> genericRepository) : IGener
     ) => _repository.GetByCriteria(includes, where, orderBy);
 
     public PaginationFromRepository<T> GetByCriteriaAndPagination(
-        int skip,
+        int pageNo,
         int pageSize,
         Expression<Func<T, object>>[]? includes = null,
         Expression<Func<T, bool>>? where = null,
         Expression<Func<T, object>>? orderBy = null
-    ) => _repository.GetByCriteriaAndPagination(skip, pageSize, includes, where, orderBy);
+    ) => _repository.GetByCriteriaAndPagination(pageNo, pageSize, includes, where, orderBy);
 }

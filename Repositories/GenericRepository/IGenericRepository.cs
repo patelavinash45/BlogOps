@@ -22,5 +22,5 @@ public interface IGenericRepository<T> where T : BaseEntity
 
     IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, object>>? orderBy = null);
 
-    PaginationFromRepository<T> GetByCriteriaAndPagination(int skip, int pageSize, Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, object>>? orderBy = null);
+    PaginationFromRepository<T> GetByCriteriaAndPagination(int pageNo, int pageSize, Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, object>>? orderBy = null);
 }

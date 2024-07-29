@@ -73,8 +73,9 @@ public class GenericRepository<T>(BlogOpsContext context) : IGenericRepository<T
         return query.AsEnumerable<T>();
     }
 
-    public PaginationFromRepository<T> GetByCriteriaAndPagination(int skip, int pageSize, Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, object>>? orderBy = null)
+    public PaginationFromRepository<T> GetByCriteriaAndPagination(int pageNo, int pageSize, Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, object>>? orderBy = null)
     {
+        int skip = (pageNo - 1) * pageSize;
         IQueryable<T> query = _dbSet;
         if (where != null)
         {

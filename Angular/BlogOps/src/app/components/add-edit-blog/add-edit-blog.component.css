@@ -30,3 +30,7 @@ input{
 .btn{
     background-color: #0486a1;
 }
+
+.tox-promotion{
+    display: none;
+}

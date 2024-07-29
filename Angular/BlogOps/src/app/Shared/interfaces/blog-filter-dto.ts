@@ -5,4 +5,6 @@ export interface BlogFilterDto {
     searchContent : string | null,
     isAdmin : boolean,
     userId : number,
+    pageNo: number,
+    pageSize: number,
 }

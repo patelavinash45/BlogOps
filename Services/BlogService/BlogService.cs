@@ -30,12 +30,11 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
         return blogs.First().ToResponseDto();
     }
 
-    public PaginationDto<BlogResponseDto> GetAllBlogs(BlogFilterDto blogFilterDto, int pageNo)
+    public PaginationDto<BlogResponseDto> GetBlogs(BlogFilterDto blogFilterDto)
     {
-        int userId = _userInfo.UserId;
-        int skip = (pageNo - 1) * 9;
         Expression<Func<Blog, bool>> where = a =>
-                        ((blogFilterDto.IsAdmin && (blogFilterDto.UserId == 0 || a.CreatedBy == blogFilterDto.UserId)) || a.CreatedBy == userId)
+                        (blogFilterDto.IsAdmin || a.CreatedBy == _userInfo.UserId)
+                        && (!blogFilterDto.IsAdmin || blogFilterDto.UserId == 0 || a.CreatedBy == blogFilterDto.UserId)
                         && (!blogFilterDto.IsAdmin || a.Status != BlogStatus.Draft)
                         && a.Status != BlogStatus.Deleted
                         && (blogFilterDto.Status == BlogStatus.All || a.Status == blogFilterDto.Status)
@@ -47,7 +46,7 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
         Expression<Func<Blog, object>> orderBy = a => a.Id;
 
         PaginationFromRepository<Blog> paginationFromRepository
-                                = GetByCriteriaAndPagination(skip, 9, [includeCategories, includeCreatedBy, includeUpdatedBy], where, orderBy);
+                        = GetByCriteriaAndPagination(blogFilterDto.PageNo, blogFilterDto.PageSize, [includeCategories, includeCreatedBy, includeUpdatedBy], where, orderBy);
 
         List<BlogResponseDto> blogResponseDtos = [];
         foreach (Blog blog in paginationFromRepository.Entities ?? [])
@@ -55,14 +54,15 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
             blogResponseDtos.Add(blog.ToResponseDto());
         }
 
-        int totalPages = (paginationFromRepository.TotalCount + 8) / 9;
+        int totalPages = (paginationFromRepository.TotalCount + blogFilterDto.PageSize - 1)
+                                                                            / blogFilterDto.PageSize;
         return new PaginationDto<BlogResponseDto>
         {
             DtoList = blogResponseDtos,
             TotalCount = paginationFromRepository.TotalCount,
-            PageNo = pageNo,
-            IsNext = pageNo < totalPages,
-            IsPrevious = pageNo != 1,
+            PageNo = blogFilterDto.PageNo,
+            IsNext = blogFilterDto.PageNo < totalPages,
+            IsPrevious = blogFilterDto.PageNo != 1,
         };
     }
 

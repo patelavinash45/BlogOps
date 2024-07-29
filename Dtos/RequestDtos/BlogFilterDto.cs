@@ -10,5 +10,9 @@ public record BlogFilterDto
 
     public bool IsAdmin { get; set; } = false;
 
-    public int UserId {get; set;}
+    public int UserId { get; set; }
+
+    public int PageNo { get; set; }
+
+    public int PageSize { get; set; }
 }

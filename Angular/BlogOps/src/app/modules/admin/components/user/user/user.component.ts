@@ -11,6 +11,10 @@ import { UserStatusIntToValuePipe } from '../../../../../core/pipe/user-status-i
 import { UserStatusWiseClasses } from '../../../../../shared/constants/constant';
 import { CommonModule } from '@angular/common';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { PaginationDto } from '../../../../../shared/interfaces/pagination-dto';
+import { response } from 'express';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-user',
@@ -22,25 +26,29 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
     RouterLink, 
     CommonModule,
     MatProgressBarModule,
+    NgxSkeletonLoaderModule,
+    MatPaginatorModule
   ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
 export class UserComponent {
-  users: UserDto[] = [];
+  userResponse!: PaginationDto<UserDto>;
   statusWiseClasses: string[] = UserStatusWiseClasses;
   isFilterOptionsExpended: boolean = false;
   userFilterDto: UserFilterDto = {
     status: UserStatus.All,
     searchContent: null,
-    role: RoleType.All
+    role: RoleType.All,
+    pageNo: 1,
+    pageSize: 5,
   };
 
   constructor(private userService: UserService) { }
 
   getData() {
-    this.userService.GetUsers(this.userFilterDto).subscribe((response: UserDto[]) => {
-      this.users = response;
+    this.userService.GetUsers(this.userFilterDto).subscribe((response: PaginationDto<UserDto>) => {
+      this.userResponse = response;
     });
   }
 
@@ -65,5 +73,11 @@ export class UserComponent {
 
   onFilterButtonClick(){
     this.isFilterOptionsExpended = !this.isFilterOptionsExpended;
+  }
+
+  changePage(event: PageEvent) {
+    this.userFilterDto.pageNo = event.pageIndex + 1;
+    this.userFilterDto.pageSize = event.pageSize;
+    this.getData();
   }
 }

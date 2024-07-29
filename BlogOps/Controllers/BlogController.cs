@@ -25,12 +25,12 @@ public class BlogController(IBlogService blogService) : ControllerBase
 
     [Authentication(RoleEnum.All)]
     [HttpPost]
-    [Route("{pageNo:int}")]
+    [Route("filter")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public IActionResult GetBlogs(int pageNo, [FromBody] BlogFilterDto blogFilterDto)
+    public IActionResult GetBlogs([FromBody] BlogFilterDto blogFilterDto)
     {
-        var response = _blogService.GetAllBlogs(blogFilterDto, pageNo);
+        var response = _blogService.GetBlogs(blogFilterDto);
         return Ok(response);
     }
 

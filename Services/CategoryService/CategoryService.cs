@@ -17,10 +17,10 @@ public class CategoryService(IGenericRepository<Category> genericRepository) : G
         return category.ToCategoryDto();
     }
 
-    public List<CategoryDto> GetAllCategories(CategoriesFilterDto categoriesFilterDto)
+    public List<CategoryDto> GetCategories(CategoriesFilterDto categoriesFilterDto)
     {
         Expression<Func<Category, bool>> where = a => (categoriesFilterDto.SearchContent == null || a.Name.ToLower().Contains(categoriesFilterDto.SearchContent.ToLower()))
-                                                      && (categoriesFilterDto.Status == CategoryStatus.All || (categoriesFilterDto.Status == CategoryStatus.Active && !a.IsDeleted) || a.IsDeleted);
+                                                      && (categoriesFilterDto.Status == CategoryStatus.All || (categoriesFilterDto.Status == CategoryStatus.Active && !a.IsDeleted) || (categoriesFilterDto.Status == CategoryStatus.Deleted && a.IsDeleted));
         Expression<Func<Category, object>> orderby = a => a.Id;
 
         IEnumerable<Category> categories = GetByCriteria(where: where, orderBy: orderby);
@@ -45,6 +45,7 @@ public class CategoryService(IGenericRepository<Category> genericRepository) : G
                                     ?? throw new Exception("Category Not Found");
 
         category.Name = categoryDto.Name;
+        category.IsDeleted = categoryDto.Status == CategoryStatus.Deleted;
         Update(category);
         return await SaveAsync() ? true : throw new Exception("");
     }

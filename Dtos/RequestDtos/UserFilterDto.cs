@@ -10,4 +10,8 @@ public record UserFilterDto
     public string? SearchContent { get; set; }
 
     public RoleEnum Role { get; set; }
+
+    public int PageNo { get; set; }
+
+    public int PageSize { get; set; }
 }

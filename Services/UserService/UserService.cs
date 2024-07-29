@@ -6,6 +6,7 @@ using Dtos.CommonDtos;
 using Dtos.Constants;
 using Dtos.Enums;
 using Dtos.Mappers;
+using Dtos.PaginationDto;
 using Dtos.RequestDtos;
 using Dtos.ResponseDtos;
 using Microsoft.AspNetCore.Http;
@@ -49,7 +50,7 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         throw new AuthenticationException(ConstantValue.InvalidCredentials);
     }
 
-    public List<UserDto> GetUsers(UserFilterDto userFilterDto)
+    public PaginationDto<UserDto> GetUsers(UserFilterDto userFilterDto)
     {
         Expression<Func<User, bool>> where = a => (userFilterDto.Role == RoleEnum.All
                                         || (userFilterDto.Role == RoleEnum.Admin && a.RoleId == 1)
@@ -57,13 +58,24 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
                                         && (userFilterDto.Status == UserStatus.All || userFilterDto.Status == a.Status)
                                         && (userFilterDto.SearchContent == null || (a.FirstName + " " + a.LastName).ToLower().Contains(userFilterDto.SearchContent.ToLower()));
         Expression<Func<User, object>> orderBy = a => a.Id;
-        IEnumerable<User>? users = GetByCriteria(where: where, orderBy: orderBy);
+        PaginationFromRepository<User> paginationFromRepository
+                                    = GetByCriteriaAndPagination(userFilterDto.PageNo, userFilterDto.PageSize, where: where, orderBy: orderBy);
         List<UserDto> userDtos = [];
-        foreach (User user in users ?? [])
+        foreach (User user in paginationFromRepository.Entities ?? [])
         {
             userDtos.Add(user.ToUserDto());
         }
-        return userDtos;
+
+        int totalPages = (paginationFromRepository.TotalCount + userFilterDto.PageSize - 1)
+                                                                           / userFilterDto.PageSize;
+        return new PaginationDto<UserDto>
+        {
+            DtoList = userDtos,
+            TotalCount = paginationFromRepository.TotalCount,
+            PageNo = userFilterDto.PageNo,
+            IsNext = userFilterDto.PageNo < totalPages,
+            IsPrevious = userFilterDto.PageNo != 1,
+        };
     }
 
     public async Task<bool> CreateUser(CreateUserRequestDto createUserRequestDto)
@@ -76,7 +88,7 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
     public async Task<bool> UpdateUser(UserDto userDto)
     {
         User? user = GetById(userDto.Id) ?? throw new Exception("User Not Found");
-        user = userDto.ToUpdateUser(user);
+        user = userDto.ToUser(user);
         Update(user);
         return await SaveAsync() ? true : throw new Exception();
     }
