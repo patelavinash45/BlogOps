@@ -3,6 +3,10 @@
     height: 55px;
 }
 
+.ng-select-container{
+    height: 55px;
+}
+
 a{
     text-decoration: none;
 }

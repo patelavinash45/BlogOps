@@ -15,8 +15,11 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { BlogService } from '../../../service/blog.service';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Blog } from '../../../../../shared/interfaces/blog';
-import { MatSelectModule } from '@angular/material/select';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { MatAutocomplete, MatOption } from '@angular/material/autocomplete';
+import { UserFilterDto } from '../../../../../shared/interfaces/user-filter-dto';
+import { UserStatus } from '../../../../../shared/enums/user-status';
+import { RoleType } from '../../../../../shared/enums/role-type';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-blog',
@@ -31,16 +34,17 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
     MatPaginatorModule,
     MatProgressBarModule,
     NgxSkeletonLoaderModule,
-    MatSelectModule,
-    NgxMatSelectSearchModule
+    NgSelectModule,
+    MatOption
   ],
   templateUrl: './blog.component.html',
   styleUrl: './blog.component.css'
 })
 export class BlogComponent {
-  response!: PaginationDto<Blog>;
+  blogResponse!: PaginationDto<Blog>;
   statusWiseClasses: string[] = StatusWiseClasses;
-  authors: UserDto[] = [];
+  authorResponse!: PaginationDto<UserDto>;
+  selectSearchAuthors: UserDto[] = [];
   isFilterOptionsExpended: boolean = false;
   blogFilterDto: BlogFilterDto = {
     status: BlogStatus.All,
@@ -48,23 +52,36 @@ export class BlogComponent {
     isAdmin: true,
     userId: 0,
     pageNo: 1,
-    pageSize: 10,
+    pageSize: 5,
+  };
+  userFilterDto: UserFilterDto = {
+    status: UserStatus.Active,
+    searchContent: null,
+    role: RoleType.Author,
+    pageNo: 1,
+    pageSize: 20,
   };
   @ViewChild(RejectModalComponent) rejectModal!: RejectModalComponent;
+  @ViewChild(MatAutocomplete) matAutoComplete!: MatAutocomplete;
 
   constructor(private blogService: BlogService) { }
 
   getData() {
     this.blogService.GetBlogs(this.blogFilterDto).subscribe((response: PaginationDto<Blog>) => {
-      this.response = response;
+      this.blogResponse = response;
+    });
+  }
+
+  getUserData() {
+    this.blogService.GetAllAuthors(this.userFilterDto).subscribe((response: PaginationDto<UserDto>) => {
+      this.authorResponse = response;
+      this.selectSearchAuthors = [...this.selectSearchAuthors,...response.dtoList];
     });
   }
 
   ngOnInit(): void {
     this.getData();
-    this.blogService.GetAllAuthors().subscribe((response: UserDto[]) => {
-      this.authors = response;
-    });
+    this.getUserData();
   }
 
   onSearchInputChange(event: any) {
@@ -77,9 +94,24 @@ export class BlogComponent {
     this.getData();
   }
 
-  onUserChange(event: any) {
-    this.blogFilterDto.userId = event.target.value;
+  onUserChange(userId: number) {
+    this.blogFilterDto.userId = userId;
     this.getData();
+  }
+
+  onUserSearch(event: any) {
+    this.selectSearchAuthors = [];
+    this.userFilterDto.searchContent = event.target.value;
+    this.getUserData();
+  }
+
+  onOptionScroll() {
+    console.log("event")
+    
+    // if (this.authorResponse.isNext) {
+    //   this.authorResponse.pageNo++;
+    //   this.getUserData();
+    // }
   }
 
   onBlogStatusChange(id: number, isApprove: boolean) {

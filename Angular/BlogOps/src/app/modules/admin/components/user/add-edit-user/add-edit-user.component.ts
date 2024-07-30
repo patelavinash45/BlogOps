@@ -64,6 +64,10 @@ export class AddEditUserComponent {
     this.isShowPassword = !this.isShowPassword;
   }
 
+  ngOnChanges(): void {
+    this.isButtonClick;
+  }
+
   onFormSubmit() {
     if (this.createUserForm.valid) {
       this.isButtonClick = true;

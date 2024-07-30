@@ -57,7 +57,7 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
                                         || (userFilterDto.Role == RoleEnum.Author && a.RoleId == 2))
                                         && (userFilterDto.Status == UserStatus.All || userFilterDto.Status == a.Status)
                                         && (userFilterDto.SearchContent == null || (a.FirstName + " " + a.LastName).ToLower().Contains(userFilterDto.SearchContent.ToLower()));
-        Expression<Func<User, object>> orderBy = a => a.Id;
+        Expression<Func<User, object>> orderBy = a => a.FirstName;
         PaginationFromRepository<User> paginationFromRepository
                                     = GetByCriteriaAndPagination(userFilterDto.PageNo, userFilterDto.PageSize, where: where, orderBy: orderBy);
         List<UserDto> userDtos = [];

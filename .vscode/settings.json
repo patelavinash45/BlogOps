@@ -19,6 +19,7 @@
         "prerender",
         "tinymce",
         "Toastr",
+        "typeahead",
         "wordcount"
     ]
 }

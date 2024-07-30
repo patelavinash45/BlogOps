@@ -22,15 +22,8 @@ export class BlogService {
     return this.httpClient.post<PaginationDto<Blog>>(`${baseUrl}/blogs/filter`, blogFilterDto);
   }
 
-  public GetAllAuthors(): Observable<UserDto[]> {
-    const userFilterDto: UserFilterDto = {
-      status: UserStatus.All,
-      searchContent: null,
-      role: RoleType.Author,
-      pageNo: 1,
-      pageSize: 5,
-    };
-    return this.httpClient.post<UserDto[]>(`${baseUrl}/users/filter`, userFilterDto);
+  public GetAllAuthors(userFilterDto: UserFilterDto): Observable<PaginationDto<UserDto>> {
+    return this.httpClient.post<PaginationDto<UserDto>>(`${baseUrl}/users/filter`, userFilterDto);
   }
 
   public ChangeStatus(blogId: number, isApproved: boolean, adminComment: string | null): Observable<void> {

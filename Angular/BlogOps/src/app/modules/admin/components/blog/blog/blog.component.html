@@ -46,29 +46,29 @@
                     </select>
                     <label for="floatingSelect">Status</label>
                 </div>
-                <mat-form-field>
-                    <mat-select  placeholder="User" #singleSelect>
-                      <mat-option>
-                        <ngx-mat-select-search ></ngx-mat-select-search>
-                      </mat-option>
-                      @for(author of authors;track author.id){
-                        <mat-option [value]="author.id">
-                            {{ author.firstName }} {{ author.lastName }}
-                        </mat-option>
-                        }
-                    </mat-select>
-                  </mat-form-field>
+                <div class="form-floating filter-div">
+                    <ng-select
+                        [items]="selectSearchAuthors"
+                        [virtualScroll]="true"
+                        placeholder="User"
+                        (scrollToEnd)="onOptionScroll()"
+                        #select>
+                        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                            <b>{{index}} </b>
+                          </ng-template>
+                    </ng-select>
+                </div>
                 <!-- <div class="form-floating filter-div">
                     <select
-                        (change)="onUserChange($event)"
+                        (change)="onUserChange"
                         class="form-select"
                         id="floatingSelect"
                         aria-label="User">
-                        <option [value]="0" selected>All</option>
-                        @for(author of authors;track author.id){
-                        <option [value]="author.id">
-                            {{ author.firstName }} {{ author.lastName }}
-                        </option>
+                        <option [value]="0" selected><input /></option>
+                        @for(author of authorResponse.dtoList;track author.id){
+                            <option [value]="author.id">
+                                {{ author.firstName }} {{ author.lastName }}
+                            </option>
                         }
                     </select>
                     <label for="floatingSelect">User</label>
@@ -76,7 +76,7 @@
             </div>
         </mat-expansion-panel>
     </div>
-    @defer (when response!= null) {
+    @defer (when blogResponse!= null) {
     <div class="mt-3 card shadow-sm p-3 table-responsive">
         <table class="table text-center table-bordered rounded-2 fs-6">
             <thead>
@@ -90,7 +90,7 @@
                 </tr>
             </thead>
             <tbody>
-                @for(blog of response.dtoList; track blog.id){
+                @for(blog of blogResponse.dtoList; track blog.id){
                 <tr class="align-middle">
                     <td class="mat-primary">
                         {{ blog.title }}
@@ -150,7 +150,7 @@
         <mat-paginator
             class="fs-6"
             (page)="changePage($event)"
-            [length]="response.totalCount"
+            [length]="blogResponse.totalCount"
             [pageSizeOptions]="[5,10,15,20]"
             [pageSize]="10"></mat-paginator>
     </div>

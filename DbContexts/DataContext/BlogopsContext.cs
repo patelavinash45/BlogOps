@@ -28,7 +28,7 @@ public partial class BlogOpsContext : DbContext
         {
             BaseEntity? baseEntity = entity.Entity as BaseEntity;
             int userId = _userInfo.UserId;
-            baseEntity.UpdatedBy = userId;
+            baseEntity!.UpdatedBy = userId;
             baseEntity.UpdatedDate = UserInfo.CurrentTime;
             if (entity.State == EntityState.Added)
             {
