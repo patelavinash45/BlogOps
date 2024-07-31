@@ -3,6 +3,7 @@ using DbContexts.DataModels;
 using Dtos.CommonDtos;
 using Dtos.Enums;
 using Dtos.Mappers;
+using Dtos.PaginationDto;
 using Dtos.RequestDtos;
 using Repositories.GenericRepository;
 using Services.GenericService;
@@ -17,19 +18,30 @@ public class CategoryService(IGenericRepository<Category> genericRepository) : G
         return category.ToCategoryDto();
     }
 
-    public List<CategoryDto> GetCategories(CategoriesFilterDto categoriesFilterDto)
+    public PaginationDto<CategoryDto> GetCategories(CategoriesFilterDto categoriesFilterDto)
     {
         Expression<Func<Category, bool>> where = a => (categoriesFilterDto.SearchContent == null || a.Name.ToLower().Contains(categoriesFilterDto.SearchContent.ToLower()))
                                                       && (categoriesFilterDto.Status == CategoryStatus.All || (categoriesFilterDto.Status == CategoryStatus.Active && !a.IsDeleted) || (categoriesFilterDto.Status == CategoryStatus.Deleted && a.IsDeleted));
         Expression<Func<Category, object>> orderby = a => a.Id;
 
-        IEnumerable<Category> categories = GetByCriteria(where: where, orderBy: orderby);
+        PaginationFromRepository<Category> paginationFromRepository
+                                    = GetByCriteriaAndPagination(categoriesFilterDto.PageNo, categoriesFilterDto.PageSize, where: where, orderBy: orderby);
+
         List<CategoryDto> categoryResponseDtos = [];
-        foreach (Category category in categories ?? [])
+        foreach (Category category in paginationFromRepository.Entities ?? [])
         {
             categoryResponseDtos.Add(category.ToCategoryDto());
         };
-        return categoryResponseDtos;
+        int totalPages = (paginationFromRepository.TotalCount + categoriesFilterDto.PageSize - 1)
+                                                                            / categoriesFilterDto.PageSize;
+        return new PaginationDto<CategoryDto>
+        {
+            DtoList = categoryResponseDtos,
+            TotalCount = paginationFromRepository.TotalCount,
+            PageNo = categoriesFilterDto.PageNo,
+            IsNext = categoriesFilterDto.PageNo < totalPages,
+            IsPrevious = categoriesFilterDto.PageNo != 1,
+        };
     }
 
     public async Task<bool> CreateCategory(CreateCategoryRequestDto createCategoryRequestDto)

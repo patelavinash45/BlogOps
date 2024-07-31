@@ -34,3 +34,13 @@ input{
 .tox-promotion{
     display: none;
 }
+
+::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-placeholder,
+::ng-deep .ng-select .ng-select-container .ng-input {
+    top: auto !important;
+}
+
+.ng-select.custom,
+.ng-select.custom ::ng-deep .ng-select-container {
+    min-height: 55px;
+}

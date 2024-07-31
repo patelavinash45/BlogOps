@@ -13,28 +13,41 @@ import { BlogService } from '../../core/service/blog.service';
 import { ValidationMessageComponent } from "../base/validation-message/validation-message.component";
 import { CategoryDto } from '../../shared/interfaces/category-dto';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import { PaginationDto } from '../../shared/interfaces/pagination-dto';
+import { CategoriesFilterDto } from '../../shared/interfaces/categories-filter-dto';
+import { CategoryStatus } from '../../shared/enums/category-status';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-add-edit-blog',
   standalone: true,
   imports: [
-    AngularEditorModule, 
-    ReactiveFormsModule, 
-    MatButtonModule, 
+    AngularEditorModule,
+    ReactiveFormsModule,
+    MatButtonModule,
     ValidationMessageComponent,
-    EditorModule
+    EditorModule,
+    NgSelectModule
   ],
   templateUrl: './add-edit-blog.component.html',
   styleUrl: './add-edit-blog.component.css',
 })
 export class AddEditBlogComponent {
   editorConfig = editorConfig;
-  categories: CategoryDto[] = [];
+  categoryResponse!: PaginationDto<CategoryDto>;
+  selectSearchCategories: CategoryDto[] = [];
   blogForm!: FormGroup;
   blogId!: number;
   isDraft: boolean = true;
   createBlogRequestDto!: CreateBlogRequestDto;
-  selectedCategories: number[] = [];
+  categorySearchInput$ = new Subject<string>();
+  categoriesFilterDto: CategoriesFilterDto = {
+    searchContent: null,
+    status: CategoryStatus.Active,
+    pageNo: 1,
+    pageSize: 7,
+  };
 
   constructor(
     private blogService: BlogService,
@@ -64,25 +77,40 @@ export class AddEditBlogComponent {
         blogCategories: response.blogCategories,
         isDraft: this.isDraft,
       });
-      this.selectedCategories = response.blogCategories;
     })
   }
 
-  ngOnInit(): void {
-    this.blogService.GetCategories().subscribe((response: CategoryDto[]) => {
-      this.categories = response;
+  getCategories() {
+    this.blogService.GetCategories(this.categoriesFilterDto).subscribe((response: PaginationDto<CategoryDto>) => {
+      this.categoryResponse = response;
+      this.selectSearchCategories = [...this.selectSearchCategories, ...response.dtoList];
     });
+  }
+
+  ngOnInit(): void {
+    this.getCategories();
+    this.categorySearchInput$.pipe(debounceTime(300), distinctUntilChanged()).subscribe((searchInput) => {
+      this.selectSearchCategories = [];
+      this.categoriesFilterDto.pageNo = 1;
+      this.categoriesFilterDto.searchContent = searchInput;
+      this.getCategories();
+    });
+  }
+
+  onOptionScroll() {
+    if (this.categoryResponse.isNext) {
+      this.categoriesFilterDto.pageNo++;
+      this.getCategories();
+    }
   }
 
   onCategoryChange(event: any) {
     this.blogForm.controls['blogCategories'].markAsTouched;
-    if (event.target.checked) {
-      this.selectedCategories.push(event.target.value);
+    const selectedCategories: number[] = [];
+    for(var category of event){
+      selectedCategories.push(category.id);
     }
-    else {
-      this.selectedCategories = this.selectedCategories.filter(a => a != event.target.value);
-    }
-    this.blogForm.controls['blogCategories'].setValue(this.selectedCategories);
+    this.blogForm.controls['blogCategories'].setValue(selectedCategories);
   }
 
   onFormSubmit() {

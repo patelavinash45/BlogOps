@@ -10,7 +10,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { adminSideBarItems, authorSideBarItems } from '../../../shared/constants/constant';
+import { adminSideBarItems, authorSideBarItems, largeDisplay } from '../../../shared/constants/constant';
 
 @Component({
   selector: 'app-header',
@@ -38,10 +38,15 @@ export class HeaderComponent {
 
   constructor(private manageCookieService: ManageCookieService, private breakObserver: BreakpointObserver, private router:Router) { }
 
-  isHandSet$: Observable<boolean> = this.breakObserver.observe(Breakpoints.Handset).pipe(
+  isLargeDisplay$: Observable<boolean> = this.breakObserver.observe(largeDisplay).pipe(
     map(result => result.matches),
     shareReplay()
-  )
+  );
+
+  isSmallDisplay$: Observable<boolean> = this.breakObserver.observe(Breakpoints.Small).pipe(
+    map(result => result.matches),
+    shareReplay()
+  );
 
   ngOnInit(): void {
     this.profileName = this.manageCookieService.GetProfileName();

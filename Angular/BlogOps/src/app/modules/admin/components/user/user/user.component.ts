@@ -5,25 +5,22 @@ import { UserFilterDto } from '../../../../../shared/interfaces/user-filter-dto'
 import { UserStatus } from '../../../../../shared/enums/user-status';
 import { RoleType } from '../../../../../shared/enums/role-type';
 import { MatButtonModule } from '@angular/material/button';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { RouterLink } from '@angular/router';
 import { UserStatusIntToValuePipe } from '../../../../../core/pipe/user-status-int-to-value.pipe';
 import { UserStatusWiseClasses } from '../../../../../shared/constants/constant';
 import { CommonModule } from '@angular/common';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { PaginationDto } from '../../../../../shared/interfaces/pagination-dto';
-import { response } from 'express';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-user',
   standalone: true,
   imports: [
-    UserStatusIntToValuePipe, 
-    MatButtonModule, 
-    MatExpansionModule, 
-    RouterLink, 
+    UserStatusIntToValuePipe,
+    MatButtonModule,
+    RouterLink,
     CommonModule,
     MatProgressBarModule,
     NgxSkeletonLoaderModule,
@@ -71,7 +68,7 @@ export class UserComponent {
     this.getData();
   }
 
-  onFilterButtonClick(){
+  onFilterButtonClick() {
     this.isFilterOptionsExpended = !this.isFilterOptionsExpended;
   }
 

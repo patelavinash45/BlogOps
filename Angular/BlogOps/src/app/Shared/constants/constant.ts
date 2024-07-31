@@ -1,3 +1,4 @@
+import { Breakpoints } from "@angular/cdk/layout";
 import { RoutePathConstant } from "./route-path.constant";
 
 export const baseUrl = 'http://localhost:5014/api';
@@ -15,7 +16,7 @@ export const StatusWiseClasses: string[] = ['bg-primary text-white border-white'
 export const UserStatusWiseClasses: string[] = ['bg-success text-white border-white', 'bg-warning text-black border-black', 'bg-danger text-white border-white'];
 
 export const editorConfig = {
-  base_url: '/tinymce', 
+  base_url: '/tinymce',
   suffix: '.min',
   plugins: 'lists link image table code help wordcount'
 }
@@ -31,4 +32,25 @@ export const authorSideBarItems: string[][] = [
   ['Dashboard', RoutePathConstant.AuthorDashboardPath],
   ['Profile', '/author/manage-user'],
 ];
+
+export const largeDisplay: string[] = [
+  Breakpoints.Medium,
+  Breakpoints.Large,
+  Breakpoints.XLarge,
+  Breakpoints.Web,
+  Breakpoints.WebPortrait,
+  Breakpoints.TabletLandscape,
+  Breakpoints.WebLandscape,
+];
+
+export const displayForWelcomeText: string[] = [
+  Breakpoints.XSmall,
+  Breakpoints.Small,
+  Breakpoints.Handset,
+  Breakpoints.Tablet,
+  Breakpoints.TabletPortrait,
+  Breakpoints.HandsetPortrait,
+  Breakpoints.HandsetLandscape,
+];
+
 

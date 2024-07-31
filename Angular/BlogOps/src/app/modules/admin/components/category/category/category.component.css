@@ -7,10 +7,6 @@ a{
     text-decoration: none;
 }
 
-.mat-expansion-panel:not([class*=mat-elevation-z]) {
-    box-shadow: none;
-}
-
 @media only screen and (max-width: 776px) {
     .filter-options {
         flex-direction: column;

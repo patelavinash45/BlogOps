@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { CommonModule } from '@angular/common';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ValidationMessageComponent } from '../../../../../components/base/validation-message/validation-message.component';
@@ -13,13 +12,13 @@ import { CategoryStatus } from '../../../../../shared/enums/category-status';
 import { CategoryService } from '../../../service/category.service';
 import { AddEditModalComponent } from '../add-edit-modal/add-edit-modal.component';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+import { PaginationDto } from '../../../../../shared/interfaces/pagination-dto';
 
 @Component({
   selector: 'app-category',
   standalone: true,
   imports: [
     CommonModule,
-    MatExpansionModule,
     MatPaginatorModule,
     MatProgressBarModule,
     MatButtonModule,
@@ -32,11 +31,13 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
   styleUrl: './category.component.css'
 })
 export class CategoryComponent {
-  categories: CategoryDto[] = [];
+  categoryResponse!: PaginationDto<CategoryDto>;
   statusWiseClasses: string[] = StatusWiseClasses;
   categoriesFilterDto: CategoriesFilterDto = {
     searchContent: null,
     status: CategoryStatus.All,
+    pageNo: 1,
+    pageSize: 10,
   };
   isFilterOptionsExpended: boolean = false;
   isCreateCategory: boolean = false;
@@ -46,8 +47,8 @@ export class CategoryComponent {
   constructor(private categoryService: CategoryService) { }
 
   getData() {
-    this.categoryService.GetCategories(this.categoriesFilterDto).subscribe((response) => {
-      this.categories = response;
+    this.categoryService.GetCategories(this.categoriesFilterDto).subscribe((response : PaginationDto<CategoryDto>) => {
+      this.categoryResponse = response;
     });
   }
 
@@ -88,5 +89,11 @@ export class CategoryComponent {
   onEditConform() {
     this.editCategoryId = null;
     this.addEditModalComponent.updateCategory();
+  }
+
+  changePage(event: PageEvent) {
+    this.categoriesFilterDto.pageNo = event.pageIndex + 1;
+    this.categoriesFilterDto.pageSize = event.pageSize;
+    this.getData();
   }
 }

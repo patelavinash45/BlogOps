@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PaginationDto } from '../../../../../shared/interfaces/pagination-dto';
 import { BlogFilterDto } from '../../../../../shared/interfaces/blog-filter-dto';
@@ -7,19 +7,20 @@ import { UserDto } from '../../../../../shared/interfaces/user-dto';
 import { CommonModule } from '@angular/common';
 import { RejectModalComponent } from "../reject-modal/reject-modal.component";
 import { MatButtonModule } from '@angular/material/button';
-import { MatExpansionModule } from '@angular/material/expansion';
 import { BlogStatusIntToValuePipe } from '../../../../../core/pipe/blog-status-int-to-value.pipe';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { StatusWiseClasses } from '../../../../../shared/constants/constant';
+import { largeDisplay, StatusWiseClasses } from '../../../../../shared/constants/constant';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { BlogService } from '../../../service/blog.service';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { Blog } from '../../../../../shared/interfaces/blog';
-import { MatAutocomplete, MatOption } from '@angular/material/autocomplete';
 import { UserFilterDto } from '../../../../../shared/interfaces/user-filter-dto';
 import { UserStatus } from '../../../../../shared/enums/user-status';
 import { RoleType } from '../../../../../shared/enums/role-type';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { debounceTime, distinctUntilChanged, map, Observable, shareReplay, Subject } from 'rxjs';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-blog',
@@ -29,13 +30,12 @@ import { NgSelectModule } from '@ng-select/ng-select';
     RouterLink,
     RejectModalComponent,
     MatButtonModule,
-    MatExpansionModule,
     BlogStatusIntToValuePipe,
     MatPaginatorModule,
     MatProgressBarModule,
     NgxSkeletonLoaderModule,
     NgSelectModule,
-    MatOption
+    MatExpansionModule  
   ],
   templateUrl: './blog.component.html',
   styleUrl: './blog.component.css'
@@ -59,12 +59,17 @@ export class BlogComponent {
     searchContent: null,
     role: RoleType.Author,
     pageNo: 1,
-    pageSize: 20,
+    pageSize: 7,
   };
+  userSearchInput$ = new Subject<string>();
   @ViewChild(RejectModalComponent) rejectModal!: RejectModalComponent;
-  @ViewChild(MatAutocomplete) matAutoComplete!: MatAutocomplete;
 
-  constructor(private blogService: BlogService) { }
+  constructor(private blogService: BlogService, private breakObserver: BreakpointObserver) { }
+
+  isLargeDevice$: Observable<boolean> = this.breakObserver.observe(largeDisplay).pipe(
+    map(result => result.matches),
+    shareReplay()
+  );
 
   getData() {
     this.blogService.GetBlogs(this.blogFilterDto).subscribe((response: PaginationDto<Blog>) => {
@@ -75,13 +80,19 @@ export class BlogComponent {
   getUserData() {
     this.blogService.GetAllAuthors(this.userFilterDto).subscribe((response: PaginationDto<UserDto>) => {
       this.authorResponse = response;
-      this.selectSearchAuthors = [...this.selectSearchAuthors,...response.dtoList];
+      this.selectSearchAuthors = [...this.selectSearchAuthors, ...response.dtoList];
     });
   }
 
   ngOnInit(): void {
     this.getData();
     this.getUserData();
+    this.userSearchInput$.pipe(debounceTime(300), distinctUntilChanged()).subscribe((searchInput) => {
+      this.selectSearchAuthors = [];
+      this.userFilterDto.pageNo = 1;
+      this.userFilterDto.searchContent = searchInput;
+      this.getUserData();
+    });
   }
 
   onSearchInputChange(event: any) {
@@ -94,24 +105,21 @@ export class BlogComponent {
     this.getData();
   }
 
-  onUserChange(userId: number) {
-    this.blogFilterDto.userId = userId;
+  onUserChange(event: any) {
+    if (event == undefined) {
+      this.blogFilterDto.userId = 0;
+    }
+    else {
+      this.blogFilterDto.userId = event.id;
+    }
     this.getData();
   }
 
-  onUserSearch(event: any) {
-    this.selectSearchAuthors = [];
-    this.userFilterDto.searchContent = event.target.value;
-    this.getUserData();
-  }
-
   onOptionScroll() {
-    console.log("event")
-    
-    // if (this.authorResponse.isNext) {
-    //   this.authorResponse.pageNo++;
-    //   this.getUserData();
-    // }
+    if (this.authorResponse.isNext) {
+      this.userFilterDto.pageNo++;
+      this.getUserData();
+    }
   }
 
   onBlogStatusChange(id: number, isApprove: boolean) {

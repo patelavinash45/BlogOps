@@ -3,22 +3,27 @@
     height: 55px;
 }
 
-.ng-select-container{
-    height: 55px;
-}
-
-a{
+a {
     text-decoration: none;
 }
 
-.mat-expansion-panel:not([class*=mat-elevation-z]) {
-    box-shadow: none;
+::ng-deep .ng-select .ng-select-container .ng-input {
+    top: auto !important;
 }
 
-.mat-expansion-panel-body{  
-    padding-right: 0px!important;
-    padding-left: 0px!important;
+.ng-select.custom,
+.ng-select.custom ::ng-deep .ng-select-container {
+    min-height: 55px;
 }
+
+/* ::ng-deep ng-select .ng-dropdown-panel .scroll-host{
+    overflow: hidden;
+}
+
+::ng-deep ng-select .ng-dropdown-panel {
+    max-height: 75px;
+    overflow-y: auto;
+} */
 
 @media only screen and (max-width: 776px) {
     .filter-options {

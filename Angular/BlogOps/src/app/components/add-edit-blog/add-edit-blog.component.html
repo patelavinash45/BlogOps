@@ -9,7 +9,7 @@
       </button>
     </div>
   </div>
-  @defer (when categories.length > 0) {
+  @defer (when categoryResponse != null) {
   <form
     class="p-3 shadow-sm card main-div my-3"
     [formGroup]="blogForm"
@@ -27,26 +27,27 @@
     <app-validation-message [control]="blogForm.controls['title']"
       controlName="Title" />
     <div class="fs-5 fw-bolder mb-2 mt-3 mx-1">Blog Content</div>
-    <editor [init]="editorConfig" formControlName="content" aria-placeholder="Content" class="shadow-none"></editor>
+    <editor [init]="editorConfig" formControlName="content"
+      aria-placeholder="Content" class="shadow-none"></editor>
     <app-validation-message [control]="blogForm.controls['content']"
       controlName="Content" />
-    <div class="d-flex align-items-baseline">
+    <div class="d-flex align-items-baseline mt-3">
       <div class="fs-5 fw-bolder mb-2 mt-3 mx-1">Blog Categories :</div>
-      <div class="mx-2">
-        @for(category of categories; track category.id;let i = $index){
-        <div class="form-check form-check-inline">
-          <input
-            (change)="onCategoryChange($event)"
-            class="form-check-input"
-            type="checkbox"
-            id="{{ category.name }}"
-            value="{{ category.id }}"
-            [checked]="selectedCategories.includes(category.id)" />
-          <label class="form-check-label" for="{{ category.name }}">{{
-            category.name
-            }}</label>
-        </div>
-        }
+      <div class="form-floating mx-2">
+        <ng-select
+          class="custom w-100"
+          [items]="selectSearchCategories"
+          placeholder="Categories"
+          bindLabel="name"
+          [multiple]="true"
+          (change)="onCategoryChange($event)"
+          [typeahead]="categorySearchInput$"
+          (scrollToEnd)="onOptionScroll()">
+          <ng-template ng-option-tmp let-item="item"
+            let-search="searchTerm">
+            {{item.name}}
+          </ng-template>
+        </ng-select>
       </div>
     </div>
     <app-validation-message [control]="blogForm.controls['blogCategories']"
