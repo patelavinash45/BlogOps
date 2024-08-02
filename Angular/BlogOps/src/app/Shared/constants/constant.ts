@@ -22,15 +22,15 @@ export const editorConfig = {
 }
 
 export const adminSideBarItems: string[][] = [
-  ['Dashboard', RoutePathConstant.AdminDashboardPath],
-  ['Blog', RoutePathConstant.AdminBlogPath],
-  ['User', RoutePathConstant.AdminUserPath],
-  ['Categories', RoutePathConstant.AdminCategoryPath],
+  ['Dashboard', RoutePathConstant.AdminDashboardPath, '<i class="fa-solid fa-house-chimney"></i>'],
+  ['Blog', RoutePathConstant.AdminBlogPath, '<i class="fa-brands fa-blogger-b"></i>'],
+  ['User', RoutePathConstant.AdminUserPath, '<i class="fa-solid fa-user-group"></i>'],
+  ['Categories', RoutePathConstant.AdminCategoryPath, '<i class="fa-solid fa-table-list"></i>'],
 ];
 
 export const authorSideBarItems: string[][] = [
-  ['Dashboard', RoutePathConstant.AuthorDashboardPath],
-  ['Profile', '/author/manage-user'],
+  ['Dashboard', RoutePathConstant.AuthorDashboardPath, '<i class="fa-solid fa-house-chimney"></i>'],
+  ['Profile', '/author/manage-user', '<i class="fa-solid fa-user"></i>'],
 ];
 
 export const largeDisplay: string[] = [

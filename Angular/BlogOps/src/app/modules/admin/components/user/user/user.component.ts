@@ -38,14 +38,16 @@ export class UserComponent {
     searchContent: null,
     role: RoleType.All,
     pageNo: 1,
-    pageSize: 5,
+    pageSize: 10,
   };
 
   constructor(private userService: UserService) { }
 
   getData() {
-    this.userService.GetUsers(this.userFilterDto).subscribe((response: PaginationDto<UserDto>) => {
-      this.userResponse = response;
+    this.userService.GetUsers(this.userFilterDto).subscribe({
+      next: (response: PaginationDto<UserDto>) => {
+        this.userResponse = response;
+      }
     });
   }
 

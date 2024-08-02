@@ -19,8 +19,9 @@ import { UserStatus } from '../../../../../shared/enums/user-status';
 import { RoleType } from '../../../../../shared/enums/role-type';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { debounceTime, distinctUntilChanged, map, Observable, shareReplay, Subject } from 'rxjs';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-blog',
@@ -28,14 +29,13 @@ import { MatExpansionModule } from '@angular/material/expansion';
   imports: [
     CommonModule,
     RouterLink,
-    RejectModalComponent,
     MatButtonModule,
     BlogStatusIntToValuePipe,
     MatPaginatorModule,
     MatProgressBarModule,
     NgxSkeletonLoaderModule,
     NgSelectModule,
-    MatExpansionModule  
+    MatExpansionModule
   ],
   templateUrl: './blog.component.html',
   styleUrl: './blog.component.css'
@@ -52,7 +52,7 @@ export class BlogComponent {
     isAdmin: true,
     userId: 0,
     pageNo: 1,
-    pageSize: 5,
+    pageSize: 10,
   };
   userFilterDto: UserFilterDto = {
     status: UserStatus.Active,
@@ -62,9 +62,8 @@ export class BlogComponent {
     pageSize: 7,
   };
   userSearchInput$ = new Subject<string>();
-  @ViewChild(RejectModalComponent) rejectModal!: RejectModalComponent;
 
-  constructor(private blogService: BlogService, private breakObserver: BreakpointObserver) { }
+  constructor(private blogService: BlogService, private breakObserver: BreakpointObserver, private modal: MatDialog,) { }
 
   isLargeDevice$: Observable<boolean> = this.breakObserver.observe(largeDisplay).pipe(
     map(result => result.matches),
@@ -72,15 +71,19 @@ export class BlogComponent {
   );
 
   getData() {
-    this.blogService.GetBlogs(this.blogFilterDto).subscribe((response: PaginationDto<Blog>) => {
-      this.blogResponse = response;
+    this.blogService.GetBlogs(this.blogFilterDto).subscribe({
+      next: (response: PaginationDto<Blog>) => {
+        this.blogResponse = response;
+      }
     });
   }
 
   getUserData() {
-    this.blogService.GetAllAuthors(this.userFilterDto).subscribe((response: PaginationDto<UserDto>) => {
-      this.authorResponse = response;
-      this.selectSearchAuthors = [...this.selectSearchAuthors, ...response.dtoList];
+    this.blogService.GetAllAuthors(this.userFilterDto).subscribe({
+      next: (response: PaginationDto<UserDto>) => {
+        this.authorResponse = response;
+        this.selectSearchAuthors = [...this.selectSearchAuthors, ...response.dtoList];
+      }
     });
   }
 
@@ -123,14 +126,14 @@ export class BlogComponent {
   }
 
   onBlogStatusChange(id: number, isApprove: boolean) {
-    if (isApprove) {
-      this.blogService.ChangeStatus(id, true, null).subscribe((response) => {
-        this.getData();
-      });
-    }
-    else {
-      this.rejectModal.blogId = id;
-    }
+    const dialogRef = this.modal.open(RejectModalComponent, {
+      width: '500px',
+      data: {
+        blogId: id,
+        isApprove: isApprove,
+      },
+    });
+    dialogRef.afterClosed().subscribe(() => this.getData());
   }
 
   onFilterButtonClick() {

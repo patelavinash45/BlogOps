@@ -20,7 +20,7 @@ public class CategoryService(IGenericRepository<Category> genericRepository) : G
 
     public PaginationDto<CategoryDto> GetCategories(CategoriesFilterDto categoriesFilterDto)
     {
-        Expression<Func<Category, bool>> where = a => (categoriesFilterDto.SearchContent == null || a.Name.ToLower().Contains(categoriesFilterDto.SearchContent.ToLower()))
+        Expression<Func<Category, bool>> where = a => (string.IsNullOrEmpty(categoriesFilterDto.SearchContent) || a.Name.ToLower().Contains(categoriesFilterDto.SearchContent.ToLower()))
                                                       && (categoriesFilterDto.Status == CategoryStatus.All || (categoriesFilterDto.Status == CategoryStatus.Active && !a.IsDeleted) || (categoriesFilterDto.Status == CategoryStatus.Deleted && a.IsDeleted));
         Expression<Func<Category, object>> orderby = a => a.Id;
 
@@ -53,12 +53,20 @@ public class CategoryService(IGenericRepository<Category> genericRepository) : G
 
     public async Task<bool> UpdateCategory(CategoryDto categoryDto)
     {
-        Category? category = GetById(categoryDto.Id)
-                                    ?? throw new Exception("Category Not Found");
+        Expression<Func<Category, bool>> where = a => a.Id == categoryDto.Id;
+        Expression<Func<Category, object>> includeBlogCategories = a => a.BlogsCategories;
+        IEnumerable<Category> categories = GetByCriteria([includeBlogCategories], where)
+                                                        ?? throw new Exception("Category Not Found");
 
-        category.Name = categoryDto.Name;
-        category.IsDeleted = categoryDto.Status == CategoryStatus.Deleted;
-        Update(category);
+        if (categoryDto.Status == CategoryStatus.Deleted)
+        {
+            CanDeleteCategory(categories.First().BlogsCategories);
+        }
+
+        categories.First().Name = categoryDto.Name;
+        categories.First().IsDeleted = categoryDto.Status == CategoryStatus.Deleted;
+
+        Update(categories.First());
         return await SaveAsync() ? true : throw new Exception("");
     }
 
@@ -66,17 +74,29 @@ public class CategoryService(IGenericRepository<Category> genericRepository) : G
     {
         Expression<Func<Category, bool>> where = a => a.Id == id;
         Expression<Func<Category, object>> includeBlogCategories = a => a.BlogsCategories;
-        IEnumerable<Category> categories = GetByCriteria(includes: [includeBlogCategories], where)
+        IEnumerable<Category> categories = GetByCriteria([includeBlogCategories], where)
                                                             ?? throw new Exception("Category Not Found");
 
-        foreach (BlogsCategory blogsCategory in categories.First().BlogsCategories ?? [])
+        CanDeleteCategory(categories.First().BlogsCategories);
+        categories.First().IsDeleted = true;
+        Update(categories.First());
+        return await SaveAsync() ? true : throw new Exception("");
+    }
+
+    public bool CategoryExist(string name)
+    {
+        Expression<Func<Category, bool>> where = a => a.Name.ToLower() == name.ToLower();
+        IEnumerable<Category> categories = GetByCriteria(where: where);
+        return categories.Any();
+    }
+
+    private static void CanDeleteCategory(ICollection<BlogsCategory>? blogsCategories)
+    {
+        foreach (BlogsCategory blogsCategory in blogsCategories ?? [])
         {
             if (!blogsCategory.IsDeleted)
                 throw new Exception("Can Not Delete Category.");
         }
-        categories.First().IsDeleted = true;
-        Update(categories.First());
-        return await SaveAsync() ? true : throw new Exception("");
     }
 
 }

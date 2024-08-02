@@ -23,9 +23,11 @@ export class ViewBlogComponent {
   ngOnInit(): void {
     this.userType = this.route.snapshot.data['role'];
     this.blogId = this.route.snapshot.params['blogId'];
-    this.blogService.GetBlogDetails(this.blogId).subscribe((response: Blog) => {
-      this.blog = response;
-    })
+    this.blogService.GetBlogDetails(this.blogId).subscribe({
+      next: (response: Blog) => {
+        this.blog = response;
+      }
+    });
   }
 
   onBackButtonClick() {

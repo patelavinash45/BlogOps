@@ -2,18 +2,12 @@
   <div class="container d-flex justify-content-center align-items-center h-100">
     <div class="logInCard p-4 shadow-lg rounded-4">
       <div class="text-center card-title fs-3 fw-bold mb-3">
-        <img
-          src="assets/image-removebg-preview (8).png"
-          height="60px" />
+        <img src="assets/LogInLogo.png" height="60px" />
       </div>
       <form [formGroup]="loginForm" (submit)="onFormSubmit()">
         <div class="input-group">
           <div class="form-floating">
-            <input
-              type="email"
-              formControlName="email"
-              class="form-control"
-              id="floatingInput"
+            <input type="email" formControlName="email" class="form-control" id="floatingInput"
               placeholder="name@example.com" />
             <label for="floatingInput">Email address</label>
           </div>
@@ -24,33 +18,29 @@
         <app-validation-message [control]="loginForm.controls['email']" controlName="Email" />
         <div class="input-group mt-3">
           <div class="form-floating">
-            <input
-              [type]="isShowPassword ? 'text' : 'password'"
-              formControlName="password"
-              class="form-control"
-              id="floatingPassword"
-              placeholder="Password" />
+            <input [type]="isShowPassword ? 'text' : 'password'" formControlName="password" class="form-control"
+              id="floatingPassword" placeholder="Password" />
             <label for="floatingPassword">Password</label>
           </div>
           <span class="input-group-text" id="basic-addon2">
             <button class="btn" type="button" (click)="onPasswordButtonClick()">
-              <i
-                class="bi"
-                [ngClass]="{
+              <i class="bi" [ngClass]="{
                   'bi-eye': !isShowPassword,
                   'bi-eye-slash': isShowPassword
                 }"></i>
             </button>
           </span>
         </div>
-        <app-validation-message [control]="loginForm.controls['password']" controlName="Password" />
+        <app-validation-message [control]="loginForm.controls['password']" controlName="Password" [length]="8" />
         <div class="d-flex justify-content-start align-items-center mt-3 mx-2">
           <input type="checkbox" class="me-2" formControlName="keepMeSignIn" />
           <span> Keep me signed in </span>
         </div>
-        <button mat-flat-button color="primary"
-          class="w-100 mt-3 login-button fs-4">
+        <button mat-flat-button color="primary" class="w-100 mt-3 login-button fs-4 d-flex justify-content-center">
           Log In
+          @if(isButtonClick){
+          <i class="fa-solid fa-spinner rotate"></i>
+          }
         </button>
       </form>
     </div>

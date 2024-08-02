@@ -16,6 +16,18 @@
     height: 500px;
 }
 
+@media only screen and (max-width: 1200px) and (min-width: 1050px) {
+    .filter-div{
+        width: 300px;
+    }
+}
+
+@media only screen and (max-width: 1050px) and (min-width: 996px) {
+    .filter-div{
+        width: 270px;
+    }
+}
+
 @media only screen and (max-width: 996px) {
     .top-options {
         flex-direction: column;

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using DbContexts.Enums;
 using Dtos.Enums;
 
@@ -11,7 +12,9 @@ public record UserFilterDto
 
     public RoleEnum Role { get; set; }
 
+    [Range(1, int.MaxValue)]
     public int PageNo { get; set; }
 
+    [Range(1, int.MaxValue)]
     public int PageSize { get; set; }
 }

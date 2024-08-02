@@ -21,14 +21,13 @@ export const httpRequestInterceptor: HttpInterceptorFn = (req, next) => {
   return next(newRequest).pipe(
     catchError(errorResponse => {
       const statusCode = errorResponse.status;
-      console.log(errorResponse);
       if (statusCode == 401) {
         toasterService.ShowError(SessionExpired);
         cookiesService.RemoveAllCookie();
         router.navigateByUrl(RoutePathConstant.LogInPath);
         return throwError(errorResponse);
       }
-      toasterService.ShowError(errorResponse.error);
+      toasterService.ShowError(errorResponse.error.Message);
       return throwError(errorResponse);
     })
   );

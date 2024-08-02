@@ -35,12 +35,35 @@ input{
     display: none;
 }
 
+.custom{
+    width: 400px;
+}
+
+::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value,
 ::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-placeholder,
 ::ng-deep .ng-select .ng-select-container .ng-input {
     top: auto !important;
+    color: black;
 }
 
 .ng-select.custom,
 .ng-select.custom ::ng-deep .ng-select-container {
     min-height: 55px;
+}
+
+::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container{
+    flex-wrap: unset!important;
+    overflow-x: scroll;
+}
+
+@media screen and (max-width:776px) {
+    .blogCategories{
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width:776px) {
+    .custom{
+        width: 70%;
+    }
 }

@@ -14,7 +14,7 @@ import { Blog } from '../../../../shared/interfaces/blog';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, BlogCardComponent, RouterLink, NgxSkeletonLoaderModule, MatButtonModule, MatPaginator ],
+  imports: [CommonModule, BlogCardComponent, RouterLink, NgxSkeletonLoaderModule, MatButtonModule, MatPaginator],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
@@ -32,9 +32,10 @@ export class DashboardComponent {
   constructor(private dashboardService: DashboardService) { }
 
   getData() {
-    this.dashboardService.GetBlogs(this.blogFilterDto).subscribe((response: PaginationDto<Blog>) => {
-      console.log(response);
-      this.response = response;
+    this.dashboardService.GetBlogs(this.blogFilterDto).subscribe({
+      next: (response: PaginationDto<Blog>) => {
+        this.response = response;
+      }
     });
   }
 

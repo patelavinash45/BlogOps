@@ -1,36 +1,32 @@
-<div
-  class="modal"
-  id="reject-modal"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <form
-      class="modal-content"
-      [formGroup]="rejectForm"
-      (submit)="onFormSubmit()">
-      <div class="modal-body">
-        <div class="fs-5 fw-bolder mb-2 mx-1">Additional Comment</div>
-        <div class="form-floating">
-          <textarea
-            formControlName="adminComment"
-            class="form-control"
-            placeholder="Comment"
-            id="comment"
-            length="150px">
+<!-- <h2 mat-dialog-title>Blog Status</h2> -->
+<mat-dialog-content class="mat-typography">
+  @if(isApprove){
+  <span class="text-black">
+    Are you Sure ??
+  </span>
+  }@else {
+  <form class="modal-content" [formGroup]="form">
+    <div class="modal-body">
+      <div class="fs-5 fw-bolder mb-2 mx-1">Additional Comment</div>
+      <div class="form-floating">
+        <textarea formControlName="adminComment" class="form-control" placeholder="Comment" id="comment" length="150px">
           </textarea>
-          <label for="comment">Comment</label>
-        </div>
-        <app-validation-message
-          [control]="rejectForm.controls['adminComment']"
-          controlName="AdminComment" />
+        <label for="comment">Comment</label>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Cancel
-        </button>
-        <button type="submit" class="btn btn-primary">Reject</button>
-      </div>
-    </form>
-  </div>
-</div>
+      <app-validation-message [control]="form.controls['adminComment']" controlName="AdminComment" />
+    </div>
+  </form>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button type="button" (click)="onFormSubmit()" color="primary">
+    @if(isApprove)
+    {Approve}
+    @else
+    {Reject}
+    @if(isButtonClick){
+    <i class="fa-solid fa-spinner rotate"></i>
+    }
+  </button>
+</mat-dialog-actions>

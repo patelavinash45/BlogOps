@@ -34,11 +34,10 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
     {
         Expression<Func<Blog, bool>> where = a =>
                         (blogFilterDto.IsAdmin || a.CreatedBy == _userInfo.UserId)
-                        && (!blogFilterDto.IsAdmin || blogFilterDto.UserId == 0 || a.CreatedBy == blogFilterDto.UserId)
-                        && (!blogFilterDto.IsAdmin || a.Status != BlogStatus.Draft)
+                        && (!blogFilterDto.IsAdmin || (a.CreatedByUser.Status != UserStatus.DeActive && (blogFilterDto.UserId == 0 || a.CreatedBy == blogFilterDto.UserId) && a.Status != BlogStatus.Draft))
                         && a.Status != BlogStatus.Deleted
                         && (blogFilterDto.Status == BlogStatus.All || a.Status == blogFilterDto.Status)
-                        && (blogFilterDto.SearchContent == null || a.Title.ToLower().Contains(blogFilterDto.SearchContent.ToLower()));
+                        && (string.IsNullOrEmpty(blogFilterDto.SearchContent) || a.Title.ToLower().Contains(blogFilterDto.SearchContent.ToLower()));
 
         Expression<Func<Blog, object>> includeCategories = a => a.BlogsCategories.Where(x => !x.IsDeleted);
         Expression<Func<Blog, object>> includeCreatedBy = a => a.CreatedByUser;

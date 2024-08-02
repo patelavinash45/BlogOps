@@ -8,7 +8,10 @@
     Email Is Invalid.
     }
     @else if (hasError('minlength') || hasError('maxlength')) {
-    {{controlName}} is Invalid.
+    {{controlName}} Min length is {{length}}.
+    }
+    @else if (hasError('maxlength')) {
+    {{controlName}} Max length is {{length}}.
     }
 </span>
 }

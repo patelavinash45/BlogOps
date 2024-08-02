@@ -13,4 +13,5 @@ public interface ICategoryService : IGenericRepository<Category>
     Task<bool> CreateCategory(CreateCategoryRequestDto createCategoryRequestDto);
     Task<bool> UpdateCategory(CategoryDto categoryDto);
     Task<bool> DeleteCategory(int id);
+    bool CategoryExist(string name);
 }

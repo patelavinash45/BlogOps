@@ -16,7 +16,7 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 import { PaginationDto } from '../../shared/interfaces/pagination-dto';
 import { CategoriesFilterDto } from '../../shared/interfaces/categories-filter-dto';
 import { CategoryStatus } from '../../shared/enums/category-status';
-import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, Subject } from 'rxjs';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
@@ -34,6 +34,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
   styleUrl: './add-edit-blog.component.css',
 })
 export class AddEditBlogComponent {
+  isButtonClick: boolean = false;
   editorConfig = editorConfig;
   categoryResponse!: PaginationDto<CategoryDto>;
   selectSearchCategories: CategoryDto[] = [];
@@ -69,21 +70,25 @@ export class AddEditBlogComponent {
   }
 
   getBlogDetails() {
-    this.blogService.GetBlogDetails(this.blogId).subscribe((response: Blog) => {
-      this.isDraft = response.status == 4;
-      this.blogForm.setValue({
-        title: response.title,
-        content: response.content,
-        blogCategories: response.blogCategories,
-        isDraft: this.isDraft,
-      });
-    })
+    this.blogService.GetBlogDetails(this.blogId).subscribe({
+      next: (response: Blog) => {
+        this.isDraft = response.status == 4;
+        this.blogForm.setValue({
+          title: response.title,
+          content: response.content,
+          blogCategories: response.blogCategories,
+          isDraft: this.isDraft,
+        });
+      }
+    });
   }
 
   getCategories() {
-    this.blogService.GetCategories(this.categoriesFilterDto).subscribe((response: PaginationDto<CategoryDto>) => {
-      this.categoryResponse = response;
-      this.selectSearchCategories = [...this.selectSearchCategories, ...response.dtoList];
+    this.blogService.GetCategories(this.categoriesFilterDto).subscribe({
+      next: (response: PaginationDto<CategoryDto>) => {
+        this.categoryResponse = response;
+        this.selectSearchCategories = [...this.selectSearchCategories, ...response.dtoList];
+      }
     });
   }
 
@@ -104,21 +109,20 @@ export class AddEditBlogComponent {
     }
   }
 
-  onCategoryChange(event: any) {
-    this.blogForm.controls['blogCategories'].markAsTouched;
-    const selectedCategories: number[] = [];
-    for(var category of event){
-      selectedCategories.push(category.id);
-    }
-    this.blogForm.controls['blogCategories'].setValue(selectedCategories);
-  }
-
   onFormSubmit() {
     if (this.blogForm.valid) {
+      this.isButtonClick = true;
+      console.log(this.blogForm)
       if (this.blogId == undefined) {
-        this.blogService.CreateNewBlog(this.blogForm.value).subscribe((response) => {
-          this.manageToastrService.ShowSuccess(BlogSaveMessage);
-          this.router.navigate(['/author/dashboard']);
+        this.blogService.CreateNewBlog(this.blogForm.value).pipe(
+          finalize(() => {
+            this.isButtonClick = false;
+          })
+        ).subscribe({
+          next: (response) => {
+            this.manageToastrService.ShowSuccess(BlogSaveMessage);
+            this.router.navigate(['/author/dashboard']);
+          }
         });
       }
       else {
@@ -130,9 +134,15 @@ export class AddEditBlogComponent {
           blogCategories: this.blogForm.controls['blogCategories'].value,
           status: this.blogForm.controls['isDraft'].value ? 4 : 0,
         };
-        this.blogService.UpdateBlog(updateBlogRequestDto).subscribe((response) => {
-          this.manageToastrService.ShowSuccess(BlogUpdateMessage);
-          this.router.navigate(['/author/dashboard']);
+        this.blogService.UpdateBlog(updateBlogRequestDto).pipe(
+          finalize(() => {
+            this.isButtonClick = false;
+          })
+        ).subscribe({
+          next: (response) => {
+            this.manageToastrService.ShowSuccess(BlogUpdateMessage);
+            this.router.navigate(['/author/dashboard']);
+          }
         });
       }
     }

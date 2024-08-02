@@ -11,15 +11,19 @@ using Dtos.RequestDtos;
 using Dtos.ResponseDtos;
 using Microsoft.AspNetCore.Http;
 using Repositories.GenericRepository;
+using Services.BlogService;
 using Services.GenericService;
 using Services.JwtService;
+using Services.MailService;
 
 namespace Services.UserService;
 
-public class UserService(IGenericRepository<User> genericRepository, IJwtService jwtService, IHttpContextAccessor httpContextAccessor) : GenericService<User>(genericRepository), IUserService
+public class UserService(IGenericRepository<User> genericRepository, IJwtService jwtService, IHttpContextAccessor httpContextAccessor, IBlogService blogService, IMailService mailService) : GenericService<User>(genericRepository), IUserService
 {
     private readonly IJwtService _jwtService = jwtService;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly IBlogService _blogService = blogService;
+    private readonly IMailService _mailService = mailService;
 
     public UserDto GetUser(int id)
     {
@@ -55,8 +59,9 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         Expression<Func<User, bool>> where = a => (userFilterDto.Role == RoleEnum.All
                                         || (userFilterDto.Role == RoleEnum.Admin && a.RoleId == 1)
                                         || (userFilterDto.Role == RoleEnum.Author && a.RoleId == 2))
+                                        && a.Status != UserStatus.Deleted
                                         && (userFilterDto.Status == UserStatus.All || userFilterDto.Status == a.Status)
-                                        && (userFilterDto.SearchContent == null || (a.FirstName + " " + a.LastName).ToLower().Contains(userFilterDto.SearchContent.ToLower()));
+                                        && (string.IsNullOrEmpty(userFilterDto.SearchContent) || (a.FirstName + " " + a.LastName).ToLower().Contains(userFilterDto.SearchContent.ToLower()));
         Expression<Func<User, object>> orderBy = a => a.FirstName;
         PaginationFromRepository<User> paginationFromRepository
                                     = GetByCriteriaAndPagination(userFilterDto.PageNo, userFilterDto.PageSize, where: where, orderBy: orderBy);
@@ -82,6 +87,7 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
     {
         User user = createUserRequestDto.ToUser();
         Add(user);
+        _mailService.NewUser(user);
         return await SaveAsync() ? true : throw new Exception();
     }
 
@@ -90,6 +96,10 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         User? user = GetById(userDto.Id) ?? throw new Exception("User Not Found");
         user = userDto.ToUser(user);
         Update(user);
+        if (userDto.Status == UserStatus.Deleted)
+        {
+            OnUserDeleted(user.Id);
+        }
         return await SaveAsync() ? true : throw new Exception();
     }
 
@@ -101,9 +111,34 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         return await SaveAsync() ? true : throw new Exception();
     }
 
+    public bool EmailExist(string email)
+    {
+        Expression<Func<User, bool>> where = a => a.Email.ToLower().Contains(email.ToLower());
+        IEnumerable<User> users = GetByCriteria(where: where);
+        return users.Any();
+    }
+
     private static bool VerifyPassword(string hashPassword, string enteredPassword)
     {
         return BCrypt.Net.BCrypt.Verify(enteredPassword, hashPassword);
+    }
+
+    private void OnUserDeleted(int userId)
+    {
+        Expression<Func<Blog, bool>> where = a => a.CreatedBy == userId && a.Status != BlogStatus.Deleted;
+        Expression<Func<Blog, object>> include = a => a.BlogsCategories.Where(x => !x.IsDeleted);
+
+        IEnumerable<Blog> blogs = _blogService.GetByCriteria(where: where, includes: [include]);
+
+        foreach (Blog blog in blogs ?? [])
+        {
+            blog.Status = BlogStatus.Deleted;
+            foreach (BlogsCategory blogsCategory in blog.BlogsCategories ?? [])
+            {
+                blogsCategory.IsDeleted = true;
+            }
+            _blogService.Update(blog);
+        }
     }
 }
 

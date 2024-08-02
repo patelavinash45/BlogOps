@@ -63,3 +63,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .modal-backdrop {
     z-index: 0;
 }
+
+@keyframes rotate {
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+
+.rotate{
+    animation: rotate 1.5s linear infinite;
+}

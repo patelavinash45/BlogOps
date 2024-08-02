@@ -10,17 +10,24 @@ import { LogInSuccessMessage } from '../../../../shared/constants/constant';
 import { RoleType } from '../../../../shared/enums/role-type';
 import { MatButtonModule } from '@angular/material/button';
 import { ValidationMessageComponent } from "../../../../components/base/validation-message/validation-message.component";
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-log-in',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatButtonModule, ValidationMessageComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    ValidationMessageComponent,
+  ],
   templateUrl: './log-in.component.html',
   styleUrl: './log-in.component.css'
 })
 export class LogInComponent {
   isShowPassword: boolean = false;
   loginForm!: FormGroup;
+  isButtonClick: boolean = false;
 
   constructor(private logInService: LogInService, private router: Router, private toastr: ManageToastrService) { }
 
@@ -38,20 +45,25 @@ export class LogInComponent {
 
   onFormSubmit() {
     if (this.loginForm.valid) {
+      this.isButtonClick = true;
       const logInRequestDto: LogInRequestDto = this.loginForm.value;
-      this.logInService.LogIn(logInRequestDto).subscribe((response: LogInResponseDto) => {
-        this.toastr.ShowSuccess(LogInSuccessMessage);
-        this.logInService.SetCookies(response, logInRequestDto.keepMeSignIn);
-        if(response.roleType == RoleType.Author)
-        {
-          this.router.navigate(['/author/dashboard']);
+      this.logInService.LogIn(logInRequestDto).pipe(
+        finalize(() => {
+          this.isButtonClick = false;
+        })
+      ).subscribe({
+        next: (response: LogInResponseDto) => {
+          this.toastr.ShowSuccess(LogInSuccessMessage);
+          this.logInService.SetCookies(response, logInRequestDto.keepMeSignIn);
+          if (response.roleType == RoleType.Author) {
+            this.router.navigate(['/author/dashboard']);
+          }
+          else {
+            this.router.navigate(['/admin/blog']);
+          }
         }
-        else
-        {
-          this.router.navigate(['/admin/blog']);
-        }
-      })
-    }else{
+      });
+    } else {
       this.loginForm.markAllAsTouched();
     }
   }

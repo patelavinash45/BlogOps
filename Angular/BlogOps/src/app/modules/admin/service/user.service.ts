@@ -29,4 +29,8 @@ export class UserService {
   public UpdateUser(useDto: UserDto): Observable<void> {
     return this.httpClient.put<void>(`${baseUrl}/users/${useDto.id}`, useDto);
   }
+
+  public EmailExist(email: string): Observable<boolean> {
+    return this.httpClient.get<boolean>(`${baseUrl}/users/email-exist/${email}`);
+  }
 }

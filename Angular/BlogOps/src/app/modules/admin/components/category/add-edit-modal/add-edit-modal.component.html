@@ -1,44 +1,40 @@
-<hr />
+<hr class="m-0 my-2" />
 <mat-expansion-panel [expanded]="true" class="shadow-none">
     <form class="row" [formGroup]="categoryForm">
-        <div
-            class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3 text-start">
+        <div class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3 text-start">
             <div class="form-floating">
-                <input
-                    formControlName="name"
-                    class="form-control w-100"
-                    id="name"
-                    placeholder="Name" />
+                <input formControlName="name" class="form-control w-100" id="name" placeholder="Name" (input)="onCategoryNameChange($event)" />
                 <label for="name">Category Name</label>
             </div>
-            <app-validation-message
-                [control]="categoryForm.controls['name']"
-                controlName="Name" />
+            @if(isCategoryExist){
+            <span class="text-danger mt-3 mx-1">
+                Category already Exits.
+            </span>
+            }@else {
+            <app-validation-message [control]="categoryForm.controls['name']" controlName="Name" />
+            }
         </div>
-        @if(!isCreateCategory){
-        <div
-            class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3 text-start">
+        @if(isCreateCategory){
+        <div class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3 text-end align-self-center">
+            <button mat-flat-button color="primary" class="shadow-none" (click)="onAddButtonClick()">
+                Add
+                @if(isAddButtonClick){
+                <i class="fa-solid fa-spinner rotate"></i>
+                }
+            </button>
+        </div>
+        }@else {
+        <div class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3 text-start">
             <div class="form-floating">
-                <select class="form-select w-100"
-                    id="status"
-                    formControlName="status">
+                <select class="form-select w-100" id="status" formControlName="status">
                     <option value="1">Active</option>
                     <option value="2">Deleted</option>
                 </select>
                 <label for="status">Status</label>
             </div>
-            <app-validation-message
-                [control]="categoryForm.controls['status']"
-                controlName="Status" />
-        </div>
-        }@else {
-        <div
-            class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3 text-center align-self-center">
-            <button mat-flat-button color="primary" class="shadow-none" (click)="onAddButtonClick()">
-                Add
-            </button>
+            <app-validation-message [control]="categoryForm.controls['status']" controlName="Status" />
         </div>
         }
     </form>
 </mat-expansion-panel>
-<hr />
+<!-- <hr class="m-0" /> -->

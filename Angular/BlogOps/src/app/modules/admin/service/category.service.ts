@@ -25,4 +25,8 @@ export class CategoryService {
   public UpdateCategory(categoryDto: CategoryDto): Observable<void>{
     return this.httpClient.put<void>(`${baseUrl}/categories/${categoryDto.id}`, categoryDto);
   } 
+
+  public CategoryExist(name: string): Observable<boolean> {
+    return this.httpClient.get<boolean>(`${baseUrl}/categories/category-exist/${name}`);
+  }
 }

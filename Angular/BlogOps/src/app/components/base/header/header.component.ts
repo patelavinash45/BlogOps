@@ -43,7 +43,7 @@ export class HeaderComponent {
     shareReplay()
   );
 
-  isSmallDisplay$: Observable<boolean> = this.breakObserver.observe(Breakpoints.Small).pipe(
+  isSmallDisplay$: Observable<boolean> = this.breakObserver.observe(Breakpoints.XSmall).pipe(
     map(result => result.matches),
     shareReplay()
   );
@@ -64,6 +64,6 @@ export class HeaderComponent {
   }
 
   onLogoImageClick(){
-    
+    this.router.navigate([this.sideNavItems[0][1]]);
   }
 }

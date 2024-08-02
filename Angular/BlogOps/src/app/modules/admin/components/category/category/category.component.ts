@@ -42,14 +42,18 @@ export class CategoryComponent {
   isFilterOptionsExpended: boolean = false;
   isCreateCategory: boolean = false;
   editCategoryId: number | null = null;
+  isUpdateButtonClick: boolean = false;
   @ViewChild(AddEditModalComponent) addEditModalComponent!: AddEditModalComponent;
 
   constructor(private categoryService: CategoryService) { }
 
   getData() {
-    this.categoryService.GetCategories(this.categoriesFilterDto).subscribe((response : PaginationDto<CategoryDto>) => {
-      this.categoryResponse = response;
-    });
+    this.categoryService.GetCategories(this.categoriesFilterDto)
+      .subscribe({
+        next: (response: PaginationDto<CategoryDto>) => {
+          this.categoryResponse = response;
+        }
+      });
   }
 
   ngOnInit(): void {
@@ -80,14 +84,15 @@ export class CategoryComponent {
 
   closeModal(isReload: boolean = false) {
     this.editCategoryId = null;
+    this.isUpdateButtonClick = false;
     this.isCreateCategory = false;
-    if (isReload) {
+    if(isReload){
       this.getData();
     }
   }
 
   onEditConform() {
-    this.editCategoryId = null;
+    this.isUpdateButtonClick = true;
     this.addEditModalComponent.updateCategory();
   }
 

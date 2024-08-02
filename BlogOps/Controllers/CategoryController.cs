@@ -77,4 +77,15 @@ public class CategoryController(ICategoryService categoryService) : ControllerBa
         await _categoryService.DeleteCategory(id);
         return Ok();
     }
+
+    [Authentication(RoleEnum.Admin)]
+    [HttpGet]
+    [Route("category-exist/{name}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IActionResult CategoryExist(string name)
+    {
+        var response = _categoryService.CategoryExist(name);
+        return Ok(response);
+    }
 }

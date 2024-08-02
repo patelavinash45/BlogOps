@@ -88,4 +88,14 @@ public class UserController(IUserService userService) : ControllerBase
         await _userService.DeleteUser(id);
         return Ok();
     }
+
+    [HttpGet]
+    [Route("email-exist/{email}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IActionResult EmailExist(string email)
+    {
+        var response = _userService.EmailExist(email);
+        return Ok(response);
+    }
 }
