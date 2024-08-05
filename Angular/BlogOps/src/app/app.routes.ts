@@ -7,6 +7,7 @@ import { AccessDeniedComponent } from './components/base/access-denied/access-de
 import { adminGuard } from './core/guard/admin.guard';
 import { authorGuard } from './core/guard/author.guard';
 import { HeaderComponent } from './components/base/header/header.component';
+import { SignUpComponent } from './modules/logIn/components/sign-up/sign-up.component';
 
 export const routes: Routes = [
     {
@@ -17,6 +18,11 @@ export const routes: Routes = [
     {
         path: 'login',
         component: LogInComponent,
+        canActivate: [loginGuard],
+    },
+    {
+        path: 'signup',
+        component: SignUpComponent,
         canActivate: [loginGuard],
     },
     {

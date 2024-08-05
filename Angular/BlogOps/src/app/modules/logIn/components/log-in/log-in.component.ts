@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LogInService } from '../../service/log-in.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LogInResponseDto } from '../../../../shared/interfaces/log-in-response-dto';
 import { LogInRequestDto } from '../../../../shared/interfaces/log-in-request-dto';
 import { ManageToastrService } from '../../../../core/service/manage-toastr.service';
@@ -20,6 +20,7 @@ import { finalize } from 'rxjs';
     ReactiveFormsModule,
     MatButtonModule,
     ValidationMessageComponent,
+    RouterLink
   ],
   templateUrl: './log-in.component.html',
   styleUrl: './log-in.component.css'

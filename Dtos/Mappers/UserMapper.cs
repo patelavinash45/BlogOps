@@ -43,12 +43,13 @@ public static class UserMapper
             Email = createUserRequestDto.Email,
             Password = HashPassword(createUserRequestDto.Password),
             Status = createUserRequestDto.Status,
+            VerificationToken = HashPassword(createUserRequestDto.Email),
         };
     }
 
-    private static string HashPassword(string password)
+    private static string HashPassword(string str)
     {
         string salt = BCrypt.Net.BCrypt.GenerateSalt();
-        return BCrypt.Net.BCrypt.HashPassword(password, salt);
+        return BCrypt.Net.BCrypt.HashPassword(str, salt);
     }
 }

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ManageToastrService } from '../../core/service/manage-toastr.service';
@@ -23,7 +22,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
   selector: 'app-add-edit-blog',
   standalone: true,
   imports: [
-    AngularEditorModule,
     ReactiveFormsModule,
     MatButtonModule,
     ValidationMessageComponent,

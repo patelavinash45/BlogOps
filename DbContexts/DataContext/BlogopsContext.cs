@@ -27,7 +27,16 @@ public partial class BlogOpsContext : DbContext
         foreach (var entity in entityList)
         {
             BaseEntity? baseEntity = entity.Entity as BaseEntity;
-            int userId = _userInfo.UserId;
+            int userId;
+            try
+            {
+                userId = _userInfo.UserId;
+            }
+            catch
+            {
+                if (entity.Entity is User && entity.State == EntityState.Added) userId = 1;
+                else throw;
+            }
             baseEntity!.UpdatedBy = userId;
             baseEntity.UpdatedDate = UserInfo.CurrentTime;
             if (entity.State == EntityState.Added)

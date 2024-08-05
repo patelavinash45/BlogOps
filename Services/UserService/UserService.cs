@@ -87,8 +87,15 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
     {
         User user = createUserRequestDto.ToUser();
         Add(user);
-        _mailService.NewUser(user);
-        return await SaveAsync() ? true : throw new Exception();
+        if (await SaveAsync())
+        {
+            await _mailService.NewUser(user);
+            return true;
+        }
+        else
+        {
+            throw new Exception(); 
+        }
     }
 
     public async Task<bool> UpdateUser(UserDto userDto)

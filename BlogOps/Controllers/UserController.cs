@@ -35,7 +35,6 @@ public class UserController(IUserService userService) : ControllerBase
         return Ok(response);
     }
 
-    [Authentication(RoleEnum.Admin)]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]

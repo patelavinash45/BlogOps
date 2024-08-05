@@ -6,7 +6,7 @@ export interface CreateUserRequestDto {
     password: string,
     firstName: string,
     lastName: string,
-    profileName: string,
+    profileName: string | null,
     role: RoleType,
     status: UserStatus,
 }

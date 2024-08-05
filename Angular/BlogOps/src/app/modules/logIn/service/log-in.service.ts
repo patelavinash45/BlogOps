@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { LogInResponseDto } from '../../../shared/interfaces/log-in-response-dto';
 import { ManageCookieService } from '../../../core/service/manage-cookie.service';
 import { baseUrl } from '../../../shared/constants/constant';
+import { CreateUserRequestDto } from '../../../shared/interfaces/create-user-request-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -19,5 +20,9 @@ export class LogInService {
 
   public SetCookies(logInResponseDto: LogInResponseDto, keepMeSignIn: boolean) {
     this.manageCookieService.SetCookies(logInResponseDto,keepMeSignIn);
+  }
+
+  public SignUp(createUserRequestDto : CreateUserRequestDto): Observable<void>{
+    return this.httpClient.post<void>(`${baseUrl}/users`, createUserRequestDto);
   }
 }
