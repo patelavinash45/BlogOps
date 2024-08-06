@@ -38,7 +38,7 @@ public partial class User : BaseEntity
     [Column("is_verified")]
     public bool IsVerified { get; set; }
 
-    [Column("verification_Token ")]
+    [Column("verification_token")]
     [StringLength(60)]
     public string? VerificationToken { get; set; }
 

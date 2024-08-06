@@ -24,6 +24,16 @@ public class UserController(IUserService userService) : ControllerBase
         return Ok(response);
     }
 
+    [HttpGet]
+    [Route("{token}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IActionResult GetUserByToken(string token)
+    {
+        var response = _userService.GetUserByToken(token);
+        return Ok(response);
+    }
+
     [Authentication(RoleEnum.Admin)]
     [HttpPost]
     [Route("filter")]
@@ -96,5 +106,15 @@ public class UserController(IUserService userService) : ControllerBase
     {
         var response = _userService.EmailExist(email);
         return Ok(response);
+    }
+
+    [HttpPost]
+    [Route("verify-email/id={id:int}&token={token}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> VerifyEmail(int id, string token)
+    {
+        await _userService.VerifyEmail(id, token);
+        return Ok();
     }
 }

@@ -56,6 +56,10 @@ input{
     overflow-x: scroll;
 }
 
+::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container::-webkit-scrollbar {
+    display: none;
+}
+
 @media screen and (max-width:776px) {
     .blogCategories{
         flex-direction: column;

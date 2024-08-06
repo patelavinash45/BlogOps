@@ -48,7 +48,7 @@ public class CategoryService(IGenericRepository<Category> genericRepository) : G
     {
         Category category = createCategoryRequestDto.ToCategory();
         Add(category);
-        return await SaveAsync() ? true : throw new Exception("");
+        return await SaveAsync();
     }
 
     public async Task<bool> UpdateCategory(CategoryDto categoryDto)
@@ -67,7 +67,7 @@ public class CategoryService(IGenericRepository<Category> genericRepository) : G
         categories.First().IsDeleted = categoryDto.Status == CategoryStatus.Deleted;
 
         Update(categories.First());
-        return await SaveAsync() ? true : throw new Exception("");
+        return await SaveAsync();
     }
 
     public async Task<bool> DeleteCategory(int id)
@@ -80,7 +80,7 @@ public class CategoryService(IGenericRepository<Category> genericRepository) : G
         CanDeleteCategory(categories.First().BlogsCategories);
         categories.First().IsDeleted = true;
         Update(categories.First());
-        return await SaveAsync() ? true : throw new Exception("");
+        return await SaveAsync();
     }
 
     public bool CategoryExist(string name)

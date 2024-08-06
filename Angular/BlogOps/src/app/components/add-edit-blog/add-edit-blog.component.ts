@@ -45,7 +45,7 @@ export class AddEditBlogComponent {
     searchContent: null,
     status: CategoryStatus.Active,
     pageNo: 1,
-    pageSize: 7,
+    pageSize: 20,
   };
 
   constructor(

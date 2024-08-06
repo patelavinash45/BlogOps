@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using DbContexts.DataModels;
 using Dtos.PaginationDto;
+using Npgsql;
 using Repositories.GenericRepository;
 
 namespace Services.GenericService;
@@ -22,6 +23,9 @@ public class GenericService<T>(IGenericRepository<T> genericRepository) : IGener
     public async Task<bool> SaveAsync() => await _repository.SaveAsync();
 
     public void Update(T objModel) => _repository.Update(objModel);
+
+    public Task<bool> ExecutePostgresFunction(string sql, List<NpgsqlParameter> par)
+                                 => _repository.ExecutePostgresFunction(sql, par);
 
     public IEnumerable<T> GetByCriteria(
         Expression<Func<T, object>>[]? includes = null,

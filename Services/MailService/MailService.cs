@@ -14,8 +14,8 @@ public class MailService(IConfiguration configuration) : IMailService
     {
         string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplate/NewUser.html");
         string bodyHtml = File.ReadAllText(templatePath);
-        bodyHtml = bodyHtml.Replace("UserName", user.FirstName + " " + user.LastName);
-        bodyHtml = bodyHtml.Replace("EmailLink", "NewLink");
+        bodyHtml = bodyHtml.Replace("UserName", $"{user.FirstName} {user.LastName}");
+        bodyHtml = bodyHtml.Replace("EmailLink", user.VerificationToken);
         MailMessage mailMessage = new()
         {
             From = new MailAddress(_configuration["EmailCredentials:UserName"] ?? ""),
@@ -29,7 +29,7 @@ public class MailService(IConfiguration configuration) : IMailService
 
     private async Task SendMail(MailMessage mailMessage)
     {
-        SmtpClient smtpClient = new("mail.etatvasoft.com", 587)
+        SmtpClient smtpClient = new(ConstantValue.EmailHost, 587)
         {
             Credentials = new NetworkCredential(
             userName: _configuration["EmailCredentials:UserName"],

@@ -10,6 +10,7 @@ using Dtos.PaginationDto;
 using Dtos.RequestDtos;
 using Dtos.ResponseDtos;
 using Microsoft.AspNetCore.Http;
+using Npgsql;
 using Repositories.GenericRepository;
 using Services.BlogService;
 using Services.GenericService;
@@ -31,11 +32,18 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         return user.ToUserDto();
     }
 
+    public UserDto GetUserByToken(string token)
+    {
+        Expression<Func<User, bool>> where = a => a.VerificationToken != null && a.VerificationToken == token;
+        IEnumerable<User> response = GetByCriteria(where: where);
+        return response.Any() ? response.First().ToUserDto() : throw new Exception("User Not Found");
+    }
+
     public LogInResponseDto ValidateUser(LogInRequestDto logInRequestDto)
     {
-        Expression<Func<User, bool>> func = a => a.Email == logInRequestDto.Email;
+        Expression<Func<User, bool>> where = a => a.Email == logInRequestDto.Email;
         Expression<Func<User, object>> include = a => a.Role;
-        IEnumerable<User> response = GetByCriteria([include], func);
+        IEnumerable<User> response = GetByCriteria([include], where);
         if (response.Any() && response.First().Status == UserStatus.Active
                        && VerifyPassword(response.First().Password, logInRequestDto.Password))
         {
@@ -94,7 +102,7 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         }
         else
         {
-            throw new Exception(); 
+            throw new Exception();
         }
     }
 
@@ -104,10 +112,8 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         user = userDto.ToUser(user);
         Update(user);
         if (userDto.Status == UserStatus.Deleted)
-        {
             OnUserDeleted(user.Id);
-        }
-        return await SaveAsync() ? true : throw new Exception();
+        return await SaveAsync();
     }
 
     public async Task<bool> DeleteUser(int id)
@@ -115,7 +121,7 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         User? user = GetById(id) ?? throw new Exception("User Not Found");
         user.Status = UserStatus.Deleted;
         Update(user);
-        return await SaveAsync() ? true : throw new Exception();
+        return await SaveAsync();
     }
 
     public bool EmailExist(string email)
@@ -123,6 +129,14 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         Expression<Func<User, bool>> where = a => a.Email.ToLower().Contains(email.ToLower());
         IEnumerable<User> users = GetByCriteria(where: where);
         return users.Any();
+    }
+
+    public async Task VerifyEmail(int id, string token)
+    {
+        string sql = "SELECT verify_email(@myUserId, @token, @userId)";
+        NpgsqlParameter userIdParam = new NpgsqlParameter("myUserId", id);
+        NpgsqlParameter tokenParam = new NpgsqlParameter("token", token);
+        await ExecutePostgresFunction(sql, [userIdParam, tokenParam]);
     }
 
     private static bool VerifyPassword(string hashPassword, string enteredPassword)

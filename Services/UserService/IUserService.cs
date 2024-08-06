@@ -10,10 +10,12 @@ namespace Services.UserService;
 public interface IUserService : IGenericService<User>
 {
     UserDto GetUser(int id);
+    UserDto GetUserByToken(string token);
     LogInResponseDto ValidateUser(LogInRequestDto logInRequestDto);
     PaginationDto<UserDto> GetUsers(UserFilterDto userFilterDto);
     Task<bool> CreateUser(CreateUserRequestDto createUserRequestDto);
     Task<bool> UpdateUser(UserDto userDto);
     Task<bool> DeleteUser(int id);
     bool EmailExist(string email);
+    Task VerifyEmail(int id, string token);
 }

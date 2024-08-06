@@ -9,13 +9,15 @@ import { RoleType } from '../../../../shared/enums/role-type';
 import { UserStatus } from '../../../../shared/enums/user-status';
 import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
+import { ManageToastrService } from '../../../../core/service/manage-toastr.service';
+import { AccountCreated } from '../../../../shared/constants/constant';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
   imports: [
-    CommonModule, 
-    ValidationMessageComponent, 
+    CommonModule,
+    ValidationMessageComponent,
     ReactiveFormsModule,
     MatButtonModule,
     RouterLink,
@@ -29,7 +31,7 @@ export class SignUpComponent {
   isShowConformPassword: boolean = false;
   isButtonClick: boolean = false;
 
-  constructor(private logInService: LogInService, private router: Router) { }
+  constructor(private logInService: LogInService, private router: Router, private toasterService: ManageToastrService) { }
 
   ngOnInit(): void {
     this.signUpForm = new FormGroup({
@@ -66,7 +68,10 @@ export class SignUpComponent {
           this.isButtonClick = false;
         })
       ).subscribe({
-        next: (response) => this.router.navigate(['login']),
+        next: (response) => {
+          this.toasterService.ShowSuccess(AccountCreated);
+          this.router.navigate(['account/login']);
+        },
       })
     }
     else {

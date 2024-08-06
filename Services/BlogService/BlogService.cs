@@ -7,6 +7,7 @@ using Dtos.PaginationDto;
 using Dtos.RequestDtos;
 using Dtos.ResponseDtos;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql;
 using Repositories.GenericRepository;
 using Services.BlogCategoryService;
 using Services.GenericService;
@@ -75,7 +76,7 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
         Blog blog = createBlogRequestDto.ToBlog();
         blog.BlogsCategories = blogsCategories;
         Add(blog);
-        return await SaveAsync() ? true : throw new Exception();
+        return await SaveAsync();
     }
 
     public async Task<bool> UpdateBlog(UpdateBlogRequestDto updateBlogRequestDto)
@@ -127,7 +128,7 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
 
         blog = updateBlogRequestDto.ToUpdateBlog(blog);
         Update(blog);
-        return await SaveAsync() ? true : throw new Exception("");
+        return await SaveAsync();
     }
 
     public async Task<bool> DeleteBlog(int id)
@@ -143,24 +144,15 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
             blogsCategory.IsDeleted = true;
         }
         Update(response.First());
-        return await SaveAsync() ? true : throw new Exception();
+        return await SaveAsync();
     }
 
     public async Task<bool> ChangeBlogStatus(int id, ChangeBlogStatusRequestDto changeBlogStatusRequestDto)
     {
-        Blog? blog = GetById(id) ?? throw new Exception("Blog Not Found");
-
-        blog.Status = changeBlogStatusRequestDto.IsApproved ? BlogStatus.Approved : BlogStatus.Rejected;
-        if (changeBlogStatusRequestDto.IsApproved)
-        {
-            blog.PublishDate = UserInfo.CurrentTime;
-        }
-        else
-        {
-            blog.AdminComment = changeBlogStatusRequestDto.AdminComment ?? null;
-        }
-
-        Update(blog);
-        return await SaveAsync() ? true : throw new Exception();
+        string sql = "SELECT approve_reject_blog(@blogId,@isApproved,@adminComment,@userId)";
+        NpgsqlParameter blogIdParam = new("blogId", id);
+        NpgsqlParameter isApprovedParam = new("isApproved", changeBlogStatusRequestDto.IsApproved);
+        NpgsqlParameter adminCommentParam = new("adminComment", changeBlogStatusRequestDto.AdminComment ?? "");
+        return await ExecutePostgresFunction(sql, [blogIdParam, isApprovedParam, adminCommentParam]);
     }
 }

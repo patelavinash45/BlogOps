@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using DbContexts.DataModels;
 using Dtos.PaginationDto;
+using Npgsql;
 
 namespace Repositories.GenericRepository;
 
@@ -19,6 +20,8 @@ public interface IGenericRepository<T> where T : BaseEntity
     int Save();
 
     Task<bool> SaveAsync();
+
+    Task<bool> ExecutePostgresFunction(string sql, List<NpgsqlParameter> par);
 
     IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, object>>? orderBy = null);
 

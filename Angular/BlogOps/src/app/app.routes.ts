@@ -8,21 +8,17 @@ import { adminGuard } from './core/guard/admin.guard';
 import { authorGuard } from './core/guard/author.guard';
 import { HeaderComponent } from './components/base/header/header.component';
 import { SignUpComponent } from './modules/logIn/components/sign-up/sign-up.component';
+import { LogInRoute } from './modules/logIn/route/login.routes';
 
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'login',
+        redirectTo: 'account/login',
         pathMatch: 'full'
     },
     {
-        path: 'login',
-        component: LogInComponent,
-        canActivate: [loginGuard],
-    },
-    {
-        path: 'signup',
-        component: SignUpComponent,
+        path: 'account',
+        children: LogInRoute,
         canActivate: [loginGuard],
     },
     {

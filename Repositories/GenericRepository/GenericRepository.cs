@@ -3,12 +3,15 @@ using BlogOpsDbContext;
 using Microsoft.EntityFrameworkCore;
 using Dtos.PaginationDto;
 using DbContexts.DataModels;
+using Npgsql;
+using DbContexts.HelperClass;
 
 namespace Repositories.GenericRepository;
 
-public class GenericRepository<T>(BlogOpsContext context) : IGenericRepository<T> where T : BaseEntity
+public class GenericRepository<T>(BlogOpsContext context, UserInfo userInfo) : IGenericRepository<T> where T : BaseEntity
 {
     private readonly BlogOpsContext _dbContext = context;
+    private readonly UserInfo _userInfo = userInfo;
     private readonly DbSet<T> _dbSet = context.Set<T>();
 
     public void Add(T objModel)
@@ -44,12 +47,19 @@ public class GenericRepository<T>(BlogOpsContext context) : IGenericRepository<T
 
     public async Task<bool> SaveAsync()
     {
-        return await _dbContext.SaveChangesAsync() > 0;
+        return await _dbContext.SaveChangesAsync() > 0 ? true : throw new Exception();
     }
 
     public void Update(T objModel)
     {
         _dbSet.Update(objModel);
+    }
+
+    public async Task<bool> ExecutePostgresFunction(string sql, List<NpgsqlParameter> par)
+    {
+        var userIdParam = new NpgsqlParameter("userId", _userInfo.UserId);
+        par.Add(userIdParam);
+        return await _dbContext.Database.ExecuteSqlRawAsync(sql, par) > 0;
     }
 
     public IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, object>>? orderBy = null)

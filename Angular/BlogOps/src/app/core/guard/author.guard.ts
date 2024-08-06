@@ -7,7 +7,7 @@ export const authorGuard: CanActivateFn = (route, state,) => {
   const jwtToken = cookiesService.GetJwtToken();
   if (jwtToken.length == 0) {
     const router = inject(Router);
-    router.navigate(["/login"]);
+    router.navigate(["/account/login"]);
     return false;
   }
   const roleType = cookiesService.GetRoleType();
