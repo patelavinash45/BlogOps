@@ -16,13 +16,17 @@
                         </span>
                     </div>
                     <div class="mt-3 h5">
-                        Please click the button below to confirm your email address and activate your account
+                        {{text1}}
                     </div>
-                    <button mat-flat-button color="primary mt-3" [disabled]="user == null">
+                    <button mat-flat-button color="primary mt-3" [disabled]="user == null" type="button"
+                        (click)="onButtonClick()">
                         CONFIRM EMAIL
+                        @if(isButtonClick){
+                        <i class="fa-solid fa-spinner rotate"></i>
+                        }
                     </button>
                     <div class="mt-4 text-secondary">
-                        If you received this in error, simply ignore this email and do not click the button.
+                        {{text2}}
                     </div>
                 </div>
             </div>
@@ -32,3 +36,9 @@
         </div>
     </div>
 </div>
+@if(isVerified){
+<div class="image-container">
+    <div class="overlay"></div>
+    <img src="assets/Verified.png" class="animated-image" (animationend)="onAnimationend()" />
+</div>
+}

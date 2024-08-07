@@ -1,10 +1,12 @@
 using System.Linq.Expressions;
-using BlogOpsDbContext;
 using Microsoft.EntityFrameworkCore;
 using Dtos.PaginationDto;
 using DbContexts.DataModels;
 using Npgsql;
 using DbContexts.HelperClass;
+using DbContexts.DataContext;
+using Dtos.RequestDtos;
+using System.Data.Common;
 
 namespace Repositories.GenericRepository;
 
@@ -55,13 +57,6 @@ public class GenericRepository<T>(BlogOpsContext context, UserInfo userInfo) : I
         _dbSet.Update(objModel);
     }
 
-    public async Task<bool> ExecutePostgresFunction(string sql, List<NpgsqlParameter> par)
-    {
-        var userIdParam = new NpgsqlParameter("userId", _userInfo.UserId);
-        par.Add(userIdParam);
-        return await _dbContext.Database.ExecuteSqlRawAsync(sql, par) > 0;
-    }
-
     public IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, object>>? orderBy = null)
     {
         IQueryable<T> query = _dbSet;
@@ -110,4 +105,10 @@ public class GenericRepository<T>(BlogOpsContext context, UserInfo userInfo) : I
             Entities = query.AsEnumerable<T>()
         };
     }
+
+    public void ApproveRejectBlog(int id, ChangeBlogStatusRequestDto changeBlogStatusRequestDto)
+                    => _dbContext.ApproveOrRejectBlog(id, changeBlogStatusRequestDto.IsApproved, changeBlogStatusRequestDto.AdminComment ?? "", _userInfo.UserId).ToList();
+
+    public void VerifyEmail(int userId, string token)
+                            => _dbContext.VerifyEmail(userId, token).ToList();
 }

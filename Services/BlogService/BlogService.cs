@@ -7,7 +7,6 @@ using Dtos.PaginationDto;
 using Dtos.RequestDtos;
 using Dtos.ResponseDtos;
 using Microsoft.IdentityModel.Tokens;
-using Npgsql;
 using Repositories.GenericRepository;
 using Services.BlogCategoryService;
 using Services.GenericService;
@@ -147,12 +146,6 @@ public class BlogService(IGenericRepository<Blog> genericRepository, IBlogCatego
         return await SaveAsync();
     }
 
-    public async Task<bool> ChangeBlogStatus(int id, ChangeBlogStatusRequestDto changeBlogStatusRequestDto)
-    {
-        string sql = "SELECT approve_reject_blog(@blogId,@isApproved,@adminComment,@userId)";
-        NpgsqlParameter blogIdParam = new("blogId", id);
-        NpgsqlParameter isApprovedParam = new("isApproved", changeBlogStatusRequestDto.IsApproved);
-        NpgsqlParameter adminCommentParam = new("adminComment", changeBlogStatusRequestDto.AdminComment ?? "");
-        return await ExecutePostgresFunction(sql, [blogIdParam, isApprovedParam, adminCommentParam]);
-    }
+    public void ChangeBlogStatus(int id, ChangeBlogStatusRequestDto changeBlogStatusRequestDto)
+                    => ApproveRejectBlog(id, changeBlogStatusRequestDto);
 }

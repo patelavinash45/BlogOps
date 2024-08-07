@@ -25,16 +25,19 @@ public class RequestHandler(RequestDelegate request)
         httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         httpContext.Response.ContentType = "application/json";
         object errorMessage;
-        switch(ex){
-            case BadHttpRequestException : errorMessage = ConstantValue.BadRequestString;
-                                           httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                                           break;
-            case UnauthorizedAccessException: errorMessage = ConstantValue.UnauthorizedString;
-                                              httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                                              break;
-            default : //errorMessage =  new { error = "Internal Server Error." };
-                      errorMessage =  ex;
-                      break;
+        switch (ex)
+        {
+            case BadHttpRequestException:
+                errorMessage = ConstantValue.BadRequestString;
+                httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                break;
+            case UnauthorizedAccessException:
+                errorMessage = ConstantValue.UnauthorizedString;
+                httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                break;
+            default: //errorMessage =  new { error = "Internal Server Error." };
+                errorMessage = ex;
+                break;
         }
         return httpContext.Response.WriteAsync(JsonConvert.SerializeObject(errorMessage));
     }

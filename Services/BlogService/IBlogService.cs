@@ -13,5 +13,5 @@ public interface IBlogService : IGenericService<Blog>
     Task<bool> CreateBlog(CreateBlogRequestDto createBlogRequestDto);
     Task<bool> UpdateBlog(UpdateBlogRequestDto updateBlogRequestDto);
     Task<bool> DeleteBlog(int id);
-    Task<bool> ChangeBlogStatus(int id, ChangeBlogStatusRequestDto changeBlogStatusRequestDto);
+    void ChangeBlogStatus(int id, ChangeBlogStatusRequestDto changeBlogStatusRequestDto);
 }

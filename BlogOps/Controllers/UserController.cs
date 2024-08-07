@@ -112,9 +112,9 @@ public class UserController(IUserService userService) : ControllerBase
     [Route("verify-email/id={id:int}&token={token}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> VerifyEmail(int id, string token)
+    public IActionResult VerifyEmail(int id, string token)
     {
-        await _userService.VerifyEmail(id, token);
+        _userService.VerifyUser(id, token);
         return Ok();
     }
 }

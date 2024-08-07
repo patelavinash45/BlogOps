@@ -1,4 +1,3 @@
-using BlogOpsDbContext;
 using DbContexts.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -6,6 +5,7 @@ using Npgsql;
 using Repositories.GenericRepository;
 using Services.GenericService;
 using DbContexts.HelperClass;
+using DbContexts.DataContext;
 
 namespace BlogOps.Configurations;
 
@@ -22,7 +22,7 @@ public static class Configuration
         var dbBuild = builder.Build();
         services.AddDbContext<BlogOpsContext>(options =>
         {
-            options.UseNpgsql(dbBuild);
+            options.UseNpgsql(dbBuild).EnableSensitiveDataLogging().LogTo(Console.WriteLine, new[] {DbLoggerCategory.Database.Command.Name},LogLevel.Information);
         });
         services.AddCors(c =>
         {

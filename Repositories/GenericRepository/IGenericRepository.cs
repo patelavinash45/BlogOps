@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using DbContexts.DataModels;
 using Dtos.PaginationDto;
+using Dtos.RequestDtos;
 using Npgsql;
 
 namespace Repositories.GenericRepository;
@@ -21,9 +22,11 @@ public interface IGenericRepository<T> where T : BaseEntity
 
     Task<bool> SaveAsync();
 
-    Task<bool> ExecutePostgresFunction(string sql, List<NpgsqlParameter> par);
-
     IEnumerable<T> GetByCriteria(Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, object>>? orderBy = null);
 
     PaginationFromRepository<T> GetByCriteriaAndPagination(int pageNo, int pageSize, Expression<Func<T, object>>[]? includes = null, Expression<Func<T, bool>>? where = null, Expression<Func<T, object>>? orderBy = null);
+
+    void ApproveRejectBlog(int id, ChangeBlogStatusRequestDto changeBlogStatusRequestDto);
+
+    void VerifyEmail(int userId, string token);
 }

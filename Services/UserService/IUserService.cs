@@ -17,5 +17,5 @@ public interface IUserService : IGenericService<User>
     Task<bool> UpdateUser(UserDto userDto);
     Task<bool> DeleteUser(int id);
     bool EmailExist(string email);
-    Task VerifyEmail(int id, string token);
+    void VerifyUser(int id, string token);
 }

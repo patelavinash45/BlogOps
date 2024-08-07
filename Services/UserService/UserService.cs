@@ -131,13 +131,7 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         return users.Any();
     }
 
-    public async Task VerifyEmail(int id, string token)
-    {
-        string sql = "SELECT verify_email(@myUserId, @token, @userId)";
-        NpgsqlParameter userIdParam = new NpgsqlParameter("myUserId", id);
-        NpgsqlParameter tokenParam = new NpgsqlParameter("token", token);
-        await ExecutePostgresFunction(sql, [userIdParam, tokenParam]);
-    }
+    public void VerifyUser(int id, string token) => VerifyEmail(id, token);
 
     private static bool VerifyPassword(string hashPassword, string enteredPassword)
     {

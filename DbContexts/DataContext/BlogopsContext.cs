@@ -2,7 +2,7 @@
 using DbContexts.HelperClass;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogOpsDbContext;
+namespace DbContexts.DataContext;
 
 public partial class BlogOpsContext : DbContext
 {
@@ -58,11 +58,18 @@ public partial class BlogOpsContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public IQueryable<FunctionReturnDto> VerifyEmail(int userId, string token) => FromExpression(() => VerifyEmail(userId, token));
+
+    public IQueryable<FunctionReturnDto> ApproveOrRejectBlog(int blogId, bool isApproved, string adminComment, int userId)
+    {
+        return FromExpression(() => ApproveOrRejectBlog(blogId, isApproved, adminComment, userId));
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
-            .HasPostgresEnum("blog_status", new[] { "Pending", "Approved", "Rejected", "Deleted", "Draft" })
-            .HasPostgresEnum("user_status", new[] { "Active", "Deactive", "Deleted" });
+            .HasPostgresEnum("blog_status", ["Pending", "Approved", "Rejected", "Deleted", "Draft"])
+            .HasPostgresEnum("user_status", ["Active", "Deactive", "Deleted"]);
 
         modelBuilder.Entity<Blog>(entity =>
         {
@@ -137,7 +144,12 @@ public partial class BlogOpsContext : DbContext
                 .HasConstraintName("users_updated_by_fkey");
         });
 
+        modelBuilder.HasDbFunction(typeof(BlogOpsContext).GetMethod(nameof(VerifyEmail), [typeof(int), typeof(string)])).HasName("verify_email");
+
+        modelBuilder.HasDbFunction(typeof(BlogOpsContext).GetMethod(nameof(ApproveOrRejectBlog), [typeof(int), typeof(bool), typeof(string), typeof(int)])).HasName("approve_reject_blog");
+
         OnModelCreatingPartial(modelBuilder);
+
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
