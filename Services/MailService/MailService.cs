@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Mail;
 using DbContexts.DataModels;
+using Dtos.Constants;
 using Microsoft.Extensions.Configuration;
 
 namespace Services.MailService;
@@ -8,30 +9,32 @@ namespace Services.MailService;
 public class MailService(IConfiguration configuration) : IMailService
 {
     private readonly IConfiguration _configuration = configuration;
-    private readonly SmtpClient smtpClient = new("smtp.gmail.com")
-    {
-        UseDefaultCredentials = false,
-        DeliveryMethod = SmtpDeliveryMethod.Network,
-        EnableSsl = true,
-        Port = 587,
-        Credentials = new NetworkCredential(
-            userName: configuration["EmailCredentials:UserName"],
-            password: configuration["EmailCredentials:Password"]),
-    };
 
-    public void NewUser(User user)
+    public async Task NewUser(User user)
     {
+        string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplate/NewUser.html");
+        string bodyHtml = File.ReadAllText(templatePath);
+        bodyHtml = bodyHtml.Replace("UserName", $"{user.FirstName} {user.LastName}");
+        bodyHtml = bodyHtml.Replace("EmailLink", user.VerificationToken);
         MailMessage mailMessage = new()
         {
             From = new MailAddress(_configuration["EmailCredentials:UserName"] ?? ""),
-            Body = "Welcome",
+            Body = bodyHtml,
+            IsBodyHtml = true,
+            Subject = ConstantValue.NewUserEmailSubject,
         };
         mailMessage.To.Add(new MailAddress(user.Email));
-        SendMail(mailMessage);
+        await SendMail(mailMessage);
     }
 
-    private void SendMail(MailMessage mailMessage)
+    private async Task SendMail(MailMessage mailMessage)
     {
-        smtpClient.Send(mailMessage);
+        SmtpClient smtpClient = new(ConstantValue.EmailHost, 587)
+        {
+            Credentials = new NetworkCredential(
+            userName: _configuration["EmailCredentials:UserName"],
+            password: _configuration["EmailCredentials:Password"]),
+        };
+        await smtpClient.SendMailAsync(mailMessage);
     }
 }

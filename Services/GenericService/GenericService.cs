@@ -1,6 +1,8 @@
 using System.Linq.Expressions;
 using DbContexts.DataModels;
 using Dtos.PaginationDto;
+using Dtos.RequestDtos;
+using Npgsql;
 using Repositories.GenericRepository;
 
 namespace Services.GenericService;
@@ -36,4 +38,10 @@ public class GenericService<T>(IGenericRepository<T> genericRepository) : IGener
         Expression<Func<T, bool>>? where = null,
         Expression<Func<T, object>>? orderBy = null
     ) => _repository.GetByCriteriaAndPagination(pageNo, pageSize, includes, where, orderBy);
+
+    public void ApproveRejectBlog(int id, ChangeBlogStatusRequestDto changeBlogStatusRequestDto)
+        => _repository.ApproveRejectBlog(id, changeBlogStatusRequestDto);
+
+    public void VerifyEmail(int userId, string token)
+        => _repository.VerifyEmail(userId, token);
 }

@@ -1,7 +1,7 @@
 export class RoutePathConstant{
     private static Author = "/author";
     private static Admin = "/admin";
-    public static LogInPath = "/login";
+    public static LogInPath = "account/login";
     public static AuthorDashboardPath = `${this.Author}/dashboard`;
     public static AuthorNewBlogPath = `${this.Author}/blog/new`;
     public static AuthorEditBlogPath = `${this.Author}/blog/edit`;

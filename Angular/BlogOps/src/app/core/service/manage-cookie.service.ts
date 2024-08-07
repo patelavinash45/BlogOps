@@ -61,7 +61,7 @@ export class ManageCookieService {
     this.cookieService.delete('LastName', '/', 'localhost', false, 'Lax');
     this.cookieService.delete('Role', '/', 'localhost', false, 'Lax');
     this.cookieService.delete('ProfileName', '/', 'localhost', false, 'Lax');
-    this.router.navigate(['/login']);
+    this.router.navigate(['/account/login']);
   }
 
   private encryptData(data: string): string {

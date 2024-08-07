@@ -10,6 +10,7 @@ import { SessionExpired } from '../../shared/constants/constant';
 export const httpRequestInterceptor: HttpInterceptorFn = (req, next) => {
   const cookiesService = inject(ManageCookieService);
   const jwtToken = cookiesService.GetJwtToken();
+  console.log(jwtToken);
   const toasterService = inject(ManageToastrService);
   const router = inject(Router);
   const newRequest = req.clone({
@@ -20,6 +21,7 @@ export const httpRequestInterceptor: HttpInterceptorFn = (req, next) => {
   });
   return next(newRequest).pipe(
     catchError(errorResponse => {
+      console.log(errorResponse);
       const statusCode = errorResponse.status;
       if (statusCode == 401) {
         toasterService.ShowError(SessionExpired);

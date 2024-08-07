@@ -68,12 +68,12 @@ public class BlogController(IBlogService blogService) : ControllerBase
     [Route("change-status/{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> ChangeBlogStatus(int id, [FromBody] ChangeBlogStatusRequestDto changeBlogStatusRequestDto)
+    public IActionResult ChangeBlogStatus(int id, [FromBody] ChangeBlogStatusRequestDto changeBlogStatusRequestDto)
     {
         if (id <= 0 || !ModelState.IsValid)
             throw new BadHttpRequestException(nameof(ChangeBlogStatusRequestDto));
 
-        await _blogService.ChangeBlogStatus(id, changeBlogStatusRequestDto);
+        _blogService.ChangeBlogStatus(id, changeBlogStatusRequestDto);
         return Ok();
     }
 

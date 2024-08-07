@@ -1,0 +1,44 @@
+<div class="background">
+    <div class="container d-flex justify-content-center align-items-center h-100">
+        <div class="logInCard p-4 shadow-lg rounded-4">
+            <div class="card shadow-sm rounded-4">
+                <div class="card-header text-center">
+                    <img src="assets/Email.png" />
+                </div>
+                <div class="card-body text-center">
+                    <div class="h4">
+                        Verify Your email address
+                    </div>
+                    <div class="mt-3 h5">
+                        Welcome to
+                        <span class="text-color">
+                            BlogOps
+                        </span>
+                    </div>
+                    <div class="mt-3 h5">
+                        {{text1}}
+                    </div>
+                    <button mat-flat-button color="primary mt-3" [disabled]="user == null" type="button"
+                        (click)="onButtonClick()">
+                        CONFIRM EMAIL
+                        @if(isButtonClick){
+                        <i class="fa-solid fa-spinner rotate"></i>
+                        }
+                    </button>
+                    <div class="mt-4 text-secondary">
+                        {{text2}}
+                    </div>
+                </div>
+            </div>
+            <div class="text-center card-title fs-3 fw-bold mt-3">
+                <img src="assets/LogInLogo.png" height="45px" />
+            </div>
+        </div>
+    </div>
+</div>
+@if(isVerified){
+<div class="image-container">
+    <div class="overlay"></div>
+    <img src="assets/Verified.png" class="animated-image" (animationend)="onAnimationend()" />
+</div>
+}

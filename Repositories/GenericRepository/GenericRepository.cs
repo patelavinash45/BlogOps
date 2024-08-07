@@ -1,14 +1,19 @@
 using System.Linq.Expressions;
-using BlogOpsDbContext;
 using Microsoft.EntityFrameworkCore;
 using Dtos.PaginationDto;
 using DbContexts.DataModels;
+using Npgsql;
+using DbContexts.HelperClass;
+using DbContexts.DataContext;
+using Dtos.RequestDtos;
+using System.Data.Common;
 
 namespace Repositories.GenericRepository;
 
-public class GenericRepository<T>(BlogOpsContext context) : IGenericRepository<T> where T : BaseEntity
+public class GenericRepository<T>(BlogOpsContext context, UserInfo userInfo) : IGenericRepository<T> where T : BaseEntity
 {
     private readonly BlogOpsContext _dbContext = context;
+    private readonly UserInfo _userInfo = userInfo;
     private readonly DbSet<T> _dbSet = context.Set<T>();
 
     public void Add(T objModel)
@@ -44,7 +49,7 @@ public class GenericRepository<T>(BlogOpsContext context) : IGenericRepository<T
 
     public async Task<bool> SaveAsync()
     {
-        return await _dbContext.SaveChangesAsync() > 0;
+        return await _dbContext.SaveChangesAsync() > 0 ? true : throw new Exception();
     }
 
     public void Update(T objModel)
@@ -100,4 +105,10 @@ public class GenericRepository<T>(BlogOpsContext context) : IGenericRepository<T
             Entities = query.AsEnumerable<T>()
         };
     }
+
+    public void ApproveRejectBlog(int id, ChangeBlogStatusRequestDto changeBlogStatusRequestDto)
+                    => _dbContext.ApproveOrRejectBlog(id, changeBlogStatusRequestDto.IsApproved, changeBlogStatusRequestDto.AdminComment ?? "", _userInfo.UserId).ToList();
+
+    public void VerifyEmail(int userId, string token)
+                            => _dbContext.VerifyEmail(userId, token).ToList();
 }

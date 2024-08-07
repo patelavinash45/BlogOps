@@ -1,0 +1,87 @@
+<div class="background">
+    <div class="container d-flex justify-content-center align-items-center h-100">
+        <div class="logInCard p-4 shadow-lg rounded-4">
+            <div class="text-center card-title fs-3 fw-bold mb-3">
+                <img src="assets/LogInLogo.png" height="60px" />
+            </div>
+            <form [formGroup]="signUpForm" (submit)="onFormSubmit()">
+                <div class="input-group">
+                    <div class="form-floating">
+                        <input formControlName="firstName" class="form-control" id="firstName"
+                            placeholder="FirstName" />
+                        <label for="firstName">First Name</label>
+                    </div>
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-person-circle btn disabled border-0"></i>
+                    </span>
+                </div>
+                <app-validation-message [control]="signUpForm.controls['firstName']" controlName="FirstName" />
+                <div class="input-group mt-3">
+                    <div class="form-floating">
+                        <input formControlName="lastName" class="form-control" id="lastName" placeholder="LastName" />
+                        <label for="lastName">Last Name</label>
+                    </div>
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-person-circle btn disabled border-0"></i>
+                    </span>
+                </div>
+                <app-validation-message [control]="signUpForm.controls['lastName']" controlName="LastName" />
+                <div class="input-group mt-3">
+                    <div class="form-floating">
+                        <input type="email" formControlName="email" class="form-control" id="email"
+                            placeholder="name@example.com" />
+                        <label for="email">Email address</label>
+                    </div>
+                    <span class="input-group-text" id="basic-addon1">
+                        <i class="bi bi-envelope btn disabled border-0"></i>
+                    </span>
+                </div>
+                <app-validation-message [control]="signUpForm.controls['email']" controlName="Email" />
+                <div class="input-group mt-3">
+                    <div class="form-floating">
+                        <input [type]="isShowPassword ? 'text' : 'password'" formControlName="password"
+                            class="form-control" id="floatingPassword" placeholder="Password" />
+                        <label for="floatingPassword">Password</label>
+                    </div>
+                    <span class="input-group-text" id="basic-addon2">
+                        <button class="btn" type="button" (click)="onPasswordButtonClick()">
+                            <i class="bi" [ngClass]="{
+                    'bi-eye': !isShowPassword,
+                    'bi-eye-slash': isShowPassword
+                  }"></i>
+                        </button>
+                    </span>
+                </div>
+                <app-validation-message [control]="signUpForm.controls['password']" controlName="Password"
+                    [length]="8" />
+                <div class="input-group mt-3">
+                    <div class="form-floating">
+                        <input [type]="isShowConformPassword ? 'text' : 'password'" formControlName="conformPassword"
+                            class="form-control" id="conformPassword" placeholder="Password" />
+                        <label for="conformPassword">Conform Password</label>
+                    </div>
+                    <span class="input-group-text" id="basic-addon2">
+                        <button class="btn" type="button" (click)="onConformPasswordPasswordButtonClick()">
+                            <i class="bi" [ngClass]="{
+                        'bi-eye': !isShowPassword,
+                        'bi-eye-slash': isShowPassword
+                      }"></i>
+                        </button>
+                    </span>
+                </div>
+                <app-validation-message [control]="signUpForm.controls['conformPassword']"
+                    controlName="ConformPassword" />
+                <button mat-flat-button color="primary"
+                    class="w-100 mt-3 login-button fs-4 d-flex justify-content-center">
+                    Sign Up
+                    @if(isButtonClick){
+                    <i class="fa-solid fa-spinner rotate"></i>
+                    }
+                </button>
+            </form>
+            <div class="d-flex justify-content-center mt-3">
+                Already User ? <a [routerLink]="['/account/login']" class="mx-2">Log In</a>
+            </div>
+        </div>
+    </div>
+</div>

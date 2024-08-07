@@ -35,6 +35,13 @@ public partial class User : BaseEntity
     [Column("status")]
     public UserStatus Status { get; set; }
 
+    [Column("is_verified")]
+    public bool IsVerified { get; set; }
+
+    [Column("verification_token")]
+    [StringLength(60)]
+    public string? VerificationToken { get; set; }
+
     [InverseProperty("CreatedByUser")]
     public virtual ICollection<Blog> BlogCreatedByBlogs { get; set; } = new List<Blog>();
 

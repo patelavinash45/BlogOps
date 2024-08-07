@@ -12,7 +12,7 @@ public static class UserMapper
         user.LastName = userDto.LastName;
         user.ProfileName = userDto.ProfileName ?? user.ProfileName;
         user.Email = userDto.Email;
-        user.Password = userDto.Password != null ? HashPassword(userDto.Password!) : user.Password;
+        user.Password = userDto.Password != null ? HashString(userDto.Password!) : user.Password;
         user.Status = userDto.Status;
         user.RoleId = (int)userDto.Role;
         return user;
@@ -41,14 +41,15 @@ public static class UserMapper
             LastName = createUserRequestDto.LastName,
             ProfileName = createUserRequestDto.ProfileName,
             Email = createUserRequestDto.Email,
-            Password = HashPassword(createUserRequestDto.Password),
+            Password = HashString(createUserRequestDto.Password),
             Status = createUserRequestDto.Status,
+            VerificationToken = HashString(createUserRequestDto.Email).Replace("/", "$"),
         };
     }
 
-    private static string HashPassword(string password)
+    private static string HashString(string str)
     {
         string salt = BCrypt.Net.BCrypt.GenerateSalt();
-        return BCrypt.Net.BCrypt.HashPassword(password, salt);
+        return BCrypt.Net.BCrypt.HashPassword(str, salt);
     }
 }

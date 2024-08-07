@@ -9,10 +9,12 @@ export class ManageToastrService {
   constructor(private toasterService: ToastrService) { }
 
   ShowSuccess(toastMessage:string) {
+    this.toasterService.clear();
     this.toasterService.success(toastMessage);
   }
 
   ShowError(toastMessage:string) {
+    this.toasterService.clear();
     this.toasterService.error(toastMessage);
   }
 }

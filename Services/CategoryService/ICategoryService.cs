@@ -2,11 +2,11 @@ using DbContexts.DataModels;
 using Dtos.CommonDtos;
 using Dtos.PaginationDto;
 using Dtos.RequestDtos;
-using Repositories.GenericRepository;
+using Services.GenericService;
 
 namespace Services.CategoryService;
 
-public interface ICategoryService : IGenericRepository<Category>
+public interface ICategoryService : IGenericService<Category>
 {
     CategoryDto GetCategory(int id);
     PaginationDto<CategoryDto> GetCategories(CategoriesFilterDto categoriesFilterDto);
