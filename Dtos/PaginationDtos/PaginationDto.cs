@@ -1,4 +1,4 @@
-namespace Dtos.PaginationDto;
+namespace Dtos.PaginationDtos;
 
 public record PaginationDto<T>
 {

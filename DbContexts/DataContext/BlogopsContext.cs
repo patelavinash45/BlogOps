@@ -1,4 +1,5 @@
 ﻿using DbContexts.DataModels;
+using DbContexts.FunctionDtos;
 using DbContexts.HelperClass;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,12 +59,14 @@ public partial class BlogOpsContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public IQueryable<AdminDashboardCountsDto> AdminDashBoardCounts() => FromExpression(() => AdminDashBoardCounts());
+
+    public IQueryable<AdminDashboardBlogsDto> AdminDashBoardBlogs() => FromExpression(() => AdminDashBoardBlogs());
+
     public IQueryable<FunctionReturnDto> VerifyEmail(int userId, string token) => FromExpression(() => VerifyEmail(userId, token));
 
     public IQueryable<FunctionReturnDto> ApproveOrRejectBlog(int blogId, bool isApproved, string adminComment, int userId)
-    {
-        return FromExpression(() => ApproveOrRejectBlog(blogId, isApproved, adminComment, userId));
-    }
+                            => FromExpression(() => ApproveOrRejectBlog(blogId, isApproved, adminComment, userId));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -144,9 +147,13 @@ public partial class BlogOpsContext : DbContext
                 .HasConstraintName("users_updated_by_fkey");
         });
 
-        modelBuilder.HasDbFunction(typeof(BlogOpsContext).GetMethod(nameof(VerifyEmail), [typeof(int), typeof(string)])).HasName("verify_email");
+        modelBuilder.HasDbFunction(typeof(BlogOpsContext).GetMethod(nameof(VerifyEmail), [typeof(int), typeof(string)])!).HasName("verify_email");
 
-        modelBuilder.HasDbFunction(typeof(BlogOpsContext).GetMethod(nameof(ApproveOrRejectBlog), [typeof(int), typeof(bool), typeof(string), typeof(int)])).HasName("approve_reject_blog");
+        modelBuilder.HasDbFunction(typeof(BlogOpsContext).GetMethod(nameof(ApproveOrRejectBlog), [typeof(int), typeof(bool), typeof(string), typeof(int)])!).HasName("approve_reject_blog");
+
+        modelBuilder.HasDbFunction(typeof(BlogOpsContext).GetMethod(nameof(AdminDashBoardCounts))!).HasName("admin_dashboard_counts");
+
+        modelBuilder.HasDbFunction(typeof(BlogOpsContext).GetMethod(nameof(AdminDashBoardBlogs))!).HasName("admin_dashboard_blogs");
 
         OnModelCreatingPartial(modelBuilder);
 

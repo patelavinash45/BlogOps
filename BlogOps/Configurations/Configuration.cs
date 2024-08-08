@@ -22,7 +22,7 @@ public static class Configuration
         var dbBuild = builder.Build();
         services.AddDbContext<BlogOpsContext>(options =>
         {
-            options.UseNpgsql(dbBuild).EnableSensitiveDataLogging().LogTo(Console.WriteLine, new[] {DbLoggerCategory.Database.Command.Name},LogLevel.Information);
+            options.UseNpgsql(dbBuild);
         });
         services.AddCors(c =>
         {

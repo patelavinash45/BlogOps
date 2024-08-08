@@ -1,12 +1,10 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Dtos.PaginationDto;
+using Dtos.PaginationDtos;
 using DbContexts.DataModels;
-using Npgsql;
 using DbContexts.HelperClass;
 using DbContexts.DataContext;
 using Dtos.RequestDtos;
-using System.Data.Common;
 
 namespace Repositories.GenericRepository;
 

@@ -3,7 +3,7 @@ using DbContexts.DataModels;
 using Dtos.CommonDtos;
 using Dtos.Enums;
 using Dtos.Mappers;
-using Dtos.PaginationDto;
+using Dtos.PaginationDtos;
 using Dtos.RequestDtos;
 using Repositories.GenericRepository;
 using Services.GenericService;

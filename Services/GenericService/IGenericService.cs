@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using DbContexts.DataModels;
-using Dtos.PaginationDto;
+using Dtos.PaginationDtos;
 using Dtos.RequestDtos;
 using Npgsql;
 

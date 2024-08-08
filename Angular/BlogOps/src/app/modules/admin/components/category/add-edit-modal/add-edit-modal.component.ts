@@ -43,7 +43,7 @@ export class AddEditModalComponent {
   }
 
   updateCategory() {
-    if (this.categoryForm.valid && this.isCategoryExist) {
+    if (this.categoryForm.valid && !this.isCategoryExist) {
       this.localCategory.name = this.categoryForm.controls['name'].value;
       this.localCategory.status = this.categoryForm.controls['status'].value;
       this.categoryService.UpdateCategory(this.localCategory).pipe(
@@ -60,7 +60,8 @@ export class AddEditModalComponent {
   }
 
   onAddButtonClick() {
-    if (this.categoryForm.valid && this.isCategoryExist) {
+    console.log(this.isCategoryExist);
+    if (this.categoryForm.valid && !this.isCategoryExist) {
       this.isAddButtonClick = true
       const createCategoryRequestDto: CreateCategoryRequestDto = this.categoryForm.value;
       this.categoryService.AddCategory(createCategoryRequestDto).pipe(
