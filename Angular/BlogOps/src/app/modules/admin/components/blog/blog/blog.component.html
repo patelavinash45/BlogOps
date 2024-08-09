@@ -59,8 +59,8 @@
                 </tr>
             </thead>
             <tbody>
-                @for(blog of blogResponse.dtoList; track blog.id){
-                <tr class="align-middle">
+                @for(blog of blogResponse.dtoList; track blog.id; let i=$index;){
+                <tr class="align-middle" [ngClass]="'animation'+(i+1)">
                     <td class="mat-primary">
                         {{ blog.title }}
                     </td>
@@ -92,7 +92,7 @@
                             <i class="bi bi-pencil-square"></i>
                         </button>
                         |
-                        <a title="View Blog" mat-mini-fab color="primary" [routerLink]="['/admin/blog/view', blog.id]">
+                        <a title="View Blog" class="shadow-none" mat-mini-fab color="primary" [routerLink]="['/admin/blog/view', blog.id]">
                             <i class="bi bi-journal-album"></i>
                         </a>
                     </td>
@@ -101,7 +101,7 @@
             </tbody>
         </table>
         <mat-paginator class="fs-6" (page)="changePage($event)" [length]="blogResponse.totalCount"
-            [pageSizeOptions]="[5,10,15,20]" [pageSize]="10"></mat-paginator>
+            [pageSizeOptions]="[10,15,20,25]" [pageSize]="10"></mat-paginator>
     </div>
     }@placeholder(minimum 1000ms) {
     <mat-progress-bar mode="indeterminate" class="rounded-4"></mat-progress-bar>

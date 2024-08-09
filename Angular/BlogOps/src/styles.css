@@ -22,7 +22,6 @@ body{
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-
 .mat-typography h1,
 .mat-typography h2,
 .mat-typography h3,
@@ -83,4 +82,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .rotate{
     animation: rotate 1.5s linear infinite;
+}
+
+:root, [data-bs-theme=light]{
+    --bs-success-rgb:79, 177, 104;
+    --bs-primary-rgb:60, 111, 225;
+    --bs-danger-rgb:237, 60, 77;
+    --bs-warning-rgb:234, 183, 33;
 }

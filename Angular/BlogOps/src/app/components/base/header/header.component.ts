@@ -3,7 +3,7 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { ManageCookieService } from '../../../core/service/manage-cookie.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map, Observable, shareReplay } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -16,6 +16,7 @@ import { adminSideBarItems, authorSideBarItems, largeDisplay } from '../../../sh
   selector: 'app-header',
   standalone: true,
   imports: [
+    CommonModule,
     RouterLink,
     RouterLinkActive,
     RouterOutlet,
@@ -34,9 +35,10 @@ import { adminSideBarItems, authorSideBarItems, largeDisplay } from '../../../sh
 export class HeaderComponent {
   profileName!: string;
   roleType!: string;
+  isUpArrow: boolean = true;
   sideNavItems!: string[][];
 
-  constructor(private manageCookieService: ManageCookieService, private breakObserver: BreakpointObserver, private router:Router) { }
+  constructor(private manageCookieService: ManageCookieService, private breakObserver: BreakpointObserver, private router: Router) { }
 
   isLargeDisplay$: Observable<boolean> = this.breakObserver.observe(largeDisplay).pipe(
     map(result => result.matches),
@@ -63,7 +65,7 @@ export class HeaderComponent {
     this.manageCookieService.RemoveAllCookie();
   }
 
-  onLogoImageClick(){
+  onLogoImageClick() {
     this.router.navigate([this.sideNavItems[0][1]]);
   }
 }

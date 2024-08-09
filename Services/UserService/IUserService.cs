@@ -1,6 +1,6 @@
 using DbContexts.DataModels;
 using Dtos.CommonDtos;
-using Dtos.PaginationDto;
+using Dtos.PaginationDtos;
 using Dtos.RequestDtos;
 using Dtos.ResponseDtos;
 using Services.GenericService;

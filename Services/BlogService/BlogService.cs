@@ -3,7 +3,7 @@ using DbContexts.DataModels;
 using DbContexts.Enums;
 using DbContexts.HelperClass;
 using Dtos.Mappers;
-using Dtos.PaginationDto;
+using Dtos.PaginationDtos;
 using Dtos.RequestDtos;
 using Dtos.ResponseDtos;
 using Microsoft.IdentityModel.Tokens;
