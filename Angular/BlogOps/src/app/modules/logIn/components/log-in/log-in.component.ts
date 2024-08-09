@@ -60,7 +60,7 @@ export class LogInComponent {
             this.router.navigate(['/author/dashboard']);
           }
           else {
-            this.router.navigate(['/admin/blog']);
+            this.router.navigate(['/admin/dashboard']);
           }
         }
       });

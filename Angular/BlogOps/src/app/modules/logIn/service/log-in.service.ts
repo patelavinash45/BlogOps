@@ -34,4 +34,8 @@ export class LogInService {
   public VerifyEmail(id: number, token: string): Observable<void> {
     return this.httpClient.post<void>(`${baseUrl}/users/verify-email/id=${id}&token=${token}`, null);
   }
+
+  public EmailExist(email: string): Observable<boolean> {
+    return this.httpClient.get<boolean>(`${baseUrl}/users/email-exist/${email}`);
+  }
 }

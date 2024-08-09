@@ -28,7 +28,7 @@
                 <app-validation-message [control]="signUpForm.controls['lastName']" controlName="LastName" />
                 <div class="input-group mt-3">
                     <div class="form-floating">
-                        <input type="email" formControlName="email" class="form-control" id="email"
+                        <input type="email" formControlName="email" class="form-control" id="email" (input)="onEmailChange($event)"
                             placeholder="name@example.com" />
                         <label for="email">Email address</label>
                     </div>
@@ -36,7 +36,13 @@
                         <i class="bi bi-envelope btn disabled border-0"></i>
                     </span>
                 </div>
+                @if(isEmailExist){
+                <span class="text-danger mt-3 mx-1">
+                    Email already Exits.
+                </span>
+                }@else {
                 <app-validation-message [control]="signUpForm.controls['email']" controlName="Email" />
+                }
                 <div class="input-group mt-3">
                     <div class="form-floating">
                         <input [type]="isShowPassword ? 'text' : 'password'" formControlName="password"

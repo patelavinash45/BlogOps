@@ -3,7 +3,8 @@
     <form class="row" [formGroup]="categoryForm">
         <div class="col-xl-6 col-ld-6 col-md-6 col-sm-12 col-12 mt-3 text-start">
             <div class="form-floating">
-                <input formControlName="name" class="form-control w-100" id="name" placeholder="Name" (input)="onCategoryNameChange($event)" />
+                <input formControlName="name" class="form-control w-100" id="name" placeholder="Name"
+                    (input)="onCategoryNameChange($event)" />
                 <label for="name">Category Name</label>
             </div>
             @if(isCategoryExist){
@@ -37,4 +38,3 @@
         }
     </form>
 </mat-expansion-panel>
-<!-- <hr class="m-0" /> -->

@@ -8,7 +8,7 @@ import { CreateUserRequestDto } from '../../../../shared/interfaces/create-user-
 import { RoleType } from '../../../../shared/enums/role-type';
 import { UserStatus } from '../../../../shared/enums/user-status';
 import { Router, RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
+import { finalize} from 'rxjs';
 import { ManageToastrService } from '../../../../core/service/manage-toastr.service';
 import { AccountCreated } from '../../../../shared/constants/constant';
 
@@ -30,6 +30,7 @@ export class SignUpComponent {
   isShowPassword: boolean = false;
   isShowConformPassword: boolean = false;
   isButtonClick: boolean = false;
+  isEmailExist: boolean = false;
 
   constructor(private logInService: LogInService, private router: Router, private toasterService: ManageToastrService) { }
 
@@ -52,7 +53,7 @@ export class SignUpComponent {
   }
 
   onFormSubmit() {
-    if (this.signUpForm.valid) {
+    if (this.signUpForm.valid && !this.isEmailExist) {
       this.isButtonClick = true;
       const createUserRequestDto: CreateUserRequestDto = {
         firstName: this.signUpForm.controls['firstName'].value,
@@ -76,6 +77,17 @@ export class SignUpComponent {
     }
     else {
       this.signUpForm.markAllAsTouched();
+    }
+  }
+
+  onEmailChange(event: any) {
+    const email = event.target.value;
+    if (email.length > 0) {
+      this.logInService.EmailExist(email).subscribe({
+        next: (response: boolean) => {
+          this.isEmailExist = response;
+        }
+      });
     }
   }
 }

@@ -4,8 +4,6 @@ import { BlogFilterDto } from '../../../shared/interfaces/blog-filter-dto';
 import { Observable } from 'rxjs';
 import { baseUrl } from '../../../shared/constants/constant';
 import { UserFilterDto } from '../../../shared/interfaces/user-filter-dto';
-import { UserStatus } from '../../../shared/enums/user-status';
-import { RoleType } from '../../../shared/enums/role-type';
 import { ChangeBlogStatusRequestDto } from '../../../shared/interfaces/change-blog-status-request-dto';
 import { UserDto } from '../../../shared/interfaces/user-dto';
 import { PaginationDto } from '../../../shared/interfaces/pagination-dto';

@@ -43,10 +43,13 @@ public class UserService(IGenericRepository<User> genericRepository, IJwtService
         Expression<Func<User, bool>> where = a => a.Email == logInRequestDto.Email;
         Expression<Func<User, object>> include = a => a.Role;
         IEnumerable<User> response = GetByCriteria([include], where);
-        if (response.Any() && response.First().Status == UserStatus.Active
+        if (response.Any() 
                        && VerifyPassword(response.First().Password, logInRequestDto.Password))
         {
-            _httpContextAccessor.HttpContext!.Session.SetInt32("userId", response.First().Id);
+           if(!response.First().IsVerified)
+                throw new ;
+            
+             _httpContextAccessor.HttpContext!.Session.SetInt32("userId", response.First().Id);
             string jwtToken = _jwtService.CreateJwtToken(response.First(), logInRequestDto.KeepMeSignIn ? 60 : 20);
             return new LogInResponseDto
             {

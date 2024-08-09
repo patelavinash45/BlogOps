@@ -9,7 +9,7 @@ export const loginGuard: CanActivateFn = (route, state) => {
     const role = cookiesService.GetRoleType();
     const router = inject(Router);
     if (role == '1') {
-      router.navigate(["/admin/blog"]);
+      router.navigate(["/admin/dashboard"]);
     }
     else {
       router.navigate(["/author/dashboard"]);

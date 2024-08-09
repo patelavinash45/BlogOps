@@ -1,0 +1,42 @@
+.card-div{
+    border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+    box-shadow: var(--bs-box-shadow-sm) !important;
+    border-radius: var(--bs-border-radius-xl) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+}
+
+.top-div {
+    height: 130px;
+    background-color: white;
+}
+
+.middle-div {
+    height: 230px;
+    background-color: white;
+}
+
+.container{
+    background-color: #f8f8f8;
+}
+
+/* .approved-blog{
+    background-color: #98ecca;
+    border-color: #0bda86 !important;
+}
+
+.pending-blog{
+    background-color: #99d6f5;
+    border-color: #3cafe9   !important;
+}
+
+.users{
+    background-color: #f6faa2ed;
+    border-color: #ecf458  !important;
+}
+
+.categories{
+    background-color: #d1b2ef;
+    border-color: #ba78f9  !important;
+} */
